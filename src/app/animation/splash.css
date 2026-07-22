@@ -1,0 +1,633 @@
+/* ================= SPLASH SCREEN ================= */
+
+#intro {
+  background: linear-gradient(
+    135deg,
+    #000000,
+    #07111f,
+    #001d2e
+  );
+
+  color: #00eaff;
+  height: 100vh;
+  width: 100%;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  /* overflow: hidden; */
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* GRID */
+
+#intro::before {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 0;
+
+  background-image:
+    linear-gradient(
+      rgba(0, 234, 255, 0.08) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(0, 234, 255, 0.08) 1px,
+      transparent 1px
+    );
+
+  background-size: 40px 40px;
+
+  pointer-events: none;
+}
+
+/* GLOW */
+
+#intro::after {
+  content: "";
+  z-index: 0;
+
+  position: absolute;
+  width: 550px;
+  height: 550px;
+
+  background: radial-gradient(
+    circle,
+    rgba(0, 234, 255, 0.319),
+    transparent 70%
+  );
+
+  filter: blur(60px);
+
+  animation: pulseGlow 4s infinite ease-in-out;
+}
+
+#intro .scanline {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  filter: blur(10px);
+
+
+  background: rgba(0,234,255,.5);
+
+  animation: scan 3s ease-in-out infinite alternate;
+}
+
+#intro::before,
+#intro::after,
+.scanline {
+  pointer-events: none;
+}
+
+#intro .vignette {
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+  z-index: 0;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(0, 0, 0, 0.45),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at top right,
+      rgba(0, 0, 0, 0.45),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at bottom left,
+      rgba(0, 0, 0, 0.45),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(0, 0, 0, 0.45),
+      transparent 40%
+    );
+}
+
+.particle-canvas {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  pointer-events: none;
+
+  z-index: 0;
+}
+
+@keyframes scan {
+
+  0% {
+    top: 0%;
+  }
+
+  100% {
+    top: 95%;
+  }
+}
+
+@keyframes gridFade {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulseGlow {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ================= Cursor Trail ================= */
+
+.cursor-trail {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  pointer-events: none;
+  margin:auto;
+  z-index: 1;
+}
+
+.gravity-well {
+  position: fixed;
+  inset: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  pointer-events: none;
+
+  z-index: 1;
+}
+
+/* ================= DEFAULT ITEM ================= */
+
+.item {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* ================= ITEM ANIMATION ================= */
+
+.item1 {
+  opacity: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: -30px;
+
+  animation:
+    robotReveal 1.5s ease forwards .5s;
+}
+
+.item1 canvas {
+  filter:
+    drop-shadow(0 0 20px #00eaff)
+    drop-shadow(0 0 35px #00eaff);
+    
+}
+
+.item2 {
+  opacity: 0;
+
+  animation:
+    textReveal 1s ease forwards 1.5s;
+}
+
+.item2 h1 {
+  letter-spacing: 8px;
+}
+
+/* item3 tidak dianimasikan lagi */
+.item3 {
+  opacity: 1;
+  transform: none;
+}
+
+/* muncul terakhir */
+.item4 {
+  animation: fadeIn 0.7s forwards 3.5s;
+}
+
+/* ================= ICON ANIMATION ================= */
+
+.social-wrapper {
+  opacity: 0;
+}
+
+.icon {
+  /* opacity: 0;
+  transition: .3s; */
+  filter: drop-shadow(0 0 10px #00eaff);
+}
+
+/* ---------- GitHub dari bawah ---------- */
+
+.github-wrap {
+  /* transform: translateY(40px); */
+
+  animation:
+    socialReveal .7s forwards 2.3s,
+    floating 3s ease-in-out infinite 3s;
+  }
+
+/* ---------- Code dari atas ---------- */
+
+.code-wrap {
+  /* transform: translateY(-40px); */
+
+  animation:
+    socialRevealTop .7s forwards 2.5s,
+    floating 3s ease-in-out infinite 3.3s;
+  }
+
+/* ---------- Person dari bawah ---------- */
+
+.person-wrap {
+  /* transform: translateY(40px); */
+
+  animation:
+    socialReveal .7s forwards 2.7s,
+    floating 3s ease-in-out infinite 3.6s;
+  }
+
+/* ---------- LinkedIn dari atas ---------- */
+
+.linkedin-wrap {
+  /* transform: translateY(-40px); */
+
+  animation:
+    socialRevealTop .7s forwards 2.9s,
+    floating 3s ease-in-out infinite 3.9s;
+}
+
+/* ---------- Instagram dari bawah ---------- */
+
+.instagram-wrap {
+  /* transform: translateY(40px); */
+
+  animation:
+    socialReveal .7s forwards 3.1s,
+    floating 3s ease-in-out infinite 4.2s;
+}
+
+/* ---------- Discord dari atas ---------- */
+
+.discord-wrap {
+  /* transform: translateY(-40px); */
+
+  animation:
+    socialRevealTop .7s forwards 3.3s,
+    floating 3s ease-in-out infinite 4.5s;
+}
+
+/* ================= KEYFRAMES ================= */
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes socialReveal {
+
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes socialRevealTop {
+
+  0% {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes textReveal {
+
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+    filter: blur(10px);
+    letter-spacing: 20px;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+    letter-spacing: 8px;
+  }
+}
+
+@keyframes floating {
+
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes zoomFade {
+
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+
+  50% {
+    opacity: .8;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(2.2);
+    filter: blur(20px);
+  }
+}
+
+/* ================= SPLASH FADE OUT ================= */
+
+#intro.fade-out {
+  animation: fadeOut 1s forwards;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+/* ================= ZOOM OUT ALL ITEM ================= */
+
+.splash-content.zoom-out {
+  /* animation: zoomFade 1s forwards; */
+  animation: zoomFade 1.3s ease forwards;
+}
+
+@keyframes zoomFade {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0px);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.8);
+    filter: blur(8px);
+  }
+}
+
+/* ================= Main Page Slide Up ================= */
+
+.main-show {
+  animation: mainReveal 1s ease forwards;
+}
+
+@keyframes mainReveal {
+
+  0% {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================= Button Enter Portofolio ================= */
+.enter-btn {
+  margin-top: 40px;
+
+  padding: 12px 30px;
+
+  background: transparent;
+
+  border: 1px solid #00eaff;
+
+  color: #00eaff;
+
+  letter-spacing: 4px;
+
+  transition:
+    .4s,
+    transform .3s;
+
+  opacity: 0;
+
+  cursor: pointer;
+
+  animation:
+    fadeIn .8s forwards 4.8s;
+
+  box-shadow:
+    0 0 10px rgba(0,234,255,.3);
+}
+
+.enter-btn:hover {
+
+  background: #00eaff;
+
+  color: black;
+
+  transform:
+    translateY(-4px)
+    scale(1.05);
+
+  box-shadow:
+    0 0 30px #00eaff;
+}
+
+.enter-btn:active {
+  transform: scale(.95);
+}
+
+.enter-btn.clicked {
+  transform: scale(1.08);
+}
+
+.enter-btn:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+
+@keyframes btnPulse {
+
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ================= Hacker Text ================= */
+
+.hacker-text {
+
+  color: #00eaff;
+
+  letter-spacing: 4px;
+  font-weight: 500;
+
+  text-shadow:
+    0 0 1px #00eaff,
+    0 0 7px #00eaff;
+
+  border-right: 3px solid #00eaff;
+
+  padding: 0 7px;
+
+  width: fit-content;
+  max-width: 90vw;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+
+  font-size: clamp(1.5rem, 5vw, 3rem);
+
+  /* default animation */
+  animation:
+    blinkBorder .7s infinite;
+}
+
+/* ================= Saat Finished ================= */
+
+.hacker-text.finished {
+
+  animation:
+    blinkBorder .7s infinite,
+    blinkTeks 1.5s infinite;
+}
+
+/* ================= Text Blink ================= */
+
+@keyframes blinkTeks {
+
+  50% {
+
+    color: #00000000;
+
+      text-shadow:
+    0 0 1px #00eaff00,
+    0 0 7px #00eaff00;
+
+  }
+}
+
+/* ================= Cursor Blink ================= */
+
+@keyframes blinkBorder {
+
+  50% {
+    border-color: transparent;
+  }
+}
+
+/* ================= MOBILE DESIGN ================= */
+
+@media (max-width: 768px) {
+
+  .hacker-text {
+
+    font-size: 35px;
+
+    letter-spacing: 2px;
+
+    border-right: 2px solid #00eaff;
+
+    font-weight: 600;
+
+    padding: 0 4px;
+
+    max-width: 95vw;
+
+    text-shadow:
+      0 0 1px #00eaff,
+      0 0 5px #00eaff;
+  }
+
+  .item1{
+      margin-bottom: -15px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .hacker-text {
+
+    font-size: 30px;
+
+    font-weight: 600;
+
+    letter-spacing: 1px;
+
+    border-right: 2px solid #00eaff;
+
+    white-space: normal;
+
+    text-align: center;
+
+    line-height: 1.4;
+  }
+}

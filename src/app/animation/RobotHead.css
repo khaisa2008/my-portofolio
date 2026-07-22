@@ -1,0 +1,401 @@
+/* ================= WRAPPER ================= */
+
+.robot-wrapper {
+
+  width: 320px;
+  height: 320px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin: auto;
+}
+
+/* ================= HEAD ================= */
+
+.robot-head {
+
+  position: relative;
+
+  width: 200px;
+  height: 180px;
+
+  border-radius: 45px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(0, 234, 255, .18),
+      rgba(0, 120, 255, .08)
+    );
+
+  backdrop-filter: blur(10px);
+
+  border:
+    2px solid rgba(120,255,255,.9);
+
+  box-shadow:
+    inset 0 0 20px rgba(120,255,255,.15),
+    0 0 18px rgba(0,234,255,.5),
+    0 0 40px rgba(0,234,255,.25);
+
+  transition:
+    transform .65s cubic-bezier(.22,1,.36,1),
+    box-shadow .3s ease;
+
+  will-change: transform;
+}
+
+/* ================= FACE SCREEN ================= */
+
+.face-screen {
+
+  position: absolute;
+
+  inset: 12px;
+
+  border-radius: 32px;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgb(0, 0, 0),
+      rgba(0, 12, 27, 0.848)
+    );
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  overflow: hidden;
+
+  box-shadow:
+    inset 0 0 25px rgba(120,255,255,.08),
+    0 0 15px rgba(0,0,0,.3);
+}
+
+/* ================= EYES ================= */
+
+.eye-container {
+
+  display: flex;
+  gap: 42px;
+}
+
+/* ================= SINGLE EYE ================= */
+
+.eye {
+
+  width: 42px;
+  height: 56px;
+
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #8dffff,
+      #58f6ff
+    );
+
+  transition:
+    transform .25s ease-out,
+    height .15s ease,
+    margin-top .15s ease;
+
+  box-shadow:
+    0 0 10px #78ffff,
+    0 0 20px #78ffff,
+    0 0 45px rgba(120,255,255,.9);
+
+  cursor: pointer;
+}
+
+/* ================= BLINK ================= */
+
+.eye-blink {
+
+  height: 8px;
+
+  margin-top: 24px;
+
+  border-radius: 20px;
+}
+
+/* ================= EARS ================= */
+
+.ear {
+
+  position: absolute;
+
+  top: 60px;
+
+  width: 34px;
+  height: 82px;
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(0, 234, 255, 0.693),
+      rgba(0, 119, 255, 0.758)
+    );
+
+  border:
+    2px solid rgba(120,255,255,.8);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  backdrop-filter: blur(8px);
+
+  box-shadow:
+    inset 0 0 12px rgba(120,255,255,.18),
+    0 0 15px rgba(0,234,255,.45);
+}
+
+.left-ear {
+
+  left: -18px;
+}
+
+.right-ear {
+
+  right: -18px;
+}
+
+/* ================= EAR LIGHT ================= */
+
+.ear-light {
+
+  width: 12px;
+  height: 42px;
+
+  border-radius: 20px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 0 20px #63f7ff,
+    0 0 35px rgba(99,247,255,.9);
+}
+
+/* ================= ANTENNA ================= */
+
+.antenna {
+
+  position: absolute;
+
+  top: -32px;
+  left: 50%;
+
+  width: 8px;
+  height: 36px;
+
+  transform: translateX(-50%);
+
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff,
+      #d6e0ea
+    );
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 0 8px rgba(120,255,255,.4);
+}
+
+.antenna-ball {
+
+  position: absolute;
+
+  top: -14px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle at 30% 30%,
+      #bfffff,
+      #63f7ff
+    );
+
+  box-shadow:
+    0 0 12px #63f7ff,
+    0 0 30px rgba(99,247,255,.9);
+}
+
+/* ================= CLICKABLE ================= */
+
+.eye,
+.robot-head,
+.face-screen {
+  cursor: pointer;
+}
+
+/* ================= KEYFRAME ================= */
+
+@keyframes robotReveal {
+
+  0% {
+
+    opacity: 0;
+
+    transform:
+      scale(.2)
+      rotate(-180deg);
+  }
+
+  60% {
+
+    opacity: 1;
+
+    transform:
+      scale(1.08)
+      rotate(8deg);
+  }
+
+  100% {
+
+    opacity: 1;
+
+    transform:
+      scale(1)
+      rotate(0deg);
+  }
+}
+
+/* ================= MOBILE RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+
+  .robot-wrapper {
+    width: 100%;
+    height: auto;
+    min-height: 220px;
+    padding: 20px 0;
+  }
+
+  .robot-head {
+    width: 160px;
+    height: 145px;
+    border-radius: 35px;
+  }
+
+  .face-screen {
+    inset: 10px;
+    border-radius: 25px;
+  }
+
+  .eye-container {
+    gap: 28px;
+  }
+
+  .eye {
+    width: 32px;
+    height: 44px;
+    border-radius: 14px;
+  }
+
+  .eye-blink {
+    height: 6px;
+    margin-top: 18px;
+  }
+
+  .ear {
+    width: 26px;
+    height: 65px;
+    top: 50px;
+  }
+
+  .left-ear {
+    left: -14px;
+  }
+
+  .right-ear {
+    right: -14px;
+  }
+
+  .ear-light {
+    width: 8px;
+    height: 30px;
+  }
+
+  .antenna {
+    width: 6px;
+    height: 30px;
+    top: -25px;
+  }
+
+  .antenna-ball {
+    width: 20px;
+    height: 20px;
+    top: -10px;
+  }
+}
+
+/* ================= SMALL PHONE ================= */
+
+@media (max-width: 480px) {
+
+  .robot-head {
+    width: 135px;
+    height: 125px;
+    border-radius: 30px;
+  }
+
+  .face-screen {
+    inset: 8px;
+    border-radius: 20px;
+  }
+
+  .eye-container {
+    gap: 22px;
+  }
+
+  .eye {
+    width: 30px;
+    height: 42px;
+  }
+
+  .ear {
+    width: 22px;
+    height: 55px;
+    top: 42px;
+  }
+
+  .left-ear {
+    left: -12px;
+  }
+
+  .right-ear {
+    right: -12px;
+  }
+
+  .ear-light {
+    width: 7px;
+    height: 24px;
+  }
+
+  .antenna {
+    height: 25px;
+    top: -20px;
+  }
+
+  .antenna-ball {
+    width: 16px;
+    height: 16px;
+    top: -8px;
+  }
+}

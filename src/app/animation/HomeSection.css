@@ -1,0 +1,449 @@
+/* ================= HERO SECTION ================= */
+
+.hero-section {
+  min-height: 60vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-title {
+  font-size: 50px;
+  font-weight: 800;
+  opacity: 0;
+  animation: fadeRight 1s ease forwards;
+}
+
+.hero-title span {
+  background: linear-gradient(200deg, #00d9ff, #0b428f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-subtitle {
+  color: #b6b6b6;
+  font-weight: 500;
+  opacity: 0;
+  animation: fadeRight 1s ease forwards;
+  animation-delay: 0.3s;
+}
+
+.hero-text {
+  color: #c9c9c9;
+  line-height: 1.8;
+  opacity: 0;
+  animation: fadeRight 1s ease forwards;
+  animation-delay: 0.6s;
+}
+
+.social-icons {
+  opacity: 0;
+  animation: fadeRight 1s ease forwards;
+  animation-delay: 0.9s;
+}
+
+.social-icons i {
+  font-size: 28px;
+  margin-right: 18px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.social-icons i:hover {
+  color: #00d9ff;
+  transform: translateY(-5px);
+}
+
+/* ================= HERO RIGHT ================= */
+
+.hero-right {
+  position: relative;
+  width: 100%;
+  height: 700px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ================= GRID BACKGROUND ================= */
+
+.hero-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(219, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(223, 0, 0, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  z-index: -5;
+  animation: gridMove 25s linear infinite;
+}
+
+/* ================= GLOW EFFECT ================= */
+
+.hero-bg-glow {
+  position: absolute;
+  width: 900px;
+  height: 900px;
+  right: -250px;
+  bottom: -250px;
+  background: radial-gradient(circle, rgba(0, 180, 255, 0.25), transparent 70%);
+  filter: blur(80px);
+  z-index: -4;
+  animation:
+    zoomInGlow 2s ease,
+    pulseGlow 6s ease-in-out infinite;
+}
+
+/* ================= PROFILE IMAGE ================= */
+
+.hero-img {
+  width: 450px;
+  position: relative;
+  z-index: 10;
+  opacity: 0;
+  filter: drop-shadow(0 0 25px rgba(0, 217, 255, 0.5));
+  animation:
+    profileIntro 1.6s ease forwards,
+    floatProfile 5s ease-in-out infinite 1.6s,
+    profileGlow 4s ease-in-out infinite;
+}
+
+/* ================= ORBIT RING ================= */
+
+.orbit-ring {
+  position: absolute;
+  width: 650px;
+  height: 650px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 170, 255, 0.15);
+  box-shadow:
+    0 0 30px rgba(0, 217, 255, 0.05),
+    inset 0 0 30px rgba(0, 217, 255, 0.05);
+  opacity: 0;
+  animation:
+    orbitIntro 1.5s ease forwards,
+    orbitRotate 30s linear infinite 1.5s;
+}
+
+.orbit-ring-2 {
+  width: 500px;
+  height: 500px;
+  border-style: dashed;
+  animation-duration: 1.8s, 20s;
+}
+
+/* ================= TECH ICONS ================= */
+
+.tech-icon {
+  position: absolute;
+  width: 90px;
+  z-index: 15;
+  transition: all 0.4s ease;
+  will-change: transform, filter;
+}
+
+.tech-icon:hover {
+  transform: scale(1.08);
+}
+
+.code-img {
+  position: absolute;
+  top: 30px;
+  left: 50px;
+  width: 120px;
+  opacity: 0.2;
+  animation: codeImgRight 3s;
+}
+
+.poldacot-img {
+  position: absolute;
+  width: 150px;
+  bottom: 40px;
+  left: 120px;
+  animation: polcadotShow 5s;
+}
+
+.poldacot-img2 {
+  position: absolute;
+  width: 150px;
+  right: 20px;
+  opacity: 0.5;
+  animation: polcadotShow 5s;
+}
+
+/* ================= SOURCE CARD ================= */
+
+.source-card {
+  position: absolute;
+  width: 280px;
+  top: 150px;
+  right: -50px;
+  z-index: 5;
+  opacity: 0.7;
+  border-radius: 20px;
+  background: rgba(50, 50, 50, 0.514);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 0 30px rgba(0, 217, 255, 0.08),
+    inset 0 0 10px rgba(255, 255, 255, 0.03);
+  animation:
+    cardIntro 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+    cardFloat 5s ease-in-out infinite 2s;
+}
+
+@keyframes cardIntro {
+  0% {
+    opacity: 0;
+    transform: translateX(80px) scale(0.75) rotate(8deg);
+    filter: blur(8px);
+  }
+
+  60% {
+    opacity: 0.8;
+    transform: translateX(-10px) scale(1.05) rotate(-2deg);
+    filter: blur(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1) rotate(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes cardFloat {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  25% {
+    transform: translateY(-10px) rotate(-1.5deg);
+    filter: blur(2px);
+  }
+
+  50% {
+    transform: translateY(-16px) rotate(0.5deg);
+    filter: blur(0);
+  }
+
+  75% {
+    transform: translateY(-8px) rotate(1.5deg);
+    filter: blur(1px);
+  }
+
+  100% {
+    transform: translateY(0) rotate(0deg);
+    filter: blur(0);
+  }
+}
+
+@keyframes codeImgRight {
+  0% {
+    opacity: 0;
+    left: 0px;
+  }
+  50% {
+    opacity: 0.1;
+    top: 30px;
+    left: 50px;
+  }
+  100% {
+    opacity: 0.2;
+    top: 30px;
+    left: 50px;
+  }
+}
+
+@keyframes polcadotShow {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* ================= HEXAGON ================= */
+
+.hex {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  transform-origin: center;
+  filter: drop-shadow(0 0 5px rgba(0, 159, 245, 0.577))
+    drop-shadow(0 0 5px rgba(0, 191, 255, 0.792));
+}
+
+/* Ukuran yang proporsional untuk setiap hexagon */
+.hex1 {
+  width: 100px;
+  height: 100px;
+  top: 50px;
+  left: 15%;
+  animation:
+    hexIntro 3s cubic-bezier(0.18, 0.9, 0.25, 1) forwards,
+    hexSpin 20s linear infinite 2.8s;
+}
+
+.hex2 {
+  width: 170px;
+  height: 170px;
+  bottom: 110px;
+  left: 30%;
+  animation:
+    hexIntro 3s cubic-bezier(0.18, 0.9, 0.25, 1) forwards,
+    hexSpin 50s linear infinite reverse 2.8s;
+}
+
+.hex3 {
+  width: 150px;
+  height: 150px;
+  bottom: 200px;
+  right: 5%;
+  animation:
+    hexIntro 3s cubic-bezier(0.18, 0.9, 0.25, 1) forwards,
+    hexSpin 20s linear infinite 2.8s;
+}
+
+.hex4 {
+  width: 120px;
+  height: 120px;
+  top: 40px;
+  right: 15%;
+  animation:
+    hexIntro 3s cubic-bezier(0.18, 0.9, 0.25, 1) forwards,
+    hexSpin 40s linear infinite reverse 2.8s;
+}
+
+/* Gambar hexagon akan mengisi container */
+.hex img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(0, 217, 255, 0.8))
+    drop-shadow(0 0 20px rgba(0, 217, 255, 0.4));
+}
+
+/* ================= KEYFRAMES ================= */
+
+@keyframes gridMove {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 40px 40px;
+  }
+}
+
+@keyframes pulseGlow {
+  50% {
+    transform: scale(1.08);
+    opacity: 0.9;
+  }
+}
+
+@keyframes profileGlow {
+  50% {
+    filter: drop-shadow(0 0 20px rgba(0, 217, 255, 0.645))
+      drop-shadow(0 0 30px rgba(0, 217, 255, 0.3));
+  }
+}
+
+@keyframes profileIntro {
+  from {
+    opacity: 0;
+    transform: translateY(80px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes floatProfile {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+@keyframes orbitIntro {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes orbitRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes hexIntro {
+  0% {
+    transform: scale(0) rotate(-360deg);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes hexSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeRight {
+  from {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes zoomInGlow {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
