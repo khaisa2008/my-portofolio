@@ -6,20 +6,19 @@ import SkillsSection from "./sections/SkillsSection";
 import ProjectsSection from "./sections/ProjectsSection";
 import ContactSection from "./sections/ContactSection";
 import Navbar from "./sections/Navbar";
-import AnimatedBackground from "../components/AnimatedBackground";
-import "../animation/HomeSection.css";
+import AnimatedBackground from "@/app/components/AnimatedBackground";
+import FloatingSettings from "@/app/components/FloatingSettings";
+import "@/app/animation/HomeSection.css";
+import "@/app/animation/AboutSection.css";
 
 export default function MainPortfolio() {
+
   return (
     <>
       <AnimatedBackground />
 
       <div id="main">
-        <img
-          src="/element/polcadot.png"
-          className="poldacot-img2"
-          alt="polcadot"
-        />
+        
         <img src="/element/code.png" className="code-img" alt="code" />
 
         {/* ================= NAVBAR ================= */}
@@ -39,6 +38,9 @@ export default function MainPortfolio() {
 
         {/* ================= CONTACT ================= */}
         <ContactSection />
+
+        {/* ================= FLOATING SETTINGS ================= */}
+        <FloatingSettings />
 
         {/* ================= FOOTER ================= */}
         <footer className="text-center py-4">

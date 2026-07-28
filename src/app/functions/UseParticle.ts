@@ -8,7 +8,7 @@ export default function UseParticle() {
   const frameInterval = 1000 / 30; // Target 30fps
 
   // Deteksi visibilitas tab
-  if (typeof document !== 'undefined') {
+  if (typeof document !== "undefined") {
     document.addEventListener("visibilitychange", () => {
       isActive = document.visibilityState === "visible";
     });
@@ -16,13 +16,13 @@ export default function UseParticle() {
 
   function initParticles() {
     const canvas = document.getElementById(
-      "particleCanvas"
+      "particleCanvas",
     ) as HTMLCanvasElement;
 
     if (!canvas) return;
 
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-    
+
     if (!ctx) return;
 
     let particles: {
@@ -46,29 +46,22 @@ export default function UseParticle() {
       const density = 0.00005; // Turun dari 0.00006
 
       particleCount = Math.min(
-        Math.floor(
-          canvas.width *
-            canvas.height *
-            density
-        ),
-        200 // Turun dari 250
+        Math.floor(canvas.width * canvas.height * density),
+        200, // Turun dari 250
       );
 
-      particles = Array.from(
-        { length: particleCount },
-        () => ({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          radius: Math.random() * 1.8 + 0.8, // Sedikit lebih kecil
-          vx: (Math.random() - 0.5) * 0.35, // Sedikit lebih lambat
-          vy: (Math.random() - 0.5) * 0.35,
-          opacity: Math.random() * 0.5 + 0.3, // Turun opacity
-        })
-      );
+      particles = Array.from({ length: particleCount }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 1.8 + 0.8, // Sedikit lebih kecil
+        vx: (Math.random() - 0.5) * 0.35, // Sedikit lebih lambat
+        vy: (Math.random() - 0.5) * 0.35,
+        opacity: Math.random() * 0.5 + 0.3, // Turun opacity
+      }));
 
       maxDistance = Math.min(
         canvas.width * 0.05, // Turun dari 0.06
-        100 // Turun dari 120
+        100, // Turun dari 120
       );
     }
 
@@ -88,12 +81,7 @@ export default function UseParticle() {
       }
       lastFrameTime = timestamp;
 
-      ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Matikan shadow untuk performa lebih baik
       // (tetap pertahankan jika ingin efek glow)
@@ -103,7 +91,7 @@ export default function UseParticle() {
       const len = particles.length;
       for (let i = 0; i < len; i++) {
         const p = particles[i];
-        
+
         p.x += p.vx;
         p.y += p.vy;
 
@@ -114,13 +102,7 @@ export default function UseParticle() {
         if (p.y > canvas.height) p.y = 0;
 
         ctx.beginPath();
-        ctx.arc(
-          p.x,
-          p.y,
-          p.radius,
-          0,
-          Math.PI * 2
-        );
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
 
         ctx.fillStyle = `rgba(
           0,
@@ -141,23 +123,11 @@ export default function UseParticle() {
       // Gunakan squared distance untuk menghindari sqrt
       const maxDistSq = maxDistance * maxDistance;
 
-      for (
-        let i = 0;
-        i < connectionLimit;
-        i++
-      ) {
-        for (
-          let j = i + 1;
-          j < connectionLimit;
-          j++
-        ) {
-          const dx =
-            particles[i].x -
-            particles[j].x;
+      for (let i = 0; i < connectionLimit; i++) {
+        for (let j = i + 1; j < connectionLimit; j++) {
+          const dx = particles[i].x - particles[j].x;
 
-          const dy =
-            particles[i].y -
-            particles[j].y;
+          const dy = particles[i].y - particles[j].y;
 
           const distSq = dx * dx + dy * dy;
 
@@ -166,25 +136,17 @@ export default function UseParticle() {
 
             ctx.beginPath();
 
-            ctx.moveTo(
-              particles[i].x,
-              particles[i].y
-            );
+            ctx.moveTo(particles[i].x, particles[i].y);
 
-            ctx.lineTo(
-              particles[j].x,
-              particles[j].y
-            );
+            ctx.lineTo(particles[j].x, particles[j].y);
 
             ctx.strokeStyle = `rgba(
               0,
               255,
               255,
               ${
-                0.12 * // Turun dari 0.15
-                (1 -
-                  dist /
-                    maxDistance)
+                0.5 * // Turun dari 0.15
+                (1 - dist / maxDistance)
               }
             )`;
 
@@ -193,10 +155,7 @@ export default function UseParticle() {
         }
       }
 
-      animationId =
-        requestAnimationFrame(
-          animate
-        );
+      animationId = requestAnimationFrame(animate);
     }
 
     animate(0);
@@ -205,20 +164,12 @@ export default function UseParticle() {
       createParticles();
     };
 
-    window.addEventListener(
-      "resize",
-      resize
-    );
+    window.addEventListener("resize", resize);
 
     return () => {
-      cancelAnimationFrame(
-        animationId
-      );
+      cancelAnimationFrame(animationId);
 
-      window.removeEventListener(
-        "resize",
-        resize
-      );
+      window.removeEventListener("resize", resize);
     };
   }
 

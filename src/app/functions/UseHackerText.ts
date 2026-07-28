@@ -3,27 +3,20 @@
 import { useEffect, useState } from "react";
 
 export default function useMethod() {
-
   const finalText = "MY PORTFOLIO";
 
-  const chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-  const [displayText, setDisplayText] =
-    useState("");
+  const [displayText, setDisplayText] = useState("");
 
-  const [finished, setFinished] =
-    useState(false);
+  const [finished, setFinished] = useState(false);
 
   useEffect(() => {
-
     let currentIndex = 0;
 
-    let scrambleInterval:
-      NodeJS.Timeout;
+    let scrambleInterval: NodeJS.Timeout;
 
     const startAnimation = () => {
-
       setFinished(false);
 
       currentIndex = 0;
@@ -32,33 +25,20 @@ export default function useMethod() {
     };
 
     const revealNextLetter = () => {
-
       let scrambleCount = 0;
 
       scrambleInterval = setInterval(() => {
-
-        const visibleText =
-          finalText.slice(
-            0,
-            currentIndex
-          );
+        const visibleText = finalText.slice(0, currentIndex);
 
         const scrambled = finalText
           .split("")
           .map((char, index) => {
-
             if (index < currentIndex) {
               return finalText[index];
             }
 
             if (index === currentIndex) {
-
-              return chars[
-                Math.floor(
-                  Math.random() *
-                  chars.length
-                )
-              ];
+              return chars[Math.floor(Math.random() * chars.length)];
             }
 
             return "";
@@ -66,74 +46,45 @@ export default function useMethod() {
           .join("");
 
         // efek muncul dari tengah
-        const padding =
-          " ".repeat(
-            finalText.length -
-            visibleText.length
-          );
+        const padding = " ".repeat(finalText.length - visibleText.length);
 
-        setDisplayText(
-          padding + scrambled
-        );
+        setDisplayText(padding + scrambled);
 
         scrambleCount++;
 
         if (scrambleCount > 8) {
-
-          clearInterval(
-            scrambleInterval
-          );
+          clearInterval(scrambleInterval);
 
           currentIndex++;
 
-          if (
-            currentIndex <=
-            finalText.length
-          ) {
-
+          if (currentIndex <= finalText.length) {
             setTimeout(() => {
               revealNextLetter();
             }, 50);
-
           } else {
-
-            setDisplayText(
-              finalText
-            );
+            setDisplayText(finalText);
 
             setFinished(true);
 
             setTimeout(() => {
-
               // setDisplayText("");
 
               startAnimation();
-
             }, 5000);
           }
         }
-
       }, 50);
     };
 
-    const initialDelay =
-      setTimeout(() => {
-
-        startAnimation();
-
-      }, 0);
+    const initialDelay = setTimeout(() => {
+      startAnimation();
+    }, 0);
 
     return () => {
+      clearInterval(scrambleInterval);
 
-      clearInterval(
-        scrambleInterval
-      );
-
-      clearTimeout(
-        initialDelay
-      );
+      clearTimeout(initialDelay);
     };
-
   }, []);
 
   return {

@@ -1,0 +1,514 @@
+/* ================= ABOUT SECTION ================= */
+
+.about-section {
+  position: relative;
+  overflow: hidden;
+  background-color: #f8fafc;
+}
+
+.section-about-title h2 {
+  font-size: 45px;
+  font-weight: 700;
+  background: linear-gradient(200deg, #00d9ff, #0b428f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.section-about-title p {
+  color: #aaa;
+}
+
+.dark-theme .about-section {
+  background-color: #000e21;
+}
+
+.about-section .container {
+  position: relative;
+  z-index: 2;
+}
+
+/* ==== CONSTELLATION (FALLING STARS) ==== */
+
+.constellation {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--size);
+  height: var(--size);
+  background: #00c6ff;
+  border-radius: 50%;
+  box-shadow:
+    0 0 6px rgba(0, 198, 255, 0.8),
+    0 0 12px rgba(0, 114, 255, 0.4);
+  animation: fallingStar var(--duration) linear infinite;
+  animation-delay: var(--delay);
+}
+
+.star::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 90px;
+  height: 1.5px;
+  background: linear-gradient(
+    to left,
+    rgba(0, 198, 255, 0.9) 0%,
+    rgba(0, 59, 109, 0.5) 60%,
+    transparent 100%
+  );
+  transform: rotate(45deg);
+  transform-origin: right center;
+}
+
+@keyframes fallingStar {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.6);
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(600px, 600px) scale(1);
+  }
+}
+
+/* ================= CONTENT ANIMATIONS (TITLE & GLASS CARDS) ================= */
+.row.g-4 > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.section-about-title,
+.glass-card {
+  opacity: 0;
+  will-change: transform, opacity, filter;
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Default HIDE State (Saat tidak active) */
+.about-section:not(.active) .section-about-title {
+  opacity: 0;
+  transform: translateY(-30px);
+  filter: blur(8px);
+}
+
+.about-section:not(.active) .glass-card.card-left {
+  opacity: 0;
+  transform: translateX(-60px) scale(0.95);
+  filter: blur(10px);
+}
+
+.about-section:not(.active) .glass-card.card-right {
+  opacity: 0;
+  transform: translateX(60px) scale(0.95);
+  filter: blur(10px);
+}
+
+/* ACTIVE State (Saat diakses) */
+.about-section.active .section-about-title {
+  animation: titleSpawn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Penyesuaian Delays Animasi saat Active agar muncul berurutan (Bento Effect) */
+.about-section.active .col-lg-7 .glass-card:nth-child(1) {
+  animation: cardSpawnLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.1s;
+}
+
+.about-section.active .col-lg-7 .glass-card:nth-child(2) {
+  animation: cardSpawnLeft 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.25s;
+}
+
+.about-section.active .col-lg-5 .glass-card:nth-child(1) {
+  animation: cardSpawnRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
+}
+
+.about-section.active .col-lg-5 .glass-card:nth-child(2) {
+  animation: cardSpawnRight 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.35s;
+}
+
+/* ================= GLASS CARD STYLES ================= */
+
+.glass-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(10px);
+  border-radius: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition:
+    transform 0.4s ease,
+    box-shadow 0.4s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+}
+
+.dark-theme .glass-card {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.glass-card:hover {
+  transform: translateY(-8px) scale(1.01) !important;
+  box-shadow: 0 16px 40px rgba(0, 217, 255, 0.15) !important;
+}
+
+/* ================= BACKGROUND DECORATIONS ================= */
+
+.bg-decorations {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.bg-element {
+  position: absolute;
+  opacity: 0;
+}
+
+/* Dynamic HIDE State untuk Elemen Latar */
+.about-section:not(.active) .bg-element {
+  opacity: 0;
+  transform: scale(0.3) translateY(40px);
+  transition: all 0.5s ease-in-out;
+}
+
+/* Dynamic ACTIVE State (Spawn saat diakses) */
+.about-section.active .bg-element {
+  animation: spawnElement 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ================= SHAPES SPECIFIC STYLES ================= */
+
+/* Circle Styles */
+.bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    rgba(72, 157, 254, 0.8) 0%,
+    rgba(252, 252, 252, 0.741) 100%
+  );
+}
+
+.bg-circle-1 {
+  width: 320px;
+  height: 320px;
+  bottom: 1%;
+  left: 1%;
+}
+.bg-circle-2 {
+  width: 180px;
+  height: 180px;
+  top: 35%;
+  left: 23%;
+}
+.bg-circle-3 {
+  width: 110px;
+  height: 110px;
+  top: 17%;
+  left: 34%;
+}
+.bg-circle-4 {
+  width: 70px;
+  height: 70px;
+  top: 5%;
+  left: 29%;
+}
+.bg-circle-5 {
+  width: 50px;
+  height: 50px;
+  top: 1%;
+  left: 23%;
+}
+
+.about-section.active .bg-circle-1 {
+  animation:
+    spawnCircle 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.3s,
+    CircleWave 12s ease-in-out infinite alternate 1.3s;
+}
+
+.about-section.active .bg-circle-2 {
+  animation:
+    spawnCircle 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.5s,
+    CircleWave 10s ease-in-out infinite alternate 1.5s;
+}
+
+.about-section.active .bg-circle-3 {
+  animation:
+    spawnCircle 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.7s,
+    CircleWave 8s ease-in-out infinite alternate 1.7s;
+}
+
+.about-section.active .bg-circle-4 {
+  animation:
+    spawnCircle 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.9s,
+    CircleWave 8s ease-in-out infinite alternate 1.9s;
+}
+
+.about-section.active .bg-circle-5 {
+  animation:
+    spawnCircle 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 1s,
+    CircleWave 9s ease-in-out infinite alternate 2s;
+}
+
+/* Ring Styles */
+.bg-ring {
+  border-radius: 50%;
+  border: 18px solid rgba(147, 196, 253, 0.644);
+  background: transparent;
+}
+
+.bg-ring-left {
+  width: 100px;
+  height: 100px;
+  border-width: 15px;
+  border-color: rgba(147, 196, 253, 0.81);
+  right: 320px;
+  bottom: 80px;
+}
+
+.bg-ring-right-large {
+  width: 500px;
+  height: 500px;
+  border-width: 35px;
+  border-color: rgba(147, 196, 253, 0.334);
+  right: -150px;
+  top: 80px;
+}
+
+.bg-ring-right-top {
+  width: 350px;
+  height: 350px;
+  border-width: 28px;
+  border-color: rgba(147, 196, 253, 0.534);
+  right: 190px;
+  top: 100px;
+}
+
+.about-section.active .bg-ring-left {
+  animation: 
+    spawnElement 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s,
+    PopRing 10s ease-in-out infinite alternate 1.2s;
+}
+
+.about-section.active .bg-ring-right-large {
+  animation: 
+    spawnElement 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.3s,
+    PopRing 9s ease-in-out infinite alternate-reverse 1.3s; /* Durasi 7s & gerak terbalik */
+}
+
+.about-section.active .bg-ring-right-top {
+  animation: 
+    spawnElement 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.45s,
+    PopRing 7s ease-in-out infinite alternate 1.45s; /* Durasi 5.5s */
+}
+
+/* Dot Grid Styles */
+.bg-dot-grid {
+  width: 100px;
+  height: 100px;
+  background-image: radial-gradient(
+    rgba(147, 197, 253, 0.6) 2px,
+    transparent 2px
+  );
+  background-size: 12px 12px;
+}
+
+.dot-grid-top-left {
+  left: 2%;
+  top: 5%;
+}
+.dot-grid-mid-left {
+  bottom: 1%;
+  left: 1.5%;
+}
+.dot-grid-bottom-right {
+  bottom: 12%;
+  right: 8%;
+}
+
+.about-section.active .dot-grid-top-left {
+  animation-delay: 0.15s;
+}
+.about-section.active .dot-grid-mid-left {
+  animation-delay: 0.35s;
+}
+.about-section.active .dot-grid-bottom-right {
+  animation-delay: 0.5s;
+}
+
+/* Plus (+) Styles */
+.bg-plus {
+  width: 14px;
+  height: 14px;
+}
+
+.bg-plus::before,
+.bg-plus::after {
+  content: "";
+  position: absolute;
+  background-color: rgba(147, 197, 253, 0.7);
+  border-radius: 2px;
+}
+
+.bg-plus::before {
+  top: 6px;
+  left: 0;
+  width: 14px;
+  height: 2px;
+}
+.bg-plus::after {
+  top: 0;
+  left: 6px;
+  width: 2px;
+  height: 14px;
+}
+
+.plus-1 {
+  top: 22%;
+  right: 22%;
+}
+.plus-2 {
+  top: 22%;
+  left: 22%;
+}
+.plus-3 {
+  top: 10%;
+  right: 42%;
+}
+.plus-4 {
+  top: 10%;
+  left: 42%;
+}
+
+.about-section.active .plus-1 {
+  animation-delay: 0.6s;
+}
+.about-section.active .plus-2 {
+  animation-delay: 0.65s;
+}
+.about-section.active .plus-3 {
+  animation-delay: 0.7s;
+}
+.about-section.active .plus-4 {
+  animation-delay: 0.75s;
+}
+
+/* ================= KEYFRAMES (SPAWN ANIMATIONS) ================= */
+
+@keyframes titleSpawn {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes cardSpawnLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-60px) scale(0.95);
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes cardSpawnRight {
+  0% {
+    opacity: 0;
+    transform: translateX(60px) scale(0.95);
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes spawnElement {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(40px) rotate(-10deg);
+    filter: blur(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0) rotate(0deg);
+    filter: blur(0);
+  }
+}
+
+@keyframes spawnCircle {
+  0% {
+    opacity: 0;
+    transform:translateX(-100px);
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    transform:translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes CircleWave {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(15px);
+  }
+  75% {
+    transform: translateX(-15px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes PopRing {
+  0%{
+    transform: scale(1);
+    opacity:1;
+  }
+  50%{
+    transform:scale(1.);
+    opacity:0.3;
+  }
+  100%{
+    transform:scale(1);
+    opacity:1;
+  }
+}
+
+

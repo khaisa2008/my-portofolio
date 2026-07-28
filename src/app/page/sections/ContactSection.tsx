@@ -1,6 +1,6 @@
 export default function ContactSection() {
   return (
-    <section id="contact" className="container py-5 mb-5">
+    <section id="contact" className="container py-5 mb-5 scroll-margin-top">
       <div className="section-title text-center mb-5">
         <h2>Contact Me</h2>
         <p>Let&apos;s work together</p>

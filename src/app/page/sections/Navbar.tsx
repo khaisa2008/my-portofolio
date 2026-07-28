@@ -1,14 +1,13 @@
-import useMethodNav from "@/app/function/UseNav";
+import useMethodNav from "@/app/functions/UseNav";
 
 export default function Navbar() {
-    
   const { active, handleClick } = useMethodNav();
 
   return (
     <>
       <nav className="navbar navbar-expand-lg pt-3 sticky-top">
         <div className="container justify-content-center">
-          <div className="rounded-pill shadow-lg px-4 py-2 nav-capsule">
+          <div className="rounded-pill shadow-sm px-4 py-2 nav-capsule">
             <button
               className="navbar-toggler"
               type="button"

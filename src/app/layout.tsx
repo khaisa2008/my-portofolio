@@ -10,6 +10,9 @@ import "./animation/DizzyRobot.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
+import { ThemeProvider } from "@/app/contexts/ThemeContext";
+import { LanguageProvider } from "@/app/contexts/LanguageContext";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -38,7 +41,13 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <ThemeProvider>
+          <LanguageProvider>
+            {children}
+          </LanguageProvider>{" "}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

@@ -1,19 +1,25 @@
 /* ================= GLOBAL ================= */
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
 
 html {
   scroll-behavior: smooth;
+  scrollbar-width: none;
 }
 
 body {
   margin: 0;
   font-family: "Poppins", sans-serif;
-  background: #050816;
+  background: #000e21f2;
   color: white;
   overflow-x: hidden;
+  -ms-overflow-style: none;
 }
 
 /* ================= NAVBAR ================= */
-.bg-primary-color{
+.bg-primary-color {
   background-color: #0b428f;
 }
 
@@ -32,15 +38,16 @@ body {
   padding: 12px 20px !important;
   border-radius: 50px;
   transition: 0.3s;
+}
 
-
+.dark-theme .nav-capsule .nav-link {
+  color: #f8fafc;
 }
 
 .nav-capsule .nav-link:hover,
 .nav-capsule .nav-link.active {
-  background: #000000;
-  color: rgb(255, 255, 255) !important;
-
+  background: #00d9ff;
+  color: #293133 !important;
 }
 
 /* ================= SECTION ================= */
@@ -48,28 +55,80 @@ body {
 .section-title h2 {
   font-size: 45px;
   font-weight: 700;
-  color: #00d9ff;
+  background: linear-gradient(200deg, #00d9ff, #0b428f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
 }
 
 .section-title p {
   color: #aaa;
 }
 
-/* ================= GLASS CARD ================= */
+.gradient-overlay-bottom {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
 
-.glass-card {
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 25px;
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: 0.4s;
+  background: linear-gradient(
+    to bottom,
+    #f8fafc 0%,
+    rgba(248, 250, 252, 0.6) 40%,
+    rgba(248, 250, 252, 0) 100%
+  );
+
+  pointer-events: none;
+  z-index: -1;
 }
 
-.glass-card:hover {
-  transform: translateY(-10px);
+.dark-theme .gradient-overlay-bottom {
+  background: linear-gradient(
+    to bottom,
+    #000e21 0%,
+    #000e2163 40%,
+    rgba(248, 250, 252, 0) 100%
+  );
+}
+
+.gradient-overlay-top {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 40%;
+
+  background: linear-gradient(
+    to top,
+    #f8fafc 20%,
+    rgba(248, 250, 252, 0.6) 60%,
+    rgba(248, 250, 252, 0) 100%
+  );
+
+  pointer-events: none;
+  z-index: 10;
+}
+
+.dark-theme .gradient-overlay-top {
+  background: linear-gradient(
+    to top,
+    #000e21fc 20%,
+    #000e2163 60%,
+    rgba(248, 250, 252, 0) 100%
+  );
 }
 
 /* ================= SKILLS ================= */
+.skills-section {
+  background: rgba(255, 255, 255, 0);
+  backdrop-filter: blur(0);
+}
+
+.content-skills {
+  z-index: 10;
+}
 
 .skill-card {
   background: rgba(255, 255, 255, 0.06);
@@ -120,7 +179,7 @@ body {
 }
 
 .custom-input:focus {
-  box-shadow: 0 0 0 0.2rem rgba(0, 217, 255, 0.25) !important;
+  box-shadow: 0 0 0 0.2rem rgba(1, 217, 255, 0.25) !important;
 }
 
 /* ================= FOOTER ================= */
@@ -169,10 +228,23 @@ footer {
     ),
     #f8fbff;
 
-    animation: bgReveal 2s ease;
-
+  animation: bgReveal 2s ease;
 }
 
+.dark-theme .animated-bg {
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(0, 217, 255, 0.08),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(0, 110, 255, 0.12),
+      transparent 45%
+    ),
+    #000e21f2;
+}
 /* =====================================
    FLOATING BLOBS
 ===================================== */
@@ -250,35 +322,21 @@ footer {
   inset: 0;
 
   background-image:
-    linear-gradient(
-      rgba(0, 0, 0, 0.04) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      rgba(0, 0, 0, 0.04) 1px,
-      transparent 1px
-    );
+    linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
 
   background-size: 40px 40px;
 
-  mask-image: radial-gradient(
-    circle,
-    white,
-    transparent 90%
-  );
+  mask-image: radial-gradient(circle, white, transparent 90%);
 
-  animation: moveGrid 30s linear infinite;
 }
 
-@keyframes moveGrid {
-  from {
-    transform: translateY(0);
-  }
+.dark-theme .grid-bg {
+  background-image:
+    linear-gradient(rgba(0, 189, 252, 0.138) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 189, 252, 0.252) 1px, transparent 1px);
 
-  to {
-    transform: translateY(60px);
-  }
+  background-size: 40px 40px;
 }
 
 @keyframes bgReveal {
@@ -293,3 +351,6 @@ footer {
   }
 }
 
+.scroll-margin-top {
+  scroll-margin-top: 50px;
+}

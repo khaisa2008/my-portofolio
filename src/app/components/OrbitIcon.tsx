@@ -125,7 +125,7 @@ export default function OrbitIcon({
       const jiggle = isBoosting
         ? 0
         : Math.sin(angleRef.current * 0.2) * 6;
-      const glowSize = 10 + depth * 25;
+      const glowSize = 10 + depth * 10;
 
       //----------------------------------------
       // TERAPKAN TRANSFORM (optimasi: batch semua perubahan)

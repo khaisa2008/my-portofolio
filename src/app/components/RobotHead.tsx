@@ -1,12 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import useRobotHead from "../function/UseRobotHead";
+import useRobotHead from "../functions/UseRobotHead";
 
 export default function RobotHead() {
-
   const {
-
     eyeLeft,
     eyeRight,
     headRef,
@@ -20,114 +18,94 @@ export default function RobotHead() {
     handleLeftEyeClick,
     handleRightEyeClick,
     handleHeadClick,
-
   } = useRobotHead();
 
   return (
-
     <div className="robot-wrapper">
       <div className={`robot-fall ${dizzy ? "robot-fall-active" : ""}`}>
-
-      <div
-        ref={headRef}
-        className={`
+        <div
+          ref={headRef}
+          className={`
           robot-head
           ${angry ? "angry-head robot-angry" : ""}
           ${dizzy ? "robot-dizzy" : ""}
         `}
-        onClick={handleHeadClick}
-      >
+          onClick={handleHeadClick}
+        >
+          {/* ================= ANTENNA ================= */}
 
-        {/* ================= ANTENNA ================= */}
-
-        <div className="antenna">
-
-          <div
-            className={`
+          <div className="antenna">
+            <div
+              className={`
               antenna-ball
               ${angry ? "antenna-angry" : ""}
             `}
-          />
+            />
+          </div>
+          {dizzy && <div className="dizzy-ring"></div>}
+          {/* ================= EARS ================= */}
 
-        </div>
-        {
-          dizzy && (
-            <div className="dizzy-ring"></div>
-          )
-        }
-        {/* ================= EARS ================= */}
-
-        <div
-          className={`
+          <div
+            className={`
             ear left-ear
             ${angry ? "ear-angry" : ""}
           `}
-        >
-
-          <div
-            className={`
+          >
+            <div
+              className={`
               ear-light
               ${angry ? "ear-light-angry" : ""}
             `}
-          />
+            />
+          </div>
 
-        </div>
-
-        <div
-          className={`
+          <div
+            className={`
             ear right-ear
             ${angry ? "ear-angry" : ""}
           `}
-        >
-
-          <div
-            className={`
+          >
+            <div
+              className={`
               ear-light
               ${angry ? "ear-light-angry" : ""}
             `}
-          />
+            />
+          </div>
 
-        </div>
+          {/* ================= FACE ================= */}
 
-        {/* ================= FACE ================= */}
+          <div className="face-screen">
+            <div className="eye-container">
+              {/* ================= LEFT EYE ================= */}
 
-        <div className="face-screen">
-
-          <div className="eye-container">
-
-            {/* ================= LEFT EYE ================= */}
-
-            <div
-              ref={eyeLeft}
-              onClick={handleLeftEyeClick}
-              className={`
+              <div
+                ref={eyeLeft}
+                onClick={handleLeftEyeClick}
+                className={`
                 eye
                 ${blinkLeft ? "eye-blink" : ""}
                 ${angry ? "angry-eye left-angry" : ""}
                 ${dizzy ? "dizzy-eye" : ""}
               `}
-            ></div>
+              ></div>
 
-            {/* ================= RIGHT EYE ================= */}
+              {/* ================= RIGHT EYE ================= */}
 
-            <div
-              ref={eyeRight}
-              onClick={handleRightEyeClick}
-              className={`
+              <div
+                ref={eyeRight}
+                onClick={handleRightEyeClick}
+                className={`
                 eye
                 ${blinkRight ? "eye-blink" : ""}
                 ${angry ? "angry-eye right-angry" : ""}
                 ${dizzy ? "dizzy-eye" : ""}
               `}
-            ></div>
-
+              ></div>
+            </div>
           </div>
-
         </div>
-
       </div>
-      </div>
-
     </div>
   );
 }

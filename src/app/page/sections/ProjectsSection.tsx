@@ -1,6 +1,6 @@
 export default function ProjectsSection() {
   return (
-    <section id="projects" className="container py-5">
+    <section id="projects" className="container py-5 scroll-margin-top">
       <div className="section-title text-center mb-5">
         <h2>Projects</h2>
         <p>Some of my recent work</p>
