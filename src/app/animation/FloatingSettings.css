@@ -113,6 +113,10 @@
   font-size: 18px;
 }
 
+.dark-theme .icon-wrapper{
+  color: #b0daff;
+}
+
 .setting-info h6 {
   margin: 0;
   font-size: 14px;

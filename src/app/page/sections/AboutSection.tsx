@@ -150,7 +150,7 @@ export default function AboutSection() {
           {/* KOLOM KIRI */}
           <div className="col-lg-7 d-flex flex-column gap-4">
             {/* Card Kiri Top */}
-            <div className="glass-card card-left p-4 flex-fill">
+            <div className="glass-card-about card-left p-4 flex-fill">
               <h3 className="mb-3">
                 <i className="bi bi-person-circle"></i> {t.whoAmITitle}
               </h3>
@@ -160,7 +160,7 @@ export default function AboutSection() {
             </div>
 
             {/* Card Kiri Bottom */}
-            <div className="glass-card card-left p-4 flex-fill">
+            <div className="glass-card-about card-left p-4 flex-fill">
               <h3 className="mb-3">
                 <i className="bi bi-code-slash"></i> {t.visionTitle}
               </h3>
@@ -173,7 +173,7 @@ export default function AboutSection() {
           {/* KOLOM KANAN */}
           <div className="col-lg-5 d-flex flex-column gap-4">
             {/* Card Kanan Top (Pendek) */}
-            <div className="glass-card card-right p-4">
+            <div className="glass-card-about card-right p-4">
               <h4 className="mb-1">
                 <i className="bi bi-star-fill me-2"></i>{t.highlightTitle}
               </h4>
@@ -183,7 +183,7 @@ export default function AboutSection() {
             </div>
 
             {/* Card Kanan Bottom (Tinggi / Experience) */}
-            <div className="glass-card card-right p-4 flex-fill">
+            <div className="glass-card-about card-right p-4 flex-fill">
               <h3 className="mb-3">
                 <i className="bi bi-award"></i> {t.expTitle}
               </h3>

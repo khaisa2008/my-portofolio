@@ -10,6 +10,7 @@ import AnimatedBackground from "@/app/components/AnimatedBackground";
 import FloatingSettings from "@/app/components/FloatingSettings";
 import "@/app/animation/HomeSection.css";
 import "@/app/animation/AboutSection.css";
+import "@/app/animation/SkilsSection.css";
 
 export default function MainPortfolio() {
 

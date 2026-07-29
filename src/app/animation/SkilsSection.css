@@ -1,0 +1,123 @@
+/* ================= SKILLS SECTION ================= */
+.skills-section {
+  background: transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.particle-skills {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.content-skills {
+  z-index: 10;
+  position: relative;
+}
+
+/* ================= BASE CARD STYLE (LIGHT THEME) ================= */
+.skill-card {
+  background-color: rgba(255, 255, 255, 0.318);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  color: #0f172a;
+
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.05),
+    0 8px 10px -6px rgba(0, 0, 0, 0.03);
+
+  /* STATE AWAL ANIMASI MASUK SCROLL */
+  opacity: 0;
+  transform: translateY(40px) scale(0.92) rotateX(10deg);
+  transform-origin: center bottom;
+
+  /* 
+    SAAT KEMBALI KE LIGHT MODE (GELAP -> TERANG):
+    Warna berubah dari BAWAH ke ATAS menggunakan kalkulasi balik (11 - var(--delay)).
+  */
+  transition:
+    opacity 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--delay) * 0.06s),
+    transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--delay) * 0.06s),
+    background-color 0.4s ease calc((11 - var(--delay)) * 0.04s),
+    border-color 0.4s ease calc((11 - var(--delay)) * 0.04s),
+    color 0.4s ease calc((11 - var(--delay)) * 0.04s),
+    box-shadow 0.4s ease calc((11 - var(--delay)) * 0.04s);
+}
+
+/* ================= TRIGGER ANIMASI MASUK SECTION ================= */
+.skills-section.active .skill-card {
+  opacity: 1;
+  transform: translateY(0) scale(1) rotateX(0deg);
+}
+
+/* Icon & Text Styling */
+.skill-card i {
+  display: inline-block;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.05));
+}
+
+.skill-card h5 {
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.3px;
+  transition: color 0.3s ease;
+}
+
+/* ================= HOVER EFFECT (LIGHT THEME) ================= */
+.skill-card:hover {
+  transform: translateY(-10px) scale(1.03) !important;
+  background-color: #ffffff;
+  border-color: rgba(6, 182, 212, 0.5);
+  box-shadow:
+    0 20px 35px -10px rgba(6, 182, 212, 0.25),
+    0 0 15px rgba(6, 182, 212, 0.15);
+
+  /* Respon hover instan tanpa tertunda */
+  transition-delay: 0s !important;
+}
+
+.skill-card:hover i {
+  transform: scale(1.2) translateY(-4px) rotate(4deg);
+}
+
+/* ================= DARK THEME OVERRIDES ================= */
+.dark-theme .skill-card {
+  background-color: rgba(15, 23, 42, 0.6);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+
+  /* 
+    SAAT MASUK KE DARK MODE (TERANG -> GELAP):
+    Warna berubah dari ATAS ke BAWAH menggunakan var(--delay) normal (0, 1, 2, ...).
+  */
+  transition:
+    opacity 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--delay) * 0.06s),
+    transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--delay) * 0.06s),
+    background-color 0.4s ease calc(var(--delay) * 0.04s),
+    border-color 0.4s ease calc(var(--delay) * 0.04s),
+    color 0.4s ease calc(var(--delay) * 0.04s),
+    box-shadow 0.4s ease calc(var(--delay) * 0.04s);
+}
+
+.dark-theme .skill-card:hover {
+  background-color: rgba(30, 41, 59, 0.8);
+  border-color: rgba(56, 189, 248, 0.6);
+  box-shadow:
+    0 20px 40px -10px rgba(56, 189, 248, 0.3),
+    0 0 20px rgba(56, 189, 248, 0.2);
+
+  transition-delay: 0s !important;
+}
+
+.dark-theme .devicon-nextjs-plain {
+  color: #ffffff !important;
+}

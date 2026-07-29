@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { useLanguage } from "@/app/contexts/LanguageContext";
 
 const NAME = "M Khairul Unsa";
-const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const CHARS = "abCDEFGhIJKLMNOpqRSTUVwxyz";
 
 export default function useHeaderText() {
   const { lang } = useLanguage();

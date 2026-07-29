@@ -62,7 +62,7 @@ body {
   color: transparent;
 }
 
-.section-title p {
+.dark-theme .section-title p {
   color: #aaa;
 }
 
@@ -118,29 +118,6 @@ body {
     #000e2163 60%,
     rgba(248, 250, 252, 0) 100%
   );
-}
-
-/* ================= SKILLS ================= */
-.skills-section {
-  background: rgba(255, 255, 255, 0);
-  backdrop-filter: blur(0);
-}
-
-.content-skills {
-  z-index: 10;
-}
-
-.skill-card {
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 25px;
-  transition: 0.3s;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.skill-card:hover {
-  transform: translateY(-10px);
-  background: #00d9ff;
-  color: black;
 }
 
 /* ================= PROJECT ================= */

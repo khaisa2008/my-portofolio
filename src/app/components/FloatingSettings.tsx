@@ -25,7 +25,7 @@ export default function FloatingSettings() {
           <div className="setting-item">
             <div className="setting-info">
               <div className="icon-wrapper">
-                <i className="bi bi-moon-stars"></i>
+                <i className={`bi ${dark ? "bi-moon-stars" : "bi-brightness-high"}`}></i>
               </div>
               <div>
                 <h6>{lang === "ID" ? "Mode Gelap" : "Dark Mode"}</h6>
@@ -35,18 +35,14 @@ export default function FloatingSettings() {
                       ? "Aktif"
                       : "On"
                     : lang === "ID"
-                    ? "Mati"
-                    : "Off"}
+                      ? "Mati"
+                      : "Off"}
                 </small>
               </div>
             </div>
 
             <label className="switch">
-              <input
-                type="checkbox"
-                checked={dark}
-                onChange={toggleTheme}
-              />
+              <input type="checkbox" checked={dark} onChange={toggleTheme} />
               <span className="slider"></span>
             </label>
           </div>
@@ -57,11 +53,20 @@ export default function FloatingSettings() {
           <div className="setting-item">
             <div className="setting-info">
               <div className="icon-wrapper">
-                <i className="bi bi-globe2"></i>
+                <i
+                  className={`fi ${lang === "ID" ? "fi-id" : "fi-gb"} fis rounded-circle`}
+                  style={{
+                    width: "20px",
+                    height: "20px",
+                    objectFit: "cover",
+                  }}
+                ></i>
               </div>
               <div>
                 <h6>{lang === "ID" ? "Bahasa" : "Language"}</h6>
-                <small>{lang === "ID" ? "Bahasa Indonesia" : "English"}</small>
+                <small className="d-flex align-items-center gap-2">
+                  {lang === "ID" ? "Bahasa Indonesia" : "English"}
+                </small>
               </div>
             </div>
 

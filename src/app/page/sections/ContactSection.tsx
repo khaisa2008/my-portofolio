@@ -1,9 +1,35 @@
+"use client";
+
+import { useLanguage } from "@/app/contexts/LanguageContext";
+
+const content = {
+  ID: {
+    title: "Hubungi Saya",
+    subtitle: "Mari bekerja sama",
+    namePlaceholder: "Nama Anda",
+    emailPlaceholder: "Email Anda",
+    messagePlaceholder: "Pesan Anda",
+    sendBtn: "Kirim Pesan",
+  },
+  EN: {
+    title: "Contact Me",
+    subtitle: "Let's work together",
+    namePlaceholder: "Your Name",
+    emailPlaceholder: "Your Email",
+    messagePlaceholder: "Your Message",
+    sendBtn: "Send Message",
+  },
+};
+
 export default function ContactSection() {
+  const { lang } = useLanguage();
+  const t = content[lang];
+
   return (
     <section id="contact" className="container py-5 mb-5 scroll-margin-top">
       <div className="section-title text-center mb-5">
-        <h2>Contact Me</h2>
-        <p>Let&apos;s work together</p>
+        <h2>{t.title}</h2>
+        <p>{t.subtitle}</p>
       </div>
 
       <div className="row justify-content-center">
@@ -14,7 +40,7 @@ export default function ContactSection() {
                 <input
                   type="text"
                   className="form-control custom-input"
-                  placeholder="Your Name"
+                  placeholder={t.namePlaceholder}
                 />
               </div>
 
@@ -22,7 +48,7 @@ export default function ContactSection() {
                 <input
                   type="email"
                   className="form-control custom-input"
-                  placeholder="Your Email"
+                  placeholder={t.emailPlaceholder}
                 />
               </div>
 
@@ -30,13 +56,13 @@ export default function ContactSection() {
                 <textarea
                   rows={5}
                   className="form-control custom-input"
-                  placeholder="Your Message"
+                  placeholder={t.messagePlaceholder}
                 ></textarea>
               </div>
 
               <div className="col-12 text-center">
                 <button className="btn btn-info btn-lg rounded-pill px-5">
-                  Send Message
+                  {t.sendBtn}
                 </button>
               </div>
             </div>

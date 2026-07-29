@@ -1,10 +1,12 @@
 "use client";
 
-import RobotHead from "../components/RobotHead";
-import useMethod from "../functions/UseHackerText";
-import CursorTrail from "../#trash/CursorTrail";
-import GravityWell from "../components/GravityWell";
-import UseParticle from "../functions/UseParticle";
+import RobotHead from "@/app/components/RobotHead";
+import useMethod from "@/app/functions/UseHackerText";
+import CursorTrail from "@/app/#trash/CursorTrail";
+import GravityWell from "@/app/components/GravityWell";
+import UseParticle from "@/app/functions/UseParticle";
+import "@/app/animation/splash.css";
+
 import { useEffect, useState } from "react";
 
 type Props = {
