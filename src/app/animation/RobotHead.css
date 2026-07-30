@@ -1,7 +1,6 @@
 /* ================= WRAPPER ================= */
 
 .robot-wrapper {
-
   width: 320px;
   height: 320px;
 
@@ -15,7 +14,6 @@
 /* ================= HEAD ================= */
 
 .robot-head {
-
   position: relative;
 
   width: 200px;
@@ -23,26 +21,24 @@
 
   border-radius: 45px;
 
-  background:
-    linear-gradient(
-      145deg,
-      rgba(0, 234, 255, .18),
-      rgba(0, 120, 255, .08)
-    );
+  background: linear-gradient(
+    145deg,
+    rgba(0, 234, 255, 0.18),
+    rgba(0, 120, 255, 0.08)
+  );
 
   backdrop-filter: blur(10px);
 
-  border:
-    2px solid rgba(120,255,255,.9);
+  border: 2px solid rgba(120, 255, 255, 0.9);
 
   box-shadow:
-    inset 0 0 20px rgba(120,255,255,.15),
-    0 0 18px rgba(0,234,255,.5),
-    0 0 40px rgba(0,234,255,.25);
+    inset 0 0 20px rgba(120, 255, 255, 0.15),
+    0 0 18px rgba(0, 234, 255, 0.5),
+    0 0 40px rgba(0, 234, 255, 0.25);
 
   transition:
-    transform .65s cubic-bezier(.22,1,.36,1),
-    box-shadow .3s ease;
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s ease;
 
   will-change: transform;
 }
@@ -50,19 +46,17 @@
 /* ================= FACE SCREEN ================= */
 
 .face-screen {
-
   position: absolute;
 
   inset: 12px;
 
   border-radius: 32px;
 
-  background:
-    radial-gradient(
-      circle at center,
-      rgb(0, 0, 0),
-      rgba(0, 12, 27, 0.848)
-    );
+  background: radial-gradient(
+    circle at center,
+    rgb(0, 0, 0),
+    rgba(0, 12, 27, 0.848)
+  );
 
   display: flex;
   justify-content: center;
@@ -71,14 +65,13 @@
   overflow: hidden;
 
   box-shadow:
-    inset 0 0 25px rgba(120,255,255,.08),
-    0 0 15px rgba(0,0,0,.3);
+    inset 0 0 25px rgba(120, 255, 255, 0.08),
+    0 0 15px rgba(0, 0, 0, 0.3);
 }
 
 /* ================= EYES ================= */
 
 .eye-container {
-
   display: flex;
   gap: 42px;
 }
@@ -86,28 +79,22 @@
 /* ================= SINGLE EYE ================= */
 
 .eye {
-
   width: 42px;
   height: 56px;
 
   border-radius: 18px;
 
-  background:
-    linear-gradient(
-      180deg,
-      #8dffff,
-      #58f6ff
-    );
+  background: linear-gradient(180deg, #8dffff, #58f6ff);
 
   transition:
-    transform .25s ease-out,
-    height .15s ease,
-    margin-top .15s ease;
+    transform 0.25s ease-out,
+    height 0.15s ease,
+    margin-top 0.15s ease;
 
   box-shadow:
     0 0 10px #78ffff,
     0 0 20px #78ffff,
-    0 0 45px rgba(120,255,255,.9);
+    0 0 45px rgba(120, 255, 255, 0.9);
 
   cursor: pointer;
 }
@@ -115,18 +102,14 @@
 /* ================= BLINK ================= */
 
 .eye-blink {
-
   height: 8px;
-
   margin-top: 24px;
-
   border-radius: 20px;
 }
 
 /* ================= EARS ================= */
 
 .ear {
-
   position: absolute;
 
   top: 60px;
@@ -136,15 +119,13 @@
 
   border-radius: 20px;
 
-  background:
-    linear-gradient(
-      145deg,
-      rgba(0, 234, 255, 0.693),
-      rgba(0, 119, 255, 0.758)
-    );
+  background: linear-gradient(
+    145deg,
+    rgba(0, 234, 255, 0.693),
+    rgba(0, 119, 255, 0.758)
+  );
 
-  border:
-    2px solid rgba(120,255,255,.8);
+  border: 2px solid rgba(120, 255, 255, 0.8);
 
   display: flex;
   justify-content: center;
@@ -153,24 +134,21 @@
   backdrop-filter: blur(8px);
 
   box-shadow:
-    inset 0 0 12px rgba(120,255,255,.18),
-    0 0 15px rgba(0,234,255,.45);
+    inset 0 0 12px rgba(120, 255, 255, 0.18),
+    0 0 15px rgba(0, 234, 255, 0.45);
 }
 
 .left-ear {
-
   left: -18px;
 }
 
 .right-ear {
-
   right: -18px;
 }
 
 /* ================= EAR LIGHT ================= */
 
 .ear-light {
-
   width: 12px;
   height: 42px;
 
@@ -180,13 +158,12 @@
 
   box-shadow:
     0 0 20px #63f7ff,
-    0 0 35px rgba(99,247,255,.9);
+    0 0 35px rgba(99, 247, 255, 0.9);
 }
 
 /* ================= ANTENNA ================= */
 
 .antenna {
-
   position: absolute;
 
   top: -32px;
@@ -197,21 +174,14 @@
 
   transform: translateX(-50%);
 
-  background:
-    linear-gradient(
-      180deg,
-      #ffffff,
-      #d6e0ea
-    );
+  background: linear-gradient(180deg, #ffffff, #d6e0ea);
 
   border-radius: 20px;
 
-  box-shadow:
-    0 0 8px rgba(120,255,255,.4);
+  box-shadow: 0 0 8px rgba(120, 255, 255, 0.4);
 }
 
 .antenna-ball {
-
   position: absolute;
 
   top: -14px;
@@ -224,16 +194,11 @@
 
   border-radius: 50%;
 
-  background:
-    radial-gradient(
-      circle at 30% 30%,
-      #bfffff,
-      #63f7ff
-    );
+  background: radial-gradient(circle at 30% 30%, #bfffff, #63f7ff);
 
   box-shadow:
     0 0 12px #63f7ff,
-    0 0 30px rgba(99,247,255,.9);
+    0 0 30px rgba(99, 247, 255, 0.9);
 }
 
 /* ================= CLICKABLE ================= */
@@ -247,39 +212,28 @@
 /* ================= KEYFRAME ================= */
 
 @keyframes robotReveal {
-
   0% {
-
     opacity: 0;
 
-    transform:
-      scale(.2)
-      rotate(-180deg);
+    transform: scale(0.2) rotate(-180deg);
   }
 
   60% {
-
     opacity: 1;
 
-    transform:
-      scale(1.08)
-      rotate(8deg);
+    transform: scale(1.08) rotate(8deg);
   }
 
   100% {
-
     opacity: 1;
 
-    transform:
-      scale(1)
-      rotate(0deg);
+    transform: scale(1) rotate(0deg);
   }
 }
 
 /* ================= MOBILE RESPONSIVE ================= */
 
 @media (max-width: 768px) {
-
   .robot-wrapper {
     width: 100%;
     height: auto;
@@ -309,8 +263,8 @@
   }
 
   .eye-blink {
-    height: 6px;
-    margin-top: 18px;
+    transform: scaleY(0.1) !important;
+    transition: transform 0.1s ease-in-out;
   }
 
   .ear {
@@ -348,7 +302,6 @@
 /* ================= SMALL PHONE ================= */
 
 @media (max-width: 480px) {
-
   .robot-head {
     width: 135px;
     height: 125px;

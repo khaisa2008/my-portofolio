@@ -17,13 +17,13 @@ export default function useRobotHead() {
   const rotationCount = useRef(0);
   const lastAngle = useRef(0);
   const accumulatedRotation = useRef(0);
-  
+
   // Ref untuk kontrol animasi
   const animationRef = useRef<number | null>(null);
   const isActiveRef = useRef(true);
   const lastFrameTimeRef = useRef<number>(0);
   const frameInterval = 1000 / 30; // Target 30fps
-  
+
   // Ref untuk throttle
   const lastMoveTimeRef = useRef<number>(0);
   const moveThrottle = 1000 / 30; // 30fps untuk move events
@@ -88,7 +88,7 @@ export default function useRobotHead() {
     const moveEyes = (x: number, y: number) => {
       // Skip jika tab tidak visible
       if (!isActiveRef.current) return;
-      
+
       // CEGAH: Jika angry atau dizzy aktif, mata tidak bergerak
       if (angry || dizzy) return;
 
@@ -270,7 +270,7 @@ export default function useRobotHead() {
     const blinkInterval = setInterval(() => {
       // Skip blink jika tab tidak visible
       if (!isActiveRef.current) return;
-      
+
       setBlinkLeft(true);
       setBlinkRight(true);
 
@@ -284,29 +284,35 @@ export default function useRobotHead() {
   }, [dizzy, angry]);
 
   /* ================= EYE CLICK ================= */
-  const handleLeftEyeClick = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleLeftEyeClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
 
-    // CEGAH: Jika dizzy atau angry aktif, click mata tidak berfungsi
-    if (dizzy || angry) return;
+      // CEGAH: Jika dizzy atau angry aktif, click mata tidak berfungsi
+      if (dizzy || angry) return;
 
-    setBlinkLeft(true);
-    setTimeout(() => {
-      setBlinkLeft(false);
-    }, 1000);
-  }, [dizzy, angry]);
+      setBlinkLeft(true);
+      setTimeout(() => {
+        setBlinkLeft(false);
+      }, 1000);
+    },
+    [dizzy, angry],
+  );
 
-  const handleRightEyeClick = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleRightEyeClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
 
-    // CEGAH: Jika dizzy atau angry aktif, click mata tidak berfungsi
-    if (dizzy || angry) return;
+      // CEGAH: Jika dizzy atau angry aktif, click mata tidak berfungsi
+      if (dizzy || angry) return;
 
-    setBlinkRight(true);
-    setTimeout(() => {
-      setBlinkRight(false);
-    }, 1000);
-  }, [dizzy, angry]);
+      setBlinkRight(true);
+      setTimeout(() => {
+        setBlinkRight(false);
+      }, 1000);
+    },
+    [dizzy, angry],
+  );
 
   return {
     eyeLeft,

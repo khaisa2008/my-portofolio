@@ -1,9 +1,9 @@
 "use client";
 
-import { useTheme } from "@/app/contexts/ThemeContext"; // Adjust path if needed
+import { useTheme } from "@/app/contexts/ThemeContext";
 
 export default function UseParticle() {
-  const { dark } = useTheme(); // Take dark mode state
+  const { dark } = useTheme();
 
   let animationId: number;
   let isActive = true;
@@ -26,9 +26,9 @@ export default function UseParticle() {
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
     if (!ctx) return;
 
-    // Direct RGB values based on current theme state
-    const colorRGB = dark ? "0, 255, 255" : "51, 65, 85"; // Cyan vs Slate Dark
-    const shadowColorHex = dark ? "#00ffff" : "rgba(51, 65, 85, 0.4)";
+    // Warna RGB & Shadow kontras untuk tema terang
+    const colorRGB = dark ? "0, 255, 255" : "14, 116, 144"; // Cyan terang vs Cyan-Teal gelap
+    const shadowColorHex = dark ? "#00ffff" : "rgba(14, 116, 144, 0.3)";
 
     let particles: {
       x: number;
@@ -56,10 +56,12 @@ export default function UseParticle() {
       particles = Array.from({ length: particleCount }, () => ({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        radius: Math.random() * 1.8 + 0.8,
+        // Radius minimal 2.0px (berkisar antara 2.0px s/d 3.5px)
+        radius: Math.random() * 1.5 + 2.0,
         vx: (Math.random() - 0.5) * 0.35,
         vy: (Math.random() - 0.5) * 0.35,
-        opacity: Math.random() * 0.5 + 0.3,
+        // Opacity lebih tinggi pada tema terang agar lebih kontras
+        opacity: dark ? Math.random() * 0.5 + 0.3 : Math.random() * 0.4 + 0.5,
       }));
 
       maxDistance = Math.min(canvas.width * 0.05, 100);
@@ -81,7 +83,7 @@ export default function UseParticle() {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      ctx.shadowBlur = dark ? 10 : 0; // Glow only in dark mode
+      ctx.shadowBlur = dark ? 10 : 2; // Sedikit shadow pada tema terang agar lebih pop-out
       ctx.shadowColor = shadowColorHex;
 
       const len = particles.length;
@@ -100,9 +102,7 @@ export default function UseParticle() {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
 
-        // Dynamic particle fill color
         ctx.fillStyle = `rgba(${colorRGB}, ${p.opacity})`;
-
         ctx.fill();
       }
 
@@ -124,9 +124,10 @@ export default function UseParticle() {
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
 
-            // Dynamic line color
+            // Garis penghubung disesuaikan opacity-nya berdasarkan tema
+            const lineOpacityFactor = dark ? 0.5 : 0.65;
             ctx.strokeStyle = `rgba(${colorRGB}, ${
-              0.5 * (1 - dist / maxDistance)
+              lineOpacityFactor * (1 - dist / maxDistance)
             })`;
 
             ctx.stroke();
