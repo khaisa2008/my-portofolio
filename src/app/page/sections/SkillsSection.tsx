@@ -4,8 +4,6 @@ import { useEffect } from "react";
 
 import { useLanguage } from "@/app/contexts/LanguageContext";
 import { useIntersectionObserver } from "@/app/functions/UseIntersectionObserver";
-import { useTheme } from "@/app/contexts/ThemeContext";
-import UseParticle from "@/app/functions/UseParticleSection";
 
 // Kamus Teks untuk Multi-Bahasa
 const content = {
@@ -48,25 +46,12 @@ export default function SkillsSection() {
   // Gunakan hook Intersection Observer (persis seperti di HomeSection)
   const [sectionRef, isVisible] = useIntersectionObserver({ threshold: 0.2 });
 
-  const { dark } = useTheme();
-  const { initParticles } = UseParticle();
-
-  useEffect(() => {
-    const cleanup = initParticles();
-
-    return () => {
-      cleanup?.();
-    };
-  }, [initParticles, dark]);
-
   return (
     <section
       id="skills"
       ref={sectionRef}
       className={`skills-section py-5 scroll-margin-top ${isVisible ? "active" : ""}`}
     >
-      <canvas className="particle-skills" id="particleCanvas"></canvas>
-
       <div className="gradient-overlay-bottom" />
       <div className="container content-skills">
         <div className="section-title text-center mb-5">

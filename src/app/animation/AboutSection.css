@@ -4,6 +4,7 @@
   position: relative;
   overflow: hidden;
   background-color: #f8fafc;
+  z-index: 10;
 }
 
 .section-about-title h2 {

@@ -17,6 +17,9 @@ export default function SplashScreen({ setShowMain }: Props) {
   const { displayText, finished } = useMethod();
 
   const [canEnter, setCanEnter] = useState(false);
+  
+  // 1. Tambahkan state isAngry khusus di SplashScreen
+  const [isAngry, setIsAngry] = useState(false);
 
   const { initParticles } = UseParticle();
 
@@ -34,6 +37,26 @@ export default function SplashScreen({ setShowMain }: Props) {
     }, 5000);
 
     return () => clearTimeout(timer);
+  }, []);
+
+  // 2. Deteksi perubahan class pada robot-head tanpa merubah file RobotHead
+  useEffect(() => {
+    const robotHeadEl = document.querySelector(".robot-head");
+    if (!robotHeadEl) return;
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === "class") {
+          const currentClasses = robotHeadEl.className;
+          const angryActive = currentClasses.includes("angry-head") || currentClasses.includes("robot-angry");
+          setIsAngry(angryActive);
+        }
+      });
+    });
+
+    observer.observe(robotHeadEl, { attributes: true });
+
+    return () => observer.disconnect();
   }, []);
 
   const enterPortfolio = () => {
@@ -74,46 +97,49 @@ export default function SplashScreen({ setShowMain }: Props) {
           </div>
 
           <div className="item item2 fw-bold fs-4 mt-0">
-            <h1 className={`hacker-text ${finished ? "finished" : ""}`}>
+            {/* Pakai ${isAngry ? "..." : ""} di sini */}
+            <h1 className={`hacker-text ${finished ? "finished" : ""} ${isAngry ? "text-angry" : ""}`}>
               {displayText}
             </h1>
           </div>
 
           <div className="item3 fs-3 mt-3 d-flex justify-content-center gap-3">
-            <div className="social-wrapper github-wrap">
-              <i className="bi bi-github icon"></i>
+            <div className={`social-wrapper github-wrap`}>
+              <i className={`bi bi-github icon ${isAngry ? "icon-angry" : ""}`}></i>
             </div>
 
-            <div className="social-wrapper code-wrap">
-              <i className="bi bi-code-slash icon"></i>
+            <div className={`social-wrapper code-wrap`}>
+              <i className={`bi bi-code-slash icon ${isAngry ? "icon-angry" : ""}`}></i>
             </div>
 
-            <div className="social-wrapper person-wrap">
-              <i className="bi bi-person icon"></i>
+            <div className={`social-wrapper person-wrap`}>
+              <i className={`bi bi-person icon ${isAngry ? "icon-angry" : ""}`}></i>
             </div>
 
-            <div className="social-wrapper linkedin-wrap">
-              <i className="bi bi-linkedin icon"></i>
+            <div className={`social-wrapper linkedin-wrap`}>
+              <i className={`bi bi-linkedin icon ${isAngry ? "icon-angry" : ""}`}></i>
             </div>
 
-            <div className="social-wrapper instagram-wrap">
-              <i className="bi bi-instagram icon"></i>
+            <div className={`social-wrapper instagram-wrap`}>
+              <i className={`bi bi-instagram icon ${isAngry ? "icon-angry" : ""}`}></i>
             </div>
 
-            <div className="social-wrapper discord-wrap">
-              <i className="bi bi-discord icon"></i>
+            <div className={`social-wrapper discord-wrap`}>
+              <i className={`bi bi-discord icon ${isAngry ? "icon-angry" : ""}`}></i>
             </div>
           </div>
 
           <button
-            className="enter-btn mt-3"
+            className={`enter-btn mt-3 ${isAngry ? "btn-angry" : ""}`}
             onClick={enterPortfolio}
             disabled={!canEnter}
           >
             ENTER PORTFOLIO
           </button>
 
-          <div className="item item4 mt-4">Designed by M Khairul Unsa</div>
+          <div className={`item item4 mt-4 ${isAngry ? "text-angry-subtle" : ""}`}>
+            Designed by M Khairul Unsa
+          </div>
         </div>
       </div>
     </>

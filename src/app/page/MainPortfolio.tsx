@@ -1,5 +1,5 @@
 "use client";
-
+import { useEffect } from "react";
 import HomeSection from "./sections/HomeSection";
 import AboutSection from "./sections/AboutSection";
 import SkillsSection from "./sections/SkillsSection";
@@ -11,15 +11,28 @@ import FloatingSettings from "@/app/components/FloatingSettings";
 import "@/app/animation/HomeSection.css";
 import "@/app/animation/AboutSection.css";
 import "@/app/animation/SkilsSection.css";
+import UseParticle from "@/app/functions/UseParticleSection";
+import { useTheme } from "@/app/contexts/ThemeContext";
 
 export default function MainPortfolio() {
+  const { initParticles } = UseParticle();
+  const { dark } = useTheme();
+
+  useEffect(() => {
+    const cleanup = initParticles();
+
+    return () => {
+      cleanup?.();
+    };
+  }, [initParticles, dark]);
 
   return (
     <>
+      <canvas className="particle-section" id="particleCanvas"></canvas>
+
       <AnimatedBackground />
 
       <div id="main">
-        
         <img src="/element/code.png" className="code-img" alt="code" />
 
         {/* ================= NAVBAR ================= */}
