@@ -395,11 +395,11 @@
 }
 .plus-3 {
   top: 10%;
-  right: 42%;
+  right: 39%;
 }
 .plus-4 {
   top: 10%;
-  left: 42%;
+  left: 39%;
 }
 
 .about-section.active .plus-1 {
@@ -511,5 +511,3 @@
     opacity:1;
   }
 }
-
-

@@ -1,11 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
-
 import { useLanguage } from "@/app/contexts/LanguageContext";
 import { useIntersectionObserver } from "@/app/functions/UseIntersectionObserver";
 
-// Kamus Teks untuk Multi-Bahasa
 const content = {
   ID: {
     title: "Keahlian",
@@ -17,7 +14,6 @@ const content = {
   },
 };
 
-// Data Skill beserta Ikon Devicon
 const skillsData = [
   // --- BAHASA PEMROGRAMAN ---
   { name: "HTML", iconClass: "devicon-html5-plain colored" },
@@ -43,14 +39,20 @@ export default function SkillsSection() {
   const { lang } = useLanguage();
   const t = content[lang];
 
-  // Gunakan hook Intersection Observer (persis seperti di HomeSection)
-  const [sectionRef, isVisible] = useIntersectionObserver({ threshold: 0.2 });
+  // Dapatkan sectionRef, isVisible, dan direction
+  const [sectionRef, isVisible, direction] = useIntersectionObserver({ threshold: 0.2 });
+
+  // Tentukan class animasi berdasarkan isVisible dan direction
+  const getAnimationClass = () => {
+    if (!isVisible) return "";
+    return direction === "down" ? "active active-down" : "active active-up";
+  };
 
   return (
     <section
       id="skills"
       ref={sectionRef}
-      className={`skills-section py-5 scroll-margin-top ${isVisible ? "active" : ""}`}
+      className={`skills-section py-5 scroll-margin-top ${getAnimationClass()}`}
     >
       <div className="gradient-overlay-bottom" />
       <div className="container content-skills">
