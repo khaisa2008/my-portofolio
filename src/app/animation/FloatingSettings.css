@@ -1,3 +1,16 @@
+/* Transisi halus untuk animasi internal slider switch */
+::view-transition-old(theme-toggle-switch),
+::view-transition-new(theme-toggle-switch) {
+  animation-duration: 0.3s;
+}
+
+/* Isolasi View Transition untuk ikon tema */
+::view-transition-old(theme-icon),
+::view-transition-new(theme-icon) {
+  animation-duration: 0.3s;
+  mix-blend-mode: normal;
+}
+
 .floating-settings {
   position: fixed;
   right: 30px;
@@ -98,6 +111,7 @@
 }
 
 .icon-wrapper {
+  position: relative;
   width: 36px;
   height: 36px;
   display: flex;
@@ -113,8 +127,44 @@
   font-size: 18px;
 }
 
-.dark-theme .icon-wrapper{
+/* Class khusus unik untuk View Transition ikon tema */
+.icon-wrapper.theme-icon-wrapper {
+  view-transition-name: theme-icon;
+}
+
+.dark-theme .icon-wrapper {
   color: #b0daff;
+}
+
+/* --- Animasi Ikon (Putar & Fade) --- */
+.icon-sun,
+.icon-moon {
+  position: absolute;
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+}
+
+/* Kondisi Mode Terang (Default) */
+.icon-sun {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+.icon-moon {
+  opacity: 0;
+  transform: scale(0.4) rotate(-90deg);
+}
+
+/* Kondisi Mode Gelap */
+.dark-theme .icon-sun {
+  opacity: 0;
+  transform: scale(0.4) rotate(90deg);
+}
+
+.dark-theme .icon-moon {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
 }
 
 .setting-info h6 {
@@ -142,6 +192,8 @@
   width: 50px;
   height: 28px;
   flex-shrink: 0;
+
+  view-transition-name: theme-toggle-switch;
 }
 
 .switch input {

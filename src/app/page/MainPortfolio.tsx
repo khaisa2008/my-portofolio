@@ -1,16 +1,20 @@
 "use client";
 import { useEffect } from "react";
+
 import HomeSection from "./sections/HomeSection";
 import AboutSection from "./sections/AboutSection";
 import SkillsSection from "./sections/SkillsSection";
 import ProjectsSection from "./sections/ProjectsSection";
 import ContactSection from "./sections/ContactSection";
 import Navbar from "./sections/Navbar";
+
 import AnimatedBackground from "@/app/components/AnimatedBackground";
 import FloatingSettings from "@/app/components/FloatingSettings";
+
 import "@/app/animation/HomeSection.css";
 import "@/app/animation/AboutSection.css";
 import "@/app/animation/SkilsSection.css";
+
 import UseParticle from "@/app/functions/UseParticleSection";
 import { useTheme } from "@/app/contexts/ThemeContext";
 

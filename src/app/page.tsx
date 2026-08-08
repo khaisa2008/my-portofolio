@@ -10,10 +10,10 @@ export default function Home() {
 
   return (
     <>
-      {/* <MainPortfolio />; */}
-      {!showMain && <SplashScreen setShowMain={setShowMain} />}
+      <MainPortfolio />;
+      {/* {!showMain && <SplashScreen setShowMain={setShowMain} />}
       
-      {showMain && <MainPortfolio />}
+      {showMain && <MainPortfolio />} */}
     </>
   );
 }

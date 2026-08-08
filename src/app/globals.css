@@ -1,4 +1,31 @@
 /* ================= GLOBAL ================= */
+
+/* --- Animasi Transisi Tema (View Transitions) --- */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+  animation: circleExpand 0.5s ease-in-out forwards;
+}
+
+@keyframes circleExpand {
+  from {
+    clip-path: circle(0px at 0 0);
+  }
+  to {
+    clip-path: circle(150vmax at 0 0);
+  }
+}
+
+/* --- Menghilangkan scrollbar --- */
 ::-webkit-scrollbar {
   width: 0;
   height: 0;
@@ -309,13 +336,12 @@ footer {
   inset: 0;
 
   background-image:
-    linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+    linear-gradient(rgba(0, 0, 0, 0.132) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.119) 1px, transparent 1px);
 
   background-size: 40px 40px;
 
   mask-image: radial-gradient(circle, white, transparent 90%);
-
 }
 
 .dark-theme .grid-bg {

@@ -3,12 +3,12 @@
 import { useState } from "react";
 import "@/app/animation/FloatingSettings.css";
 import { useTheme } from "@/app/contexts/ThemeContext";
-import { useLanguage } from "@/app/contexts/LanguageContext"; // Import hook bahasa
+import { useLanguage } from "@/app/contexts/LanguageContext";
 
 export default function FloatingSettings() {
   const [open, setOpen] = useState(false);
   const { dark, toggleTheme } = useTheme();
-  const { lang, toggleLang } = useLanguage(); // Pakai state & fungsi dari LanguageContext
+  const { lang, toggleLang } = useLanguage();
 
   return (
     <div className="floating-settings">
@@ -24,8 +24,9 @@ export default function FloatingSettings() {
           {/* Setting Dark Mode */}
           <div className="setting-item">
             <div className="setting-info">
-              <div className="icon-wrapper">
-                <i className={`bi ${dark ? "bi-moon-stars" : "bi-brightness-high"}`}></i>
+              <div className="icon-wrapper theme-icon-wrapper">
+                <i className="bi bi-brightness-high icon-sun"></i>
+                <i className="bi bi-moon-stars icon-moon"></i>
               </div>
               <div>
                 <h6>{lang === "ID" ? "Mode Gelap" : "Dark Mode"}</h6>
@@ -54,7 +55,7 @@ export default function FloatingSettings() {
             <div className="setting-info">
               <div className="icon-wrapper">
                 <i
-                  className={`fi ${lang === "ID" ? "fi-id" : "fi-gb"} fis rounded-circle`}
+                  className={`fi ${lang === "ID" ? "fi-id" : "fi-us"} fis rounded-circle`}
                   style={{
                     width: "20px",
                     height: "20px",
