@@ -45,7 +45,6 @@ body {
   -ms-overflow-style: none;
 }
 
-/* ================= NAVBAR ================= */
 .bg-primary-color {
   background-color: #0b428f;
 }
@@ -60,6 +59,7 @@ body {
   z-index: 1;
 }
 
+/* ================= NAVBAR DESKTOP ================= */
 .navbar {
   background: transparent;
 }
@@ -75,6 +75,7 @@ body {
   padding: 12px 20px !important;
   border-radius: 50px;
   transition: 0.3s;
+  cursor: pointer;
 }
 
 .dark-theme .nav-capsule .nav-link {
@@ -85,6 +86,96 @@ body {
 .nav-capsule .nav-link.active {
   background: #00d9ff;
   color: #293133 !important;
+}
+
+/* ================= NAVBAR TABLET / MOBILE (MAX-WIDTH 768px) ================= */
+@media (max-width: 768px) {
+  .nav-capsule {
+    position: relative;
+    overflow: visible !important; /* PENTING: Supaya efek luar bisa menembus batas kapsul */
+    padding: 6px 12px !important;
+    width: 100%;
+    max-width: 500px; /* Disesuaikan agar proporsional di layar tablet/HP besar */
+  }
+
+  .nav-capsule ul {
+    justify-content: space-around;
+    gap: 0 !important;
+  }
+
+  .nav-capsule .nav-link {
+    display: flex;
+    flex-direction: column; /* Ikon di atas, Teks di bawah */
+    align-items: center;
+    justify-content: center;
+    width: 80px; /* Sedikit diperlebar agar seimbang di layar hingga 768px */
+    height: 56px;
+    border-radius: 30px !important;
+    padding: 0 !important;
+    font-size: 14px;
+    color: #f8fafc;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .nav-capsule .nav-link i {
+    font-size: 1.25rem;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  /* Lingkaran Aktif Warna Biru (Cyan) */
+  .nav-capsule .nav-link.active {
+    background: #00d9ff !important;
+    color: #000000 !important;
+    box-shadow: 0 4px 15px rgba(0, 217, 255, 0.5);
+    z-index: 2;
+  }
+}
+
+/* ================= NAVBAR MOBILE (HP) ================= */
+@media (max-width: 550px) {
+  .nav-capsule {
+    position: relative;
+    overflow: visible !important; /* PENTING: Supaya lingkaran luar bisa menembus batas kapsul */
+    padding: 6px 10px !important;
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .nav-capsule ul {
+    justify-content: space-around;
+    gap: 0 !important;
+  }
+
+  .nav-capsule .nav-link {
+    display: flex;
+    flex-direction: column; /* Ikon di atas, Teks di bawah */
+    align-items: center;
+    justify-content: center;
+    width: 65px;
+    height: 54px;
+    border-radius: 30px !important; /* Lingkaran sempurna */
+    padding: 0 !important;
+    font-size: 12px;
+    color: #f8fafc;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .nav-capsule .nav-link i {
+    font-size: 1.2rem;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  /* Lingkaran Aktif Warna Biru (Cyan) */
+  .nav-capsule .nav-link.active {
+    background: #00d9ff !important;
+    color: #000000 !important;
+    box-shadow: 0 4px 15px rgba(0, 217, 255, 0.5);
+    z-index: 2;
+  }
 }
 
 /* ================= SECTION ================= */
