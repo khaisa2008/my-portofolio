@@ -695,6 +695,10 @@
 }
 
 @media (max-width: 500px) {
+  .hero-title{
+      font-weight: 1000;
+  }
+  
   .source-card {
     width: 180px;
     top: 130px;

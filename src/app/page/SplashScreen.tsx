@@ -137,7 +137,7 @@ export default function SplashScreen({ setShowMain }: Props) {
             ENTER PORTFOLIO
           </button>
 
-          <div className={`item item4 mt-4 ${isAngry ? "text-angry-subtle" : ""}`}>
+          <div className={`item item4 mt-4 under-text ${isAngry ? "text-angry-subtle" : ""}`}>
             Designed by M Khairul Unsa
           </div>
         </div>

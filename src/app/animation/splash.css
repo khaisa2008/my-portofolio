@@ -1,12 +1,7 @@
 /* ================= SPLASH SCREEN ================= */
 
 #intro {
-  background: linear-gradient(
-    135deg,
-    #000000,
-    #07111f,
-    #001d2e
-  );
+  background: linear-gradient(135deg, #000000, #07111f, #001d2e);
 
   color: #00eaff;
   height: 100vh;
@@ -24,7 +19,6 @@
 /* GRID */
 
 #intro::before {
-
   content: "";
 
   position: absolute;
@@ -34,15 +28,8 @@
   z-index: 0;
 
   background-image:
-    linear-gradient(
-      rgba(0, 234, 255, 0.08) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      rgba(0, 234, 255, 0.08) 1px,
-      transparent 1px
-    );
+    linear-gradient(rgba(0, 234, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 234, 255, 0.08) 1px, transparent 1px);
 
   background-size: 40px 40px;
 
@@ -76,8 +63,7 @@
   height: 2px;
   filter: blur(10px);
 
-
-  background: rgba(0,234,255,.5);
+  background: rgba(0, 234, 255, 0.5);
 
   animation: scan 3s ease-in-out infinite alternate;
 }
@@ -96,16 +82,8 @@
   z-index: 0;
 
   background:
-    radial-gradient(
-      circle at top left,
-      rgba(0, 0, 0, 0.45),
-      transparent 35%
-    ),
-    radial-gradient(
-      circle at top right,
-      rgba(0, 0, 0, 0.45),
-      transparent 40%
-    ),
+    radial-gradient(circle at top left, rgba(0, 0, 0, 0.45), transparent 35%),
+    radial-gradient(circle at top right, rgba(0, 0, 0, 0.45), transparent 40%),
     radial-gradient(
       circle at bottom left,
       rgba(0, 0, 0, 0.45),
@@ -131,7 +109,6 @@
 }
 
 @keyframes scan {
-
   0% {
     top: 0%;
   }
@@ -172,7 +149,7 @@
   height: 100%;
 
   pointer-events: none;
-  margin:auto;
+  margin: auto;
   z-index: 1;
 }
 
@@ -205,22 +182,17 @@
   align-items: center;
   margin-bottom: -30px;
 
-  animation:
-    robotReveal 1.5s ease forwards .5s;
+  animation: robotReveal 1.5s ease forwards 0.5s;
 }
 
 .item1 canvas {
-  filter:
-    drop-shadow(0 0 20px #00eaff)
-    drop-shadow(0 0 35px #00eaff);
-    
+  filter: drop-shadow(0 0 20px #00eaff) drop-shadow(0 0 35px #00eaff);
 }
 
 .item2 {
   opacity: 0;
 
-  animation:
-    textReveal 1s ease forwards 1.5s;
+  animation: textReveal 1s ease forwards 1.5s;
 }
 
 .item2 h1 {
@@ -256,9 +228,9 @@
   /* transform: translateY(40px); */
 
   animation:
-    socialReveal .7s forwards 2.3s,
+    socialReveal 0.7s forwards 2.3s,
     floating 3s ease-in-out infinite 3s;
-  }
+}
 
 /* ---------- Code dari atas ---------- */
 
@@ -266,9 +238,9 @@
   /* transform: translateY(-40px); */
 
   animation:
-    socialRevealTop .7s forwards 2.5s,
+    socialRevealTop 0.7s forwards 2.5s,
     floating 3s ease-in-out infinite 3.3s;
-  }
+}
 
 /* ---------- Person dari bawah ---------- */
 
@@ -276,9 +248,9 @@
   /* transform: translateY(40px); */
 
   animation:
-    socialReveal .7s forwards 2.7s,
+    socialReveal 0.7s forwards 2.7s,
     floating 3s ease-in-out infinite 3.6s;
-  }
+}
 
 /* ---------- LinkedIn dari atas ---------- */
 
@@ -286,7 +258,7 @@
   /* transform: translateY(-40px); */
 
   animation:
-    socialRevealTop .7s forwards 2.9s,
+    socialRevealTop 0.7s forwards 2.9s,
     floating 3s ease-in-out infinite 3.9s;
 }
 
@@ -296,7 +268,7 @@
   /* transform: translateY(40px); */
 
   animation:
-    socialReveal .7s forwards 3.1s,
+    socialReveal 0.7s forwards 3.1s,
     floating 3s ease-in-out infinite 4.2s;
 }
 
@@ -306,7 +278,7 @@
   /* transform: translateY(-40px); */
 
   animation:
-    socialRevealTop .7s forwards 3.3s,
+    socialRevealTop 0.7s forwards 3.3s,
     floating 3s ease-in-out infinite 4.5s;
 }
 
@@ -320,7 +292,6 @@
 }
 
 @keyframes socialReveal {
-
   0% {
     opacity: 0;
     transform: translateY(40px);
@@ -333,7 +304,6 @@
 }
 
 @keyframes socialRevealTop {
-
   0% {
     opacity: 0;
     transform: translateY(-40px);
@@ -346,7 +316,6 @@
 }
 
 @keyframes textReveal {
-
   0% {
     opacity: 0;
     transform: translateY(40px);
@@ -363,7 +332,6 @@
 }
 
 @keyframes floating {
-
   0% {
     transform: translateY(0);
   }
@@ -378,7 +346,6 @@
 }
 
 @keyframes zoomFade {
-
   0% {
     opacity: 1;
     transform: scale(1);
@@ -386,7 +353,7 @@
   }
 
   50% {
-    opacity: .8;
+    opacity: 0.8;
   }
 
   100% {
@@ -436,7 +403,6 @@
 }
 
 @keyframes mainReveal {
-
   0% {
     opacity: 0;
     transform: translateY(100px);
@@ -451,48 +417,29 @@
 /* ================= Button Enter Portofolio ================= */
 .enter-btn {
   margin-top: 40px;
-
   padding: 12px 30px;
-
   background: transparent;
-
   border: 1px solid #00eaff;
-
   color: #00eaff;
-
   letter-spacing: 4px;
-
   transition:
-    .4s,
-    transform .3s;
-
+    0.4s,
+    transform 0.3s;
   opacity: 0;
-
   cursor: pointer;
-
-  animation:
-    fadeIn .8s forwards 4.8s;
-
-  box-shadow:
-    0 0 10px rgba(0,234,255,.3);
+  animation: fadeIn 0.8s forwards 4.8s;
+  box-shadow: 0 0 10px rgba(0, 234, 255, 0.3);
 }
 
 .enter-btn:hover {
-
   background: #00eaff;
-
   color: black;
-
-  transform:
-    translateY(-4px)
-    scale(1.05);
-
-  box-shadow:
-    0 0 30px #00eaff;
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 0 30px #00eaff;
 }
 
 .enter-btn:active {
-  transform: scale(.95);
+  transform: scale(0.95);
 }
 
 .enter-btn.clicked {
@@ -504,9 +451,20 @@
   pointer-events: none;
 }
 
+.under-text{
+  font-size: 15px;
+}
+
+@media (max-width: 500px) {
+  .enter-btn {
+    margin-top: 20px;
+    padding: 8px 18px;
+    letter-spacing: 2px;
+    box-shadow: 0 0 6px rgba(0, 234, 255, 0.25);
+  }
+}
 
 @keyframes btnPulse {
-
   0% {
     transform: scale(1);
   }
@@ -523,7 +481,6 @@
 /* ================= Hacker Text ================= */
 
 .hacker-text {
-
   color: #00eaff;
 
   letter-spacing: 4px;
@@ -547,38 +504,32 @@
   font-size: clamp(1.5rem, 5vw, 3rem);
 
   /* default animation */
-  animation:
-    blinkBorder .7s infinite;
+  animation: blinkBorder 0.7s infinite;
 }
 
 /* ================= Saat Finished ================= */
 
 .hacker-text.finished {
-
   animation:
-    blinkBorder .7s infinite,
+    blinkBorder 0.7s infinite,
     blinkTeks 1.5s infinite;
 }
 
 /* ================= Text Blink ================= */
 
 @keyframes blinkTeks {
-
   50% {
-
     color: #00000000;
 
-      text-shadow:
-    0 0 1px #00eaff00,
-    0 0 7px #00eaff00;
-
+    text-shadow:
+      0 0 1px #00eaff00,
+      0 0 7px #00eaff00;
   }
 }
 
 /* ================= Cursor Blink ================= */
 
 @keyframes blinkBorder {
-
   50% {
     border-color: transparent;
   }
@@ -587,9 +538,7 @@
 /* ================= MOBILE DESIGN ================= */
 
 @media (max-width: 768px) {
-
   .hacker-text {
-
     font-size: 35px;
 
     letter-spacing: 2px;
@@ -607,15 +556,13 @@
       0 0 5px #00eaff;
   }
 
-  .item1{
-      margin-bottom: -15px;
+  .item1 {
+    margin-bottom: -15px;
   }
 }
 
 @media (max-width: 480px) {
-
   .hacker-text {
-
     font-size: 30px;
 
     font-weight: 600;
@@ -637,7 +584,9 @@
 /* Text Merah & Glow */
 .text-angry {
   color: #ff2a2a !important;
-  text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000 !important;
+  text-shadow:
+    0 0 10px #ff0000,
+    0 0 20px #ff0000 !important;
   transition: all 0.3s ease;
 }
 
@@ -657,7 +606,9 @@
 /* Shadowbox / Social Wrapper Merah */
 .box-angry {
   border-color: rgba(255, 0, 0, 0.8) !important;
-  box-shadow: 0 0 15px rgba(255, 0, 0, 0.6), inset 0 0 10px rgba(255, 0, 0, 0.4) !important;
+  box-shadow:
+    0 0 15px rgba(255, 0, 0, 0.6),
+    inset 0 0 10px rgba(255, 0, 0, 0.4) !important;
   background: rgba(80, 0, 0, 0.3) !important;
   transition: all 0.3s ease;
 }
@@ -671,15 +622,20 @@
 }
 
 .btn-angry:hover {
-
   background: #ff0000;
 
   color: #f8f7f7 !important;
 
-  transform:
-    translateY(-4px)
-    scale(1.05);
+  transform: translateY(-4px) scale(1.05);
 
-  box-shadow:
-    0 0 30px #ff0000;
+  box-shadow: 0 0 30px #ff0000;
+}
+
+@media (max-width: 500px) {
+  .btn-angry {
+    margin-top: 20px;
+    padding: 8px 18px;
+    letter-spacing: 2px;
+    box-shadow: 0 0 6px rgba(0, 234, 255, 0.25);
+  }
 }
