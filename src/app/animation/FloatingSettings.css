@@ -82,7 +82,7 @@
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.05);
   color: #666;
-  font-size: 14px;
+  font-size: 15px;
   transition: 0.3s;
 }
 
@@ -169,7 +169,7 @@
 
 .setting-info h6 {
   margin: 0;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: #1a1a2e;
 }
@@ -241,7 +241,7 @@
   background: linear-gradient(135deg, #4facfe, #2563eb);
   color: white;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 15px;
   cursor: pointer;
   transition: 0.3s;
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
@@ -264,7 +264,7 @@
 .lang-switch-icon {
   display: flex;
   align-items: center;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 /* Settings Footer */

@@ -27,7 +27,7 @@ const content = {
 };
 
 export default function HomeSection() {
-  const { prefixText, nameText, blink } = useHeaderText();
+  const { prefixText, nameText, activeCursor } = useHeaderText();
   const { dark } = useTheme();
   const { lang } = useLanguage();
 
@@ -77,9 +77,17 @@ export default function HomeSection() {
             <span className="badge badge-title bg-info text-dark px-3 py-2 rounded-pill">
               {t.badge}
             </span>
-            <h1 className={`hero-title mt-4 cursor`}>
-              {prefixText}
-              <span>{nameText}</span>
+            <h1 className="hero-title mt-4">
+              <span
+                className={`prefix-text ${activeCursor === "prefix" ? "cursor" : ""}`}
+              >
+                {prefixText}
+              </span>
+              <span
+                className={`name-text ${activeCursor === "name" ? "cursor" : ""}`}
+              >
+                {nameText}
+              </span>
             </h1>
             <h2 className="hero-subtitle"> {t.subtitle} </h2>
             <p className="hero-text mt-4">{t.description}</p>
@@ -105,69 +113,70 @@ export default function HomeSection() {
           <div className="col-lg-6 pe-3">
             <div className="hero-right">
               {/* Orbit rings */}
-              <div className="orbit-ring"></div>
-              <div className="orbit-ring orbit-ring-2"></div>
+              <div className="orbit-wrapper">
+                <div className="orbit-ring"></div>
+                <div className="orbit-ring orbit-ring-2"></div>
 
-              {/* Character */}
-              <img src="/pro.png" alt="profile" className="hero-img" />
-
-              {/* Orbit Icons: Anda bisa mengirim prop `isActive={isVisible}` jika butuh kontrol di dalam komponen OrbitIcon */}
-              {isVisible && (
-                <>
-                  {/* 3D Icons with orbit animation */}
-                  <OrbitIcon
-                    image="/element/laravel.png"
-                    size={110}
-                    radiusX={255}
-                    radiusY={250}
-                    startAngle={288}
-                    speed={0.25}
-                    glow="#ff2d20"
-                    initialDelay={2100}
-                  />
-                  <OrbitIcon
-                    image="/element/react.png"
-                    size={110}
-                    radiusX={270}
-                    radiusY={260}
-                    startAngle={0}
-                    speed={0.25}
-                    glow="#61dafb"
-                    initialDelay={1650}
-                  />
-                  <OrbitIcon
-                    image="/element/js.png"
-                    size={110}
-                    radiusX={250}
-                    radiusY={250}
-                    startAngle={72}
-                    speed={0.25}
-                    glow="#f7df1e"
-                    initialDelay={1200}
-                  />
-                  <OrbitIcon
-                    image="/element/css.png"
-                    size={110}
-                    radiusX={260}
-                    radiusY={255}
-                    startAngle={144}
-                    speed={0.25}
-                    glow="#2965f1"
-                    initialDelay={800}
-                  />
-                  <OrbitIcon
-                    image="/element/html.png"
-                    size={110}
-                    radiusX={240}
-                    radiusY={245}
-                    startAngle={216}
-                    speed={0.25}
-                    glow="#ff5722"
-                    initialDelay={300}
-                  />
-                </>
-              )}
-
+                {/* Character */}
+                <img src="/pro.png" alt="profile" className="hero-img" />
+                
+                {/* Orbit Icons: Anda bisa mengirim prop `isActive={isVisible}` jika butuh kontrol di dalam komponen OrbitIcon */}
+                {isVisible && (
+                  <>
+                    {/* 3D Icons with orbit animation */}
+                    <OrbitIcon
+                      image="/element/laravel.png"
+                      size={110}
+                      radiusX={255}
+                      radiusY={250}
+                      startAngle={288}
+                      speed={0.25}
+                      glow="#ff2d20"
+                      initialDelay={2100}
+                    />
+                    <OrbitIcon
+                      image="/element/react.png"
+                      size={110}
+                      radiusX={270}
+                      radiusY={260}
+                      startAngle={0}
+                      speed={0.25}
+                      glow="#61dafb"
+                      initialDelay={1650}
+                    />
+                    <OrbitIcon
+                      image="/element/js.png"
+                      size={110}
+                      radiusX={250}
+                      radiusY={250}
+                      startAngle={72}
+                      speed={0.25}
+                      glow="#f7df1e"
+                      initialDelay={1200}
+                    />
+                    <OrbitIcon
+                      image="/element/css.png"
+                      size={110}
+                      radiusX={260}
+                      radiusY={255}
+                      startAngle={144}
+                      speed={0.25}
+                      glow="#2965f1"
+                      initialDelay={800}
+                    />
+                    <OrbitIcon
+                      image="/element/html.png"
+                      size={110}
+                      radiusX={240}
+                      radiusY={245}
+                      startAngle={216}
+                      speed={0.25}
+                      glow="#ff5722"
+                      initialDelay={300}
+                    />
+                  </>
+                )}
+              </div>
               {/* Source card */}
               <img
                 src="/element/source_code.png"

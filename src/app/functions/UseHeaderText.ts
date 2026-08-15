@@ -3,21 +3,21 @@
 import { useEffect, useState, useRef } from "react";
 import { useLanguage } from "@/app/contexts/LanguageContext";
 
-const NAME = "M Khairul Unsa";
+const NAME = "Khairul Unsa";
 const CHARS = "abCDEFGhIJKLMNOpqRSTUVwxyz";
 
 export default function useHeaderText() {
   const { lang } = useLanguage();
 
-  // Teks target bahasa saat ini (dinamis)
-  const prefixTarget = lang === "ID" ? "Halo, Saya " : "Hi, I'm ";
+  const prefixTarget = lang === "ID" ? "Halo, Saya" : "Hi, I'm";
 
-  // State untuk menyimpan progress pengetikan (berupa string sementara dari animasi)
   const [rawPrefix, setRawPrefix] = useState(prefixTarget);
   const [nameText, setNameText] = useState(NAME);
   const [blink, setBlink] = useState(false);
+  
+  // State kursor: 'prefix' atau 'name'
+  const [activeCursor, setActiveCursor] = useState<"prefix" | "name">("name");
 
-  // Menyimpan referensi prefixTarget terbaru agar fungsi interval animasi selalu mendapat nilai paling update
   const prefixTargetRef = useRef(prefixTarget);
   useEffect(() => {
     prefixTargetRef.current = prefixTarget;
@@ -72,13 +72,20 @@ export default function useHeaderText() {
     };
 
     const typeForward = () => {
+      // 1. Saat prefix mulai diketik -> kursor di prefix
+      setActiveCursor("prefix");
       scrambleLetter(
         () => prefixTargetRef.current,
         setRawPrefix,
         0,
         () => {
+          // 2. Saat name mulai diketik -> kursor pindah ke name
+          setActiveCursor("name");
           scrambleLetter(() => NAME, setNameText, 0, () => {
             setBlink(true);
+
+            // 3. Saat semua teks selesai tampil -> kursor TETAP di name
+            setActiveCursor("name");
 
             timer = setTimeout(() => {
               setBlink(false);
@@ -114,9 +121,11 @@ export default function useHeaderText() {
           if (text.length <= currentPrefix.length) {
             setRawPrefix(text);
             setNameText("");
+            setActiveCursor("prefix");
           } else {
             setRawPrefix(currentPrefix);
             setNameText(text.slice(currentPrefix.length));
+            setActiveCursor("name");
           }
 
           scramble++;
@@ -130,9 +139,11 @@ export default function useHeaderText() {
             if (real.length <= currentPrefix.length) {
               setRawPrefix(real);
               setNameText("");
+              setActiveCursor("prefix");
             } else {
               setRawPrefix(currentPrefix);
               setNameText(real.slice(currentPrefix.length));
+              setActiveCursor("name");
             }
 
             if (currentLength > 0) {
@@ -140,6 +151,7 @@ export default function useHeaderText() {
             } else {
               setRawPrefix("");
               setNameText("");
+              setActiveCursor("prefix");
 
               timer = setTimeout(() => {
                 if (mounted) typeForward();
@@ -161,12 +173,10 @@ export default function useHeaderText() {
       clearTimeout(timer);
       clearInterval(interval);
     };
-  }, []); // Cukup di-run sekali saat mount, animasi tidak perlu di-reset dari awal saat lang berubah
+  }, []);
 
-  // Jika animasi sudah selesai menayangkan prefix secara penuh, tampilkan prefixTarget bahasa yang aktif secara realtime.
-  // Jika sedang berjalan animasinya (misal sedang mengetik/menghapus), tampilkan teks animasi rawPrefix.
   const isPrefixFullyTyped =
-    rawPrefix === "Halo, Saya " || rawPrefix === "Hi, I'm ";
+    rawPrefix === "Halo, Saya" || rawPrefix === "Hi, I'm";
 
   const prefixText = isPrefixFullyTyped ? prefixTarget : rawPrefix;
 
@@ -174,5 +184,6 @@ export default function useHeaderText() {
     prefixText,
     nameText,
     blink,
+    activeCursor,
   };
 }
