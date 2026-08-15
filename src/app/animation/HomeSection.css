@@ -85,6 +85,32 @@
   color: #c9c9c9;
 }
 
+/* Gaya default (Light Theme) */
+.btn-theme-outline {
+  color: #212529;
+  border-color: #212529;
+  background-color: transparent;
+}
+
+.btn-theme-outline:hover {
+  color: #fff;
+  background-color: #212529;
+  border-color: #212529;
+}
+
+/* Gaya otomatis saat Dark Theme aktif */
+.dark-theme .btn-theme-outline {
+  color: #f8f9fa;
+  border-color: #f8f9fa;
+  background-color: transparent;
+}
+
+.dark-theme .btn-theme-outline:hover {
+  color: #000;
+  background-color: #f8f9fa;
+  border-color: #f8f9fa;
+}
+
 .dark-theme .social-icons {
   color: white;
 }
@@ -695,10 +721,10 @@
 }
 
 @media (max-width: 500px) {
-  .hero-title{
-      font-weight: 1000;
+  .hero-title {
+    font-weight: 1000;
   }
-  
+
   .source-card {
     width: 180px;
     top: 130px;

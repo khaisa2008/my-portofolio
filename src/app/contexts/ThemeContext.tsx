@@ -14,31 +14,36 @@ const ThemeContext = createContext<ThemeContextType>({
 });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [dark, setDark] = useState(false);
-
-  // Membaca tema yang tersimpan saat mount
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-
-    if (savedTheme === "dark") {
-      setDark(true);
+  // 1. Inisialisasi state langsung membaca class dari inline script / localStorage
+  const [dark, setDark] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return (
+        document.documentElement.classList.contains("dark-theme") ||
+        localStorage.getItem("theme") === "dark"
+      );
     }
+    return true; // Default fallback ke dark
+  });
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
   }, []);
 
-  // Menyimpan tema dan mengubah class html
+  // 2. Hanya sinkronkan class/localStorage jika state benar-benar berubah setelah mount
   useEffect(() => {
+    if (!mounted) return;
     document.documentElement.classList.toggle("dark-theme", dark);
     localStorage.setItem("theme", dark ? "dark" : "light");
-  }, [dark]);
+  }, [dark, mounted]);
 
   const toggleTheme = () => {
-    // Fallback jika browser belum mendukung View Transitions API
     if (!document.startViewTransition) {
       setDark((prev) => !prev);
       return;
     }
 
-    // Jalankan animasi transisi lingkaran
     document.startViewTransition(() => {
       flushSync(() => {
         setDark((prev) => !prev);

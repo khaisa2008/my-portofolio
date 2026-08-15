@@ -45,6 +45,14 @@ body {
   -ms-overflow-style: none;
 }
 
+.main {
+  background: #f8fafc;
+}
+
+.dark-theme .main {
+  background: #000e21f2;
+}
+
 .bg-primary-color {
   background-color: #0b428f;
 }
@@ -357,6 +365,8 @@ footer {
       transparent 45%
     ),
     #000e21f2;
+
+  animation: bgReveal 2s ease;
 }
 /* =====================================
    FLOATING BLOBS
@@ -453,12 +463,10 @@ footer {
 
 @keyframes bgReveal {
   from {
-    opacity: 0;
     transform: scale(1.2);
   }
 
   to {
-    opacity: 1;
     transform: scale(1);
   }
 }

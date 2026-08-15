@@ -96,7 +96,7 @@ export default function HomeSection() {
                 <i className="bi bi-send"></i> {t.hireBtn}
               </button>
               <button
-                className={`btn btn-lg rounded-pill px-4 ${dark ? "btn-outline-light" : "btn-outline-dark"}`}
+                className="btn btn-lg rounded-pill px-4 btn-theme-outline"
               >
                 <i className="bi bi-download"></i> {t.cvBtn}
               </button>
