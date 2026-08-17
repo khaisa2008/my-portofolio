@@ -39,10 +39,14 @@ html {
 body {
   margin: 0;
   font-family: "Poppins", sans-serif;
-  background: #000e21f2;
+  background: #f8fafc;
   color: white;
   overflow-x: hidden;
   -ms-overflow-style: none;
+}
+
+.dark-theme body {
+  background: #000e21;
 }
 
 .main {
@@ -50,7 +54,7 @@ body {
 }
 
 .dark-theme .main {
-  background: #000e21f2;
+  background: #000e21;
 }
 
 .bg-primary-color {
@@ -246,7 +250,7 @@ body {
 .dark-theme .gradient-overlay-top {
   background: linear-gradient(
     to top,
-    #000e21fc 20%,
+    #000e21 20%,
     #000e2163 60%,
     rgba(248, 250, 252, 0) 100%
   );
@@ -332,9 +336,24 @@ footer {
 
 .animated-bg {
   position: fixed;
-  inset: 0;
+  /* Rentangkan area melebihi viewport atas dan bawah */
+  top: -10vh;
+  bottom: -10vh;
+  left: 0;
+  right: 0;
+  height: 120vh; /* Buffer ekstra 20% */
+
   z-index: -1;
   overflow: hidden;
+
+  /* Mencegah interaksi touch yang memicu re-layout */
+  pointer-events: none;
+
+  /* Force hardware acceleration penuh */
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 
   background:
     radial-gradient(
@@ -349,7 +368,7 @@ footer {
     ),
     #f8fbff;
 
-  animation: bgReveal 2s ease;
+  animation: bgReveal 2s ease forwards;
 }
 
 .dark-theme .animated-bg {
@@ -364,7 +383,7 @@ footer {
       rgba(0, 110, 255, 0.12),
       transparent 45%
     ),
-    #000e21f2;
+    #000e21;
 
   animation: bgReveal 2s ease;
 }

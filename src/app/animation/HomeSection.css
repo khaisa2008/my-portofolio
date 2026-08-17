@@ -21,7 +21,7 @@
 
 .hero-title {
   font-size: 50px;
-  font-weight: 800;
+  font-weight: 800 !important;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -722,7 +722,7 @@
 
 @media (max-width: 500px) {
   .hero-title {
-    font-weight: 1000;
+    -webkit-text-stroke: 1.5px currentColor;
   }
 
   .source-card {

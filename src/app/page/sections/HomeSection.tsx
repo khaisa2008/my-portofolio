@@ -1,10 +1,11 @@
 "use client"; // Pastikan ada directive ini untuk Next.js App Router
 
+import Image from "next/image";
+
 import OrbitIcon from "@/app/components/OrbitIcon";
 import useHeaderText from "@/app/functions/UseHeaderText";
 import { useIntersectionObserver } from "@/app/functions/UseIntersectionObserver";
 
-import { useTheme } from "@/app/contexts/ThemeContext";
 import { useLanguage } from "@/app/contexts/LanguageContext";
 
 const content = {
@@ -28,7 +29,6 @@ const content = {
 
 export default function HomeSection() {
   const { prefixText, nameText, activeCursor } = useHeaderText();
-  const { dark } = useTheme();
   const { lang } = useLanguage();
 
   const t = content[lang];
@@ -40,33 +40,35 @@ export default function HomeSection() {
     <section
       id="home"
       ref={sectionRef} // Pasang ref di sini
-      className={`hero-section scroll-margin-top ${isVisible ? "active" : ""}`} // Class active ditambahkan saat isVisible = true
+      className={`hero-section scroll-margin-top-hero ${isVisible ? "active" : ""}`} // Class active ditambahkan saat isVisible = true
     >
       {/* Background decorative elements */}
       <div className="hero-bg-glow"></div>
 
       {/* Floating hexagons */}
       <div className="hex hex1">
-        <img src="/element/hex.png" alt="hexagon" />
+        <Image src="/element/hex.png" width={100} height={100}  alt="hexagon" />
       </div>
       <div className="hex hex2">
-        <img src="/element/hex.png" alt="hexagon" />
+        <Image src="/element/hex.png" width={170} height={170} alt="hexagon" />
       </div>
       <div className="hex hex3">
-        <img src="/element/hex.png" alt="hexagon" />
+        <Image src="/element/hex.png" width={150} height={150} alt="hexagon" />
       </div>
       <div className="hex hex4">
-        <img src="/element/hex.png" alt="hexagon" />
+        <Image src="/element/hex.png" width={120} height={120} alt="hexagon" />
       </div>
 
-      <img
+      <Image
         src="/element/polcadot.png"
         className="polcadot-img"
+        width={100} height={100}
         alt="polcadot"
       />
-      <img
+      <Image
         src="/element/polcadot.png"
         className="polcadot-img2"
+        width={90} height={90}
         alt="polcadot"
       />
 
@@ -118,7 +120,8 @@ export default function HomeSection() {
                 <div className="orbit-ring orbit-ring-2"></div>
 
                 {/* Character */}
-                <img src="/pro.png" alt="profile" className="hero-img" />
+                <Image src="/pro.avif" alt="profile" width={450} height={700} className="hero-img" />
+                {/* <img src="/pro.png" alt="profile" className="hero-img" /> */}
                 
                 {/* Orbit Icons: Anda bisa mengirim prop `isActive={isVisible}` jika butuh kontrol di dalam komponen OrbitIcon */}
                 {isVisible && (
@@ -178,8 +181,10 @@ export default function HomeSection() {
                 )}
               </div>
               {/* Source card */}
-              <img
+              <Image
                 src="/element/source_code.png"
+                width={180}
+                height={180}
                 className="source-card"
                 alt="source code"
               />

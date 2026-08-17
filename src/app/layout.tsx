@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Inter } from "next/font/google";
+import Script from "next/script";
+
 import "./globals.css";
 import "./animation/RobotHead.css";
 import "./animation/AngryRobot.css";
 import "./animation/DizzyRobot.css";
-// import "./animation/HomeSection.css";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -12,6 +13,12 @@ import "flag-icons/css/flag-icons.min.css";
 
 import { ThemeProvider } from "@/app/contexts/ThemeContext";
 import { LanguageProvider } from "@/app/contexts/LanguageContext";
+
+// Inisialisasi Inter Font dari Next.js
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,16 +47,24 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
         />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
+      </head>
+      
+      <body className="min-h-full flex flex-col">
+        <ThemeProvider>
+          <LanguageProvider>{children}</LanguageProvider>
+        </ThemeProvider>
+      </body>
+
+      <Script
+        dangerouslySetInnerHTML={{
+          __html: `
               (function() {
                 try {
                   const savedTheme = localStorage.getItem('theme');
@@ -62,14 +77,8 @@ export default function RootLayout({
                 } catch (e) {}
               })();
             `,
-          }}
-        />
-      </head>
-      <body className="min-h-full flex flex-col">
-        <ThemeProvider>
-          <LanguageProvider>{children}</LanguageProvider>
-        </ThemeProvider>
-      </body>
+        }}
+      />
     </html>
   );
 }

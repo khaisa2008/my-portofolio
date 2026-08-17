@@ -94,7 +94,7 @@ export default function FloatingSettings() {
         className={`fab ${open ? "active" : ""}`}
         onClick={() => setOpen(!open)}
       >
-        <i className={`bi ${open ? "bi-x-lg" : "bi-gear-fill"}`}></i>
+        <i className={`bi ${open ? "bi-x-lg" : "bi-gear-wide-connected"}`}></i>
       </button>
     </div>
   );
