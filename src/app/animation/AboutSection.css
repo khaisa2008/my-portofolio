@@ -212,32 +212,36 @@
 }
 
 .bg-circle-1 {
-  width: 320px;
-  height: 320px;
+  width: clamp(200px, 25vw, 320px);
+  height: clamp(200px, 25vw, 320px);
   bottom: 1%;
   left: 1%;
 }
+
 .bg-circle-2 {
-  width: 180px;
-  height: 180px;
+  width: clamp(120px, 14vw, 180px);
+  height: clamp(120px, 14vw, 180px);
   top: 35%;
   left: 23%;
 }
+
 .bg-circle-3 {
-  width: 110px;
-  height: 110px;
+  width: clamp(75px, 9vw, 110px);
+  height: clamp(75px, 9vw, 110px);
   top: 17%;
   left: 34%;
 }
+
 .bg-circle-4 {
-  width: 70px;
-  height: 70px;
+  width: clamp(50px, 6vw, 70px);
+  height: clamp(50px, 6vw, 70px);
   top: 5%;
   left: 29%;
 }
+
 .bg-circle-5 {
-  width: 50px;
-  height: 50px;
+  width: clamp(35px, 4.5vw, 50px);
+  height: clamp(35px, 4.5vw, 50px);
   top: 1%;
   left: 23%;
 }
@@ -280,8 +284,8 @@
 }
 
 .bg-ring-left {
-  width: 100px;
-  height: 100px;
+  width: clamp(70px, 7vw, 100px);
+  height: clamp(70px, 7vw, 100px);
   border-width: 15px;
   border-color: rgba(147, 196, 253, 0.81);
   right: 320px;
@@ -307,19 +311,19 @@
 }
 
 .about-section.active .bg-ring-left {
-  animation: 
+  animation:
     spawnElement 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s,
     PopRing 10s ease-in-out infinite alternate 1.2s;
 }
 
 .about-section.active .bg-ring-right-large {
-  animation: 
+  animation:
     spawnElement 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.3s,
     PopRing 9s ease-in-out infinite alternate-reverse 1.3s; /* Durasi 7s & gerak terbalik */
 }
 
 .about-section.active .bg-ring-right-top {
-  animation: 
+  animation:
     spawnElement 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.45s,
     PopRing 7s ease-in-out infinite alternate 1.45s; /* Durasi 5.5s */
 }
@@ -472,12 +476,12 @@
 @keyframes spawnCircle {
   0% {
     opacity: 0;
-    transform:translateX(-100px);
+    transform: translateX(-100px);
     filter: blur(10px);
   }
   100% {
     opacity: 1;
-    transform:translateY(0);
+    transform: translateY(0);
     filter: blur(0);
   }
 }
@@ -498,16 +502,153 @@
 }
 
 @keyframes PopRing {
-  0%{
+  0% {
     transform: scale(1);
-    opacity:1;
+    opacity: 1;
   }
-  50%{
-    transform:scale(1.);
-    opacity:0.3;
+  50% {
+    transform: scale(1);
+    opacity: 0.3;
   }
-  100%{
-    transform:scale(1);
-    opacity:1;
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 991.5px) {
+  /* Ubah semua ring ke area atas */
+  .bg-ring {
+    z-index: 2;
+  }
+
+  .bg-ring-left {
+    right: 35%;
+    top: 51%; /* Membatalkan atribut bottom sebelumnya */
+  }
+
+  .bg-ring-right-large {
+    top: 10%;
+    right: -100px;
+  }
+
+  .bg-ring-right-top {
+    top: 15%;
+    right: 25%;
+  }
+
+  /* Ubah semua circle ke area bawah */
+  .bg-circle {
+    z-index: 1; /* Memastikan circle berada di lapisan di bawah ring */
+  }
+
+  .bg-circle-1 {
+    bottom: 2%;
+    top: auto;
+    left: 3%;
+  }
+
+  .bg-circle-2 {
+    bottom: 23%;
+    top: auto;
+    left: 32%;
+  }
+
+  .bg-circle-3 {
+    bottom: 30%;
+    top: auto;
+    left: 55%;
+  }
+
+  .bg-circle-4 {
+    bottom: 35%;
+    top: auto;
+    left: auto;
+    right: 20%;
+  }
+
+  .bg-circle-5 {
+    bottom: 35%;
+    top: auto;
+    left: auto;
+    right: 5%;
+  }
+}
+
+@media (max-width: 728px) {
+  .bg-ring-left {
+    width: 75px;
+    height: 75px;
+    right: 43%;
+    top: 45%;
+  }
+
+  .bg-ring-right-large {
+    width: 450px;
+    height: 450px;
+    top: 10%;
+    right: -100px;
+  }
+
+  .bg-ring-right-top {
+    width: 300px;
+    height: 300px;
+    top: 15%;
+    right: 25%;
+  }
+}
+
+@media (max-width: 500.5px) {
+  .bg-ring-left {
+    width: 75px;
+    height: 75px;
+    right: 35%;
+    top: 40%;
+  }
+
+  .bg-ring-right-large {
+    width: 350px;
+    height: 350px;
+    top: 10%;
+    right: -100px;
+  }
+
+  .bg-ring-right-top {
+    width: 250px;
+    height: 250px;
+    top: 15%;
+    right: 25%;
+  }
+
+  .bg-circle-1 {
+    bottom: 2%;
+    top: auto;
+    left: 3%;
+  }
+
+  .bg-circle-2 {
+    bottom: 23%;
+    top: auto;
+    left: 30%;
+  }
+
+  .bg-circle-3 {
+    bottom: 36%;
+    top: auto;
+    left: 50%;
+  }
+
+  .bg-circle-4 {
+    bottom: 42%;
+    top: auto;
+    left: auto;
+    right: 17%;
+  }
+
+  .bg-circle-5 {
+    bottom: 45%;
+    top: auto;
+    left: auto;
+    right: 3%;
   }
 }
