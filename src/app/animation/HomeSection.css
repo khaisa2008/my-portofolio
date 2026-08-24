@@ -140,18 +140,6 @@
 
 /* ================= GLOW EFFECT ================= */
 
-.hero-bg-glow {
-  position: absolute;
-  width: 900px;
-  height: 900px;
-  right: -250px;
-  bottom: -250px;
-  background: radial-gradient(circle, rgba(0, 180, 255, 0.25), transparent 70%);
-  filter: blur(80px);
-  z-index: -4;
-  opacity: 0;
-}
-
 /* ================= PROFILE IMAGE ================= */
 
 .hero-img {
@@ -239,6 +227,7 @@
 .source-card {
   position: absolute;
   width: 280px;
+  height: 190px;
   top: 150px;
   right: -50px;
   z-index: 5;
@@ -298,8 +287,8 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
-  filter: drop-shadow(0 0 8px rgba(0, 217, 255, 0.8))
-    drop-shadow(0 0 20px rgba(0, 217, 255, 0.4));
+  opacity: 0.5;
+  filter: drop-shadow(0 0 10px rgba(0, 217, 255, 0.299));
 }
 
 /* ================= STATE INACTIVE (RESET WHEN SCROLLED OUT) ================= */
@@ -333,13 +322,6 @@
 
 .hero-section.active .social-icons {
   animation: socialReveal 1s ease forwards 1.5s;
-}
-
-/* Background Glow */
-.hero-section.active .hero-bg-glow {
-  animation:
-    zoomInGlow 1.5s ease forwards,
-    pulseGlow 6s ease-in-out infinite 1.5s;
 }
 
 /* Profile Image */
@@ -403,13 +385,6 @@
 }
 
 /* ================= KEYFRAMES ================= */
-
-@keyframes pulseGlow {
-  50% {
-    transform: scale(1.08);
-    opacity: 0.9;
-  }
-}
 
 @keyframes profileGlow {
   50% {
@@ -504,17 +479,6 @@
 @keyframes cursorBlink {
   50% {
     opacity: 0;
-  }
-}
-
-@keyframes zoomInGlow {
-  from {
-    opacity: 0;
-    transform: scale(0.7);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
   }
 }
 
@@ -671,6 +635,7 @@
     width: 250px;
     right: -20px;
   }
+
 }
 
 /* Mode Mobile (max-width: 690px) */
@@ -727,6 +692,7 @@
 
   .source-card {
     width: 180px;
+    height: 140px;
     top: 130px;
     right: -30px;
   }
@@ -763,4 +729,39 @@
     top: 40%;
     right: 10%;
   }
+
+  .orbit-ring {
+    width: 500px;
+    height: 500px;
+  }
+
+  .orbit-ring-2 {
+    width: 350px;
+    height: 350px;
+  }
+
+  .hero-section.active .orbit-ring {
+    animation: orbitIntro 1.2s ease forwards 0.2s;
+  }
+
+  .hero-section.active .orbit-ring-2 {
+    animation: orbitIntro 1.4s ease forwards 0.4s;
+  }
+
+  /* Hexagons */
+  /* .hero-section.active .hex1 {
+    animation: hexIntro 1s cubic-bezier(0.18, 0.9, 0.25, 1) forwards 0.2s;
+  }
+
+  .hero-section.active .hex2 {
+    animation: hexIntro 1s cubic-bezier(0.18, 0.9, 0.25, 1) forwards 0.4s;
+  }
+
+  .hero-section.active .hex3 {
+    animation: hexIntro 1s cubic-bezier(0.18, 0.9, 0.25, 1) forwards 0.6s;
+  }
+
+  .hero-section.active .hex4 {
+    animation: hexIntro 1s cubic-bezier(0.18, 0.9, 0.25, 1) forwards 0.8s;
+  } */
 }

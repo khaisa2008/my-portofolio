@@ -651,4 +651,29 @@
     left: auto;
     right: 3%;
   }
+
+  .about-section.active .bg-circle-1 {
+    animation:
+      spawnCircle 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.3s;
+  }
+
+  .about-section.active .bg-circle-2 {
+    animation:
+      spawnCircle 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.5s;
+  }
+
+  .about-section.active .bg-circle-3 {
+    animation:
+      spawnCircle 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.7s;
+  }
+
+  .about-section.active .bg-circle-4 {
+    animation:
+      spawnCircle 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.9s;
+  }
+
+  .about-section.active .bg-circle-5 {
+    animation:
+      spawnCircle 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 1s;
+  }
 }

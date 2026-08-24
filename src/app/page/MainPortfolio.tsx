@@ -37,7 +37,7 @@ export default function MainPortfolio() {
       <AnimatedBackground />
 
       <div id="main">
-        <img src="/element/code.png" className="code-img" alt="code" />
+        <img src="/element/code.avif" className="code-img" alt="code" />
 
         {/* ================= NAVBAR ================= */}
         <Navbar />

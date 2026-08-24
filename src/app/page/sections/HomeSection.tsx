@@ -42,31 +42,29 @@ export default function HomeSection() {
       ref={sectionRef} // Pasang ref di sini
       className={`hero-section scroll-margin-top-hero ${isVisible ? "active" : ""}`} // Class active ditambahkan saat isVisible = true
     >
-      {/* Background decorative elements */}
-      <div className="hero-bg-glow"></div>
 
       {/* Floating hexagons */}
       <div className="hex hex1">
-        <Image src="/element/hex.png" width={100} height={100}  alt="hexagon" />
+        <Image src="/element/hex.avif" width={100} height={100}  alt="hexagon" />
       </div>
       <div className="hex hex2">
-        <Image src="/element/hex.png" width={170} height={170} alt="hexagon" />
+        <Image src="/element/hex.avif" width={170} height={170} alt="hexagon" />
       </div>
       <div className="hex hex3">
-        <Image src="/element/hex.png" width={150} height={150} alt="hexagon" />
+        <Image src="/element/hex.avif" width={150} height={150} alt="hexagon" />
       </div>
       <div className="hex hex4">
-        <Image src="/element/hex.png" width={120} height={120} alt="hexagon" />
+        <Image src="/element/hex.avif" width={120} height={120} alt="hexagon" />
       </div>
 
       <Image
-        src="/element/polcadot.png"
+        src="/element/polcadot.avif"
         className="polcadot-img"
         width={100} height={100}
         alt="polcadot"
       />
       <Image
-        src="/element/polcadot.png"
+        src="/element/polcadot.avif"
         className="polcadot-img2"
         width={90} height={90}
         alt="polcadot"
@@ -128,7 +126,7 @@ export default function HomeSection() {
                   <>
                     {/* 3D Icons with orbit animation */}
                     <OrbitIcon
-                      image="/element/laravel.png"
+                      image="/element/laravel.avif"
                       size={110}
                       radiusX={255}
                       radiusY={250}
@@ -138,7 +136,7 @@ export default function HomeSection() {
                       initialDelay={2100}
                     />
                     <OrbitIcon
-                      image="/element/react.png"
+                      image="/element/react.avif"
                       size={110}
                       radiusX={270}
                       radiusY={260}
@@ -148,7 +146,7 @@ export default function HomeSection() {
                       initialDelay={1650}
                     />
                     <OrbitIcon
-                      image="/element/js.png"
+                      image="/element/js.avif"
                       size={110}
                       radiusX={250}
                       radiusY={250}
@@ -158,7 +156,7 @@ export default function HomeSection() {
                       initialDelay={1200}
                     />
                     <OrbitIcon
-                      image="/element/css.png"
+                      image="/element/css.avif"
                       size={110}
                       radiusX={260}
                       radiusY={255}
@@ -168,7 +166,7 @@ export default function HomeSection() {
                       initialDelay={800}
                     />
                     <OrbitIcon
-                      image="/element/html.png"
+                      image="/element/html.avif"
                       size={110}
                       radiusX={240}
                       radiusY={245}
@@ -183,8 +181,8 @@ export default function HomeSection() {
               {/* Source card */}
               <Image
                 src="/element/source_code.png"
-                width={180}
-                height={180}
+                width={280}
+                height={190}
                 className="source-card"
                 alt="source code"
               />
