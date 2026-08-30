@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/app/contexts/LanguageContext";
 import { useIntersectionObserver } from "@/app/functions/UseIntersectionObserver";
 
@@ -137,29 +137,30 @@ export default function SkillsSection() {
     threshold: 0.2,
   });
 
+  // Reset card yang terbuka ketika section keluar dari layar (tidak aktif)
+  useEffect(() => {
+    if (!isVisible) {
+      setActiveSkill(null);
+    }
+  }, [isVisible]);
+
   const getAnimationClass = () => {
     if (!isVisible) return "";
     return direction === "down" ? "active active-down" : "active active-up";
   };
 
   const handleCardClick = (name: string) => {
-    // 1. Jika mengklik card yang sama (sudah aktif), tutup card tersebut
     if (activeSkill === name) {
       setActiveSkill(null);
       return;
     }
 
-    // 2. Jika ada card lain yang sedang terbuka
     if (activeSkill !== null) {
-      // Step A: Tutup card yang sedang aktif terlebih dahulu
       setActiveSkill(null);
-
-      // Step B: Tunggu hingga durasi rotasi flip selesai (500ms / 0.5s sesuai CSS), baru buka card baru
       setTimeout(() => {
         setActiveSkill(name);
-      }, 500); // 500ms disesuaikan dengan transition duration di CSS (.skill-card-inner = 0.5s)
+      }, 500);
     } else {
-      // 3. Jika belum ada card yang terbuka, buka langsung
       setActiveSkill(name);
     }
   };
@@ -176,10 +177,8 @@ export default function SkillsSection() {
 
     if (currentRow === activeRow) {
       if (index === activeIndex) {
-        // Card aktif membesar (6 kolom)
         return "col-12 col-md-6 col-lg-6 active-expanded";
       } else {
-        // Card lain di baris yang sama mengecil (2 kolom: 6 + 2 + 2 + 2 = 12)
         return "col-4 col-md-3 col-lg-2 active-shrunk";
       }
     }
@@ -216,15 +215,15 @@ export default function SkillsSection() {
                   style={{ "--delay": index } as React.CSSProperties}
                 >
                   <div
-                    className={`skill-card-inner ${isFlipped ? "is-flipped" : ""}`}
+                    className={`skill-card-inner ${isFlipped && isVisible ? "is-flipped" : ""}`}
                   >
-                    {/* --- SISI DEPAN CARD --- */}
+                    {/* SISI DEPAN CARD */}
                     <div className="skill-card skill-card-front text-center p-3 d-flex flex-column align-items-center justify-content-center">
                       <i className={`${skill.iconClass} display-4 mb-3`}></i>
                       <h5 className="m-0 fw-semibold">{skill.name}</h5>
                     </div>
 
-                    {/* --- SISI BELAKANG CARD (LAYOUT SESUAI GAMBAR) --- */}
+                    {/* SISI BELAKANG CARD */}
                     <div className="skill-card skill-card-back p-3 d-flex align-items-center gap-3 text-start">
                       <i
                         className={`${skill.iconClass} skill-icon-back flex-shrink-0`}

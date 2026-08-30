@@ -1,11 +1,10 @@
-"use client"; // Pastikan ada directive ini untuk Next.js App Router
+"use client";
 
 import Image from "next/image";
 
 import OrbitIcon from "@/app/components/OrbitIcon";
 import useHeaderText from "@/app/functions/UseHeaderText";
 import { useIntersectionObserver } from "@/app/functions/UseIntersectionObserver";
-
 import { useLanguage } from "@/app/contexts/LanguageContext";
 
 const content = {
@@ -33,19 +32,18 @@ export default function HomeSection() {
 
   const t = content[lang];
 
-  // Gunakan hook Intersection Observer
+  // Observer aktif ketika 25% area terlihat
   const [sectionRef, isVisible] = useIntersectionObserver({ threshold: 0.25 });
 
   return (
     <section
       id="home"
-      ref={sectionRef} // Pasang ref di sini
-      className={`hero-section scroll-margin-top-hero ${isVisible ? "active" : ""}`} // Class active ditambahkan saat isVisible = true
+      ref={sectionRef}
+      className={`hero-section scroll-margin-top-hero ${isVisible ? "active" : ""}`}
     >
-
-      {/* Floating hexagons */}
+      {/* Floating hexagons - Otomatis ter-pause via CSS ketika !isVisible */}
       <div className="hex hex1">
-        <Image src="/element/hex.avif" width={100} height={100}  alt="hexagon" />
+        <Image src="/element/hex.avif" width={100} height={100} alt="hexagon" />
       </div>
       <div className="hex hex2">
         <Image src="/element/hex.avif" width={170} height={170} alt="hexagon" />
@@ -60,13 +58,15 @@ export default function HomeSection() {
       <Image
         src="/element/polcadot.avif"
         className="polcadot-img"
-        width={100} height={100}
+        width={100}
+        height={100}
         alt="polcadot"
       />
       <Image
         src="/element/polcadot.avif"
         className="polcadot-img2"
-        width={90} height={90}
+        width={90}
+        height={90}
         alt="polcadot"
       />
 
@@ -79,12 +79,16 @@ export default function HomeSection() {
             </span>
             <h1 className="hero-title mt-4">
               <span
-                className={`prefix-text ${activeCursor === "prefix" ? "cursor" : ""}`}
+                className={`prefix-text ${
+                  activeCursor === "prefix" ? "cursor" : ""
+                }`}
               >
                 {prefixText}
               </span>
               <span
-                className={`name-text ${activeCursor === "name" ? "cursor" : ""}`}
+                className={`name-text ${
+                  activeCursor === "name" ? "cursor" : ""
+                }`}
               >
                 {nameText}
               </span>
@@ -95,9 +99,7 @@ export default function HomeSection() {
               <button className="btn btn-info btn-lg rounded-pill px-4">
                 <i className="bi bi-send"></i> {t.hireBtn}
               </button>
-              <button
-                className="btn btn-lg rounded-pill px-4 btn-theme-outline"
-              >
+              <button className="btn btn-lg rounded-pill px-4 btn-theme-outline">
                 <i className="bi bi-download"></i> {t.cvBtn}
               </button>
             </div>
@@ -109,22 +111,24 @@ export default function HomeSection() {
             </div>
           </div>
 
-          {/* RIGHT CONTENT: 3D Character + Orbiting Icons */}
+          {/* RIGHT CONTENT */}
           <div className="col-lg-6 pe-3">
             <div className="hero-right">
-              {/* Orbit rings */}
               <div className="orbit-wrapper">
                 <div className="orbit-ring"></div>
                 <div className="orbit-ring orbit-ring-2"></div>
 
-                {/* Character */}
-                <Image src="/pro.avif" alt="profile" width={450} height={700} className="hero-img" />
-                {/* <img src="/pro.png" alt="profile" className="hero-img" /> */}
-                
-                {/* Orbit Icons: Anda bisa mengirim prop `isActive={isVisible}` jika butuh kontrol di dalam komponen OrbitIcon */}
+                <Image
+                  src="/pro.avif"
+                  alt="profile"
+                  width={450}
+                  height={700}
+                  className="hero-img"
+                />
+
+                {/* OrbitIcon hanya dirender & dijalankan loop animasinya jika section aktif */}
                 {isVisible && (
                   <>
-                    {/* 3D Icons with orbit animation */}
                     <OrbitIcon
                       image="/element/laravel.avif"
                       size={110}
@@ -178,7 +182,6 @@ export default function HomeSection() {
                   </>
                 )}
               </div>
-              {/* Source card */}
               <Image
                 src="/element/source_code.png"
                 width={280}

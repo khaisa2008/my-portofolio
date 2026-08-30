@@ -1,5 +1,18 @@
-/* ================= ABOUT SECTION ================= */
+/* Hentikan semua animasi CSS di dalam #about saat tidak memiliki class .active */
+.about-section:not(.active) .star,
+.about-section:not(.active) .bg-element,
+.about-section:not(.active) .glass-card-about {
+  animation-play-state: paused !important;
+}
 
+/* Jalankan kembali saat class .active terpasang */
+.about-section.active .star,
+.about-section.active .bg-element,
+.about-section.active .glass-card-about {
+  animation-play-state: running;
+}
+
+/* ================= ABOUT SECTION ================= */
 .about-section {
   position: relative;
   overflow: hidden;
@@ -249,31 +262,31 @@
 .about-section.active .bg-circle-1 {
   animation:
     spawnCircle 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.3s,
-    CircleWave 12s ease-in-out infinite alternate 1.3s;
+    CircleWave 6s ease-in-out infinite alternate 1s;
 }
 
 .about-section.active .bg-circle-2 {
   animation:
     spawnCircle 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.5s,
-    CircleWave 10s ease-in-out infinite alternate 1.5s;
+    CircleWave 6s ease-in-out infinite alternate 1.5s;
 }
 
 .about-section.active .bg-circle-3 {
   animation:
     spawnCircle 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.7s,
-    CircleWave 8s ease-in-out infinite alternate 1.7s;
+    CircleWave 6s ease-in-out infinite alternate 2s;
 }
 
 .about-section.active .bg-circle-4 {
   animation:
     spawnCircle 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.9s,
-    CircleWave 8s ease-in-out infinite alternate 1.9s;
+    CircleWave 6s ease-in-out infinite alternate 2.5s;
 }
 
 .about-section.active .bg-circle-5 {
   animation:
     spawnCircle 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 1s,
-    CircleWave 9s ease-in-out infinite alternate 2s;
+    CircleWave 6s ease-in-out infinite alternate 3s;
 }
 
 /* Ring Styles */
@@ -516,6 +529,7 @@
   }
 }
 
+/* RESPONSIVE LAYOUT */
 @media (max-width: 991.5px) {
   /* Ubah semua ring ke area atas */
   .bg-ring {

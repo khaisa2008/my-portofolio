@@ -88,15 +88,33 @@ body {
   border-radius: 50px;
   transition: 0.3s;
   cursor: pointer;
+  background: transparent;
 }
 
 .dark-theme .nav-capsule .nav-link {
   color: #f8fafc;
 }
 
-.nav-capsule .nav-link:hover,
+/* Hilangkan outline dan sticky background saat di-tap di mobile */
+.nav-capsule .nav-link:focus,
+.nav-capsule .nav-link:focus-visible,
+.nav-capsule .nav-link:active {
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent;
+}
+
+/* Hover HANYA aktif pada perangkat dengan mouse/kursor (Desktop) */
+@media (hover: hover) {
+  .nav-capsule .nav-link:hover {
+    background: #00d9ff;
+    color: #293133 !important;
+  }
+}
+
+/* Style State Aktif Murni */
 .nav-capsule .nav-link.active {
-  background: #00d9ff;
+  background: #00d9ff !important;
   color: #293133 !important;
 }
 
@@ -104,10 +122,10 @@ body {
 @media (max-width: 768px) {
   .nav-capsule {
     position: relative;
-    overflow: visible !important; /* PENTING: Supaya efek luar bisa menembus batas kapsul */
+    overflow: visible !important;
     padding: 6px 12px !important;
     width: 100%;
-    max-width: 500px; /* Disesuaikan agar proporsional di layar tablet/HP besar */
+    max-width: 500px;
   }
 
   .nav-capsule ul {
@@ -117,10 +135,10 @@ body {
 
   .nav-capsule .nav-link {
     display: flex;
-    flex-direction: column; /* Ikon di atas, Teks di bawah */
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 80px; /* Sedikit diperlebar agar seimbang di layar hingga 768px */
+    width: 80px;
     height: 56px;
     border-radius: 30px !important;
     padding: 0 !important;
@@ -135,7 +153,6 @@ body {
     margin-bottom: 2px;
   }
 
-  /* Lingkaran Aktif Warna Biru (Cyan) */
   .nav-capsule .nav-link.active {
     background: #00d9ff !important;
     box-shadow: 0 4px 15px rgba(0, 217, 255, 0.5);
@@ -147,7 +164,7 @@ body {
 @media (max-width: 550px) {
   .nav-capsule {
     position: relative;
-    overflow: visible !important; /* PENTING: Supaya lingkaran luar bisa menembus batas kapsul */
+    overflow: visible !important;
     padding: 6px 10px !important;
     width: 100%;
     max-width: 360px;
@@ -160,12 +177,12 @@ body {
 
   .nav-capsule .nav-link {
     display: flex;
-    flex-direction: column; /* Ikon di atas, Teks di bawah */
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     width: 65px;
     height: 54px;
-    border-radius: 30px !important; /* Lingkaran sempurna */
+    border-radius: 30px !important;
     padding: 0 !important;
     font-size: 12px;
     position: relative;
@@ -178,7 +195,6 @@ body {
     margin-bottom: 2px;
   }
 
-  /* Lingkaran Aktif Warna Biru (Cyan) */
   .nav-capsule .nav-link.active {
     background: #00d9ff !important;
     box-shadow: 0 4px 15px rgba(0, 217, 255, 0.5);
@@ -283,26 +299,6 @@ body {
       rgba(248, 250, 252, 0) 100%
     );
   }
-}
-/* ================= PROJECT ================= */
-
-.project-card {
-  overflow: hidden;
-  border-radius: 25px;
-  background: rgba(255, 255, 255, 0.06);
-  transition: 0.4s;
-}
-
-.project-card img {
-  transition: 0.4s;
-}
-
-.project-card:hover img {
-  transform: scale(1.05);
-}
-
-.project-card:hover {
-  transform: translateY(-10px);
 }
 
 /* ================= FORM ================= */

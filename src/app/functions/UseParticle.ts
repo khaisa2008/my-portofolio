@@ -1,19 +1,6 @@
 "use client";
 
 export default function UseParticle() {
-  // Variabel untuk kontrol animasi
-  let animationId: number;
-  let isActive = true;
-  let lastFrameTime = 0;
-  const frameInterval = 1000 / 30; // Target 30fps
-
-  // Deteksi visibilitas tab
-  if (typeof document !== "undefined") {
-    document.addEventListener("visibilitychange", () => {
-      isActive = document.visibilityState === "visible";
-    });
-  }
-
   function initParticles() {
     const canvas = document.getElementById(
       "particleCanvas",
@@ -22,8 +9,14 @@ export default function UseParticle() {
     if (!canvas) return;
 
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-
     if (!ctx) return;
+
+    // Scope-local variables untuk memastikan isolation penuh
+    let animationId: number;
+    let isRunning = true;
+    let isActive = true;
+    let lastFrameTime = 0;
+    const frameInterval = 1000 / 30; // Target 30fps
 
     let particles: {
       x: number;
@@ -34,41 +27,44 @@ export default function UseParticle() {
       opacity: number;
     }[] = [];
 
-    // Cache untuk menghindari alokasi berulang
     let maxDistance = 0;
     let particleCount = 0;
+
+    // Deteksi Tab Active/Inactive
+    const handleVisibilityChange = () => {
+      isActive = document.visibilityState === "visible";
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     function createParticles() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
 
-      // Kurangi density untuk performa
-      const density = 0.00005; // Turun dari 0.00006
-
+      const density = 0.00005;
       particleCount = Math.min(
         Math.floor(canvas.width * canvas.height * density),
-        200, // Turun dari 250
+        200,
       );
 
       particles = Array.from({ length: particleCount }, () => ({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        radius: Math.random() * 1.8 + 0.8, // Sedikit lebih kecil
-        vx: (Math.random() - 0.5) * 0.35, // Sedikit lebih lambat
+        radius: Math.random() * 1.8 + 0.8,
+        vx: (Math.random() - 0.5) * 0.35,
         vy: (Math.random() - 0.5) * 0.35,
-        opacity: Math.random() * 0.5 + 0.3, // Turun opacity
+        opacity: Math.random() * 0.5 + 0.3,
       }));
 
-      maxDistance = Math.min(
-        canvas.width * 0.05, // Turun dari 0.06
-        100, // Turun dari 120
-      );
+      maxDistance = Math.min(canvas.width * 0.05, 100);
     }
 
     createParticles();
 
     function animate(timestamp: number) {
-      // Stop jika tab tidak visible
+      // STOP MUTLAK: Jika isRunning false (komponen unmount), langsung return tanpa panggil rAF baru
+      if (!isRunning) return;
+
+      // Skip render jika tab sedang tidak aktif
       if (!isActive) {
         animationId = requestAnimationFrame(animate);
         return;
@@ -83,9 +79,7 @@ export default function UseParticle() {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Matikan shadow untuk performa lebih baik
-      // (tetap pertahankan jika ingin efek glow)
-      ctx.shadowBlur = 10; // Turun dari 15
+      ctx.shadowBlur = window.innerWidth <= 768 ? 4 : 10;
       ctx.shadowColor = "#00ffff";
 
       const len = particles.length;
@@ -97,59 +91,36 @@ export default function UseParticle() {
 
         if (p.x < 0) p.x = canvas.width;
         if (p.x > canvas.width) p.x = 0;
-
         if (p.y < 0) p.y = canvas.height;
         if (p.y > canvas.height) p.y = 0;
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-
-        ctx.fillStyle = `rgba(
-          0,
-          255,
-          255,
-          ${p.opacity}
-        )`;
-
+        ctx.fillStyle = `rgba(0, 255, 255, ${p.opacity})`;
         ctx.fill();
       }
 
-      // Reset shadow untuk lines
       ctx.shadowBlur = 0;
 
-      // Optimasi: batasi jumlah partikel untuk koneksi
-      const connectionLimit = Math.min(len, 150);
-
-      // Gunakan squared distance untuk menghindari sqrt
+      const connectionLimit =
+        window.innerWidth <= 768 ? Math.min(len, 70) : Math.min(len, 150);
       const maxDistSq = maxDistance * maxDistance;
 
       for (let i = 0; i < connectionLimit; i++) {
         for (let j = i + 1; j < connectionLimit; j++) {
           const dx = particles[i].x - particles[j].x;
-
           const dy = particles[i].y - particles[j].y;
-
           const distSq = dx * dx + dy * dy;
 
           if (distSq < maxDistSq) {
             const dist = Math.sqrt(distSq);
 
             ctx.beginPath();
-
             ctx.moveTo(particles[i].x, particles[i].y);
-
             ctx.lineTo(particles[j].x, particles[j].y);
-
-            ctx.strokeStyle = `rgba(
-              0,
-              255,
-              255,
-              ${
-                0.5 * // Turun dari 0.15
-                (1 - dist / maxDistance)
-              }
-            )`;
-
+            ctx.strokeStyle = `rgba(0, 255, 255, ${
+              0.5 * (1 - dist / maxDistance)
+            })`;
             ctx.stroke();
           }
         }
@@ -166,10 +137,12 @@ export default function UseParticle() {
 
     window.addEventListener("resize", resize);
 
+    // CLEANUP FUNCTION: Dipanggil saat SplashScreen di-unmount
     return () => {
-      cancelAnimationFrame(animationId);
-
+      isRunning = false; // Memutus loop rekursif animate()
+      cancelAnimationFrame(animationId); // Menghapus frame terdaftar di browser
       window.removeEventListener("resize", resize);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }
 

@@ -51,11 +51,9 @@ const content = {
 
 export default function AboutSection() {
   const { lang } = useLanguage();
-
   const t = content[lang];
 
   const [stars, setStars] = useState<Star[]>([]);
-  // Menggunakan custom hook observer (mendeteksi ketika section aktif / terlihat)
   const [sectionRef, isVisible] = useIntersectionObserver<HTMLElement>({
     threshold: 0.15,
   });
@@ -92,26 +90,30 @@ export default function AboutSection() {
     <section
       id="about"
       ref={sectionRef}
-      className={`about-section py-5 scroll-margin-top ${isVisible ? "active" : ""}`}
+      className={`about-section py-5 scroll-margin-top ${
+        isVisible ? "active" : ""
+      }`}
     >
-      {/* Container Bintang Jatuh (Sesuai request: Tidak Diubah) */}
-      <div className="constellation">
-        {stars.map((star, i) => (
-          <span
-            key={i}
-            className="star"
-            style={
-              {
-                "--x": star.x,
-                "--y": star.y,
-                "--delay": star.delay,
-                "--duration": star.duration,
-                "--size": star.size,
-              } as React.CSSProperties
-            }
-          />
-        ))}
-      </div>
+      {/* Container Bintang Jatuh hanya dirender saat section aktif di viewport */}
+      {isVisible && (
+        <div className="constellation">
+          {stars.map((star, i) => (
+            <span
+              key={i}
+              className="star"
+              style={
+                {
+                  "--x": star.x,
+                  "--y": star.y,
+                  "--delay": star.delay,
+                  "--duration": star.duration,
+                  "--size": star.size,
+                } as React.CSSProperties
+              }
+            />
+          ))}
+        </div>
+      )}
 
       {/* Container Elemen Dekorasi Background */}
       <div className="bg-decorations">
@@ -149,40 +151,31 @@ export default function AboutSection() {
         <div className="row g-4">
           {/* KOLOM KIRI */}
           <div className="col-lg-7 d-flex flex-column gap-4">
-            {/* Card Kiri Top */}
             <div className="glass-card-about card-left p-4 flex-fill">
               <h3 className="mb-3">
                 <i className="bi bi-person-circle"></i> {t.whoAmITitle}
               </h3>
-              <p>
-                {t.whoAmIDesc}
-              </p>
+              <p>{t.whoAmIDesc}</p>
             </div>
 
-            {/* Card Kiri Bottom */}
             <div className="glass-card-about card-left p-4 flex-fill">
               <h3 className="mb-3">
                 <i className="bi bi-code-slash"></i> {t.visionTitle}
               </h3>
-              <p>
-                {t.visionDesc}
-              </p>
+              <p>{t.visionDesc}</p>
             </div>
           </div>
 
           {/* KOLOM KANAN */}
           <div className="col-lg-5 d-flex flex-column gap-4">
-            {/* Card Kanan Top (Pendek) */}
             <div className="glass-card-about card-right p-4">
               <h4 className="mb-1">
-                <i className="bi bi-star-fill me-2"></i>{t.highlightTitle}
+                <i className="bi bi-star-fill me-2"></i>
+                {t.highlightTitle}
               </h4>
-              <small className="">
-                {t.highlightDesc}
-              </small>
+              <small>{t.highlightDesc}</small>
             </div>
 
-            {/* Card Kanan Bottom (Tinggi / Experience) */}
             <div className="glass-card-about card-right p-4 flex-fill">
               <h3 className="mb-3">
                 <i className="bi bi-award"></i> {t.expTitle}

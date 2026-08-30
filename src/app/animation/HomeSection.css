@@ -1,5 +1,20 @@
-/* ================= HERO SECTION ================= */
+/* Matikan animasi secara default jika section tidak memiliki class .active */
+.hero-section:not(.active) .hex,
+.hero-section:not(.active) .polcadot-img,
+.hero-section:not(.active) .polcadot-img2,
+.hero-section:not(.active) .orbit-ring,
+.hero-section:not(.active) .hero-img,
+.hero-section:not(.active) .source-card {
+  animation-play-state: paused !important;
+}
 
+/* Atau jika animasi dijalankan dengan class tambahan saat active */
+.hero-section.active .hex,
+.hero-section.active .orbit-ring {
+  animation-play-state: running;
+}
+
+/* ================= HERO SECTION ================= */
 .hero-section {
   min-height: 60vh;
   position: relative;
@@ -566,6 +581,8 @@
     transform: translateY(0);
   }
 }
+
+/* RESPONSIVE LAYOUT */
 @media (max-width: 1376px) {
   .hero-title {
     flex-direction: column; /* Menumpuk prefixText dan nameText secara vertikal */
@@ -635,7 +652,6 @@
     width: 250px;
     right: -20px;
   }
-
 }
 
 /* Mode Mobile (max-width: 690px) */

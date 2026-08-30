@@ -1,0 +1,306 @@
+/* ================= PROJECT CARD STYLES ================= */
+
+/* Light Theme Variables (Default: Biru Agak Gelap) */
+:root {
+  --cyan-primary: #0284c7; /* Cyan/Biru lebih gelap untuk kontras terang */
+  --cyan-border: rgba(2, 132, 199, 0.4);
+  --cyan-glow: rgba(2, 132, 199, 0.2);
+  --cyan-glow-hover: rgba(2, 132, 199, 0.5);
+  --badge-bg: rgba(2, 132, 199, 0.1);
+  --tag-bg: rgba(2, 132, 199, 0.08);
+  --btn-arrow-bg: rgba(2, 132, 199, 0.15);
+}
+
+/* Dark Theme Variables (Tetap Warna Biru Cerah) */
+.dark-theme {
+  --cyan-primary: #00d2ff; /* Biru cyan terang bawaan */
+  --cyan-border: rgba(0, 210, 255, 0.4);
+  --cyan-glow: rgba(0, 210, 255, 0.15);
+  --cyan-glow-hover: rgba(0, 210, 255, 0.8);
+  --badge-bg: rgba(0, 210, 255, 0.1);
+  --tag-bg: rgba(15, 32, 50, 0.8);
+  --btn-arrow-bg: rgba(5, 18, 30, 0.65);
+}
+
+.project-section {
+  background: transparent;
+  position: relative;
+  overflow: hidden;
+  z-index: 5;
+}
+
+.text-cyan {
+  color: var(--cyan-primary) !important;
+}
+
+/* Base Card Styling */
+.project-card {
+  position: relative;
+  width: 95%;
+  margin: 0 auto;
+  border: 1.5px solid var(--cyan-border);
+  border-radius: 20px;
+  padding: 16px;
+  background: transparent;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 15px var(--cyan-glow);
+  transition: all 0.3s ease-in-out;
+}
+
+.project-title {
+  color: #1e293b; /* Hitam saat Light Theme */
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.project-description {
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  min-height: 42px;
+}
+
+/* Dark Theme Text Overrides */
+.dark-theme .project-title {
+  color: #ffffff; /* Putih saat Dark Theme */
+}
+
+.dark-theme .project-description {
+  color: #94a3b8;
+}
+
+/* Hover Glowing Effects */
+.project-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--cyan-primary);
+  box-shadow: 0 0 25px var(--cyan-glow-hover);
+}
+
+.project-card:hover .project-img-wrapper img {
+  transform: scale(1.05);
+}
+
+/* Image & Overlay Button */
+.project-img-wrapper {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.project-img-wrapper img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.arrow-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 38px;
+  height: 38px;
+  background: var(--btn-arrow-bg);
+  border: 1px solid var(--cyan-border);
+  border-radius: 50%;
+  color: var(--cyan-primary);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+
+.arrow-btn:hover {
+  background: var(--cyan-primary);
+  color: #ffffff;
+  box-shadow: 0 0 12px var(--cyan-primary);
+}
+
+/* Badges & Tags */
+.project-category-badge {
+  background: var(--badge-bg);
+  border: 1px solid var(--cyan-border);
+  color: var(--cyan-primary);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 4px 14px;
+  border-radius: 20px;
+}
+
+.tag-pill {
+  background: var(--tag-bg);
+  border: 1px solid var(--cyan-border);
+  color: var(--cyan-primary);
+  font-size: 0.78rem;
+  padding: 4px 12px;
+  border-radius: 8px;
+}
+
+/* Footer & Divider */
+.project-divider {
+  border-color: var(--cyan-border);
+  opacity: 1;
+}
+
+.project-link {
+  color: var(--cyan-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.project-link:hover {
+  color: var(--cyan-primary);
+  opacity: 0.75;
+}
+
+.link-separator {
+  width: 1px;
+  height: 18px;
+  background-color: var(--cyan-border);
+}
+
+/* ================= POLICE LINE BACKGROUND & ANIMATIONS ================= */
+
+.police-lines-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Single Line Styling - Default Hidden State */
+.police-line {
+  position: absolute;
+  height: 45px;
+  width: 300%;
+  background-image: url("/element/policeline.png");
+  background-repeat: repeat-x;
+  background-size: auto 100%;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.45);
+  opacity: 0; /* Default disembunyikan sebelum masuk layar */
+}
+
+/* Base Position Adjustments */
+.line-top {
+  top: 15px;
+  left: -100%;
+}
+
+/* Wrapper khusus untuk memutar Line Bottom 50deg */
+.line-bottom-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-2deg); /* Rotasi dipasang di sini agar aman dari animasi */
+}
+
+/* Line Bottom Styling */
+.line-bottom {
+  bottom: 45px;
+  left: -100%;
+  /* JANGAN taruh transform: rotate(...) di sini karena akan tertimpa keyframe */
+}
+
+.police-line-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.diag-1-wrapper {
+  transform: rotate(10deg) translateY(-40px);
+}
+
+.diag-2-wrapper {
+  transform: rotate(-17deg) translateY(40px);
+}
+
+.line-diagonal {
+  width: 300%;
+  left: -100%;
+}
+
+/* Animasi hanya aktif jika kelas .is-visible dipasang oleh Hook */
+.slide-right.is-visible {
+  animation:
+    slideFromLeft 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards,
+    moveRight 12s linear infinite 1.2s,
+    pulseDim 2s ease-in-out infinite;
+}
+
+.slide-left.is-visible {
+  animation:
+    slideFromRight 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards,
+    moveLeft 12s linear infinite 1.2s,
+    pulseDim 2s ease-in-out infinite;
+}
+
+/* Ujung Depan Dimulai dari Luar Layar Meluncur ke Tengah */
+@keyframes slideFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%); /* Masuk dari jauh di luar layar kiri */
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideFromRight {
+  0% {
+    opacity: 0;
+    transform: translateX(100%); /* Masuk dari jauh di luar layar kanan */
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Pergerakan Infinite Background Tape */
+@keyframes moveRight {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes moveLeft {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -1000px 0;
+  }
+}
+
+/* Redup Terang Periodik */
+@keyframes pulseDim {
+  0%,
+  100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 8px rgba(0, 208, 255, 0.521));
+  }
+  50% {
+    opacity: 0.45;
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.2));
+  }
+}

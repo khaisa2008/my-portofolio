@@ -14,6 +14,7 @@ import FloatingSettings from "@/app/components/FloatingSettings";
 import "@/app/animation/HomeSection.css";
 import "@/app/animation/AboutSection.css";
 import "@/app/animation/SkilsSection.css";
+import "@/app/animation/ProjectsSection.css";
 
 import UseParticle from "@/app/functions/UseParticleSection";
 import { useTheme } from "@/app/contexts/ThemeContext";
