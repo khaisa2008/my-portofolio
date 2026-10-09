@@ -1,0 +1,609 @@
+/* ================= PROJECT CARD STYLES ================= */
+
+/* Light Theme Variables — varian gelap dari brand (--accent) supaya kontras
+ * di atas surface terang tetap AA, sambil tetap satu keluarga cyan. */
+:root {
+  --cyan-primary: var(--accent-ink, #0e7490);
+  --cyan-border: rgba(14, 116, 144, 0.4);
+  --cyan-glow: rgba(14, 116, 144, 0.2);
+  --cyan-glow-hover: rgba(14, 116, 144, 0.5);
+  --badge-bg: rgba(14, 116, 144, 0.1);
+  --tag-bg: rgba(14, 116, 144, 0.08);
+  --btn-arrow-bg: rgba(14, 116, 144, 0.15);
+}
+
+/* Dark Theme Variables — persis brand --accent (#00d9ff), bukan #00d2ff. */
+.dark-theme {
+  --cyan-primary: var(--accent, #00d9ff);
+  --cyan-border: rgba(0, 217, 255, 0.4);
+  --cyan-glow: rgba(0, 217, 255, 0.15);
+  --cyan-glow-hover: rgba(0, 217, 255, 0.8);
+  --badge-bg: rgba(0, 217, 255, 0.1);
+  --tag-bg: rgba(15, 32, 50, 0.8);
+  --btn-arrow-bg: rgba(5, 18, 30, 0.65);
+}
+
+.project-section {
+  background: transparent;
+  position: relative;
+  overflow: hidden;
+  z-index: 5;
+  /* Saat section di-pin, bagian atasnya tertutup navbar fixed, jadi stage
+   * butuh padding setinggi navbar. --nav-h diukur runtime oleh Navbar.tsx
+   * (fallback 84px = tinggi navbar desktop sebelum sempat terukur). */
+  --ps-nav-offset: var(--nav-h, 84px);
+}
+
+.text-cyan {
+  color: var(--cyan-primary) !important;
+}
+
+/* ================= STACKED CARD SHOWCASE — LAYOUT ================= */
+
+/* Wrapper kompensasi zoom: satu-satunya elemen section ini yang di-scale 1/z.
+ * Width layout dikecilkan z kali supaya lukisannya balik persis 100%:
+ * device = L x z (layout) x 1/z (transform) = L. */
+.ps-scalable-content {
+  position: relative;
+  transform: scale(calc(1 / var(--zoom, 1)));
+  /* top center: stage tetap menempel atas viewport, navbar occupy strips atas. */
+  transform-origin: top center;
+  /* Tanpa max-width: saat zoom IN lebar layout sengaja melebihi 100% supaya
+   * setelah di-scale 1/z lukisannya kembali persis 1 viewport. */
+  width: calc(100% * var(--zoom, 1));
+  /* Tinggi juga dikalikan z, sama seperti lebar, supaya lukisannya = 100svh. */
+  height: calc(100svh * var(--zoom, 1));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Stage = pembungkus header + deck + progress bar di dalam wrapper. Tingginya
+ * ikut wrapper (100% = 100svh x --zoom), jadi tetap 1 viewport setelah di-scale. */
+.ps-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  height: 100%;
+  padding-top: var(--ps-nav-offset);
+  padding-bottom: 28px;
+  overflow: hidden; /* klip fan kartu + area scroll horizontal */
+}
+
+/* Deck = area kartu. Tiap .ps-slot absolut mengisi deck dan menengahkan kartunya lewat
+   flexbox (bukan transform) supaya xPercent/yPercent GSAP bebas untuk offset slot. */
+.ps-deck {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Pin-spacer yang dibuat ScrollTrigger harus selebar viewport dan tetap
+ * di tengah; dengan pinType transform, spacer inilah yang di-translate. */
+.project-section .pin-spacer {
+  width: 100%;
+  max-width: 100vw;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0;
+}
+
+.ps-slot {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ukuran (width/max-height) sekarang dari Tailwind; yang tersisa hanya
+   properti transform yang tidak bisa ditulis dengan utility. */
+.ps-card {
+  transform-origin: center center;
+  backface-visibility: hidden;
+}
+
+/* Progress bar + counter deck — HANYA mode deck (desktop tanpa
+   reduced-motion). Dulu display:none di semua state: JS-nya tetap jalan
+   tapi bar tak pernah terender. Mobile = mode statis, tak ada progres. */
+.ps-progress-row {
+  display: none;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: min(640px, 90%);
+  margin: 18px auto 0;
+}
+
+.ps-progress {
+  position: relative;
+  width: min(520px, 72%);
+  height: 3px;
+  border-radius: 99px;
+  background: var(--cyan-border);
+  opacity: 0.75;
+  overflow: hidden;
+}
+
+.ps-counter {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+  color: var(--cyan-primary);
+  white-space: nowrap;
+}
+
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .ps-progress-row {
+    display: flex;
+  }
+}
+
+.ps-progress-bar {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 99px;
+  background: var(--cyan-primary);
+  transform: scaleX(0);
+  transform-origin: left center;
+  box-shadow: 0 0 10px var(--cyan-primary);
+}
+
+/* CATATAN: box card (border, radius, padding, shadow, hover) memakai class Tailwind di
+   ProjectsSection.tsx — jangan diduplikasi di sini. */
+
+.project-title {
+  color: #1e293b;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.project-description {
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  min-height: 42px;
+}
+
+.dark-theme .project-title {
+  color: #ffffff;
+}
+
+.dark-theme .project-description {
+  color: #94a3b8;
+}
+
+.project-img-wrapper {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.arrow-btn {
+  width: 38px;
+  height: 38px;
+  background: var(--btn-arrow-bg);
+  border: 1px solid var(--cyan-border);
+  border-radius: 50%;
+  color: var(--cyan-primary);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+
+.arrow-btn:hover {
+  background: var(--cyan-primary);
+  color: #ffffff;
+  box-shadow: 0 0 12px var(--cyan-primary);
+}
+
+.project-category-badge {
+  background: var(--badge-bg);
+  border: 1px solid var(--cyan-border);
+  color: var(--cyan-primary);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 4px 14px;
+  border-radius: 20px;
+}
+
+.tag-pill {
+  background: var(--tag-bg);
+  border: 1px solid var(--cyan-border);
+  color: var(--cyan-primary);
+  font-size: 0.78rem;
+  padding: 4px 12px;
+  border-radius: 8px;
+}
+
+.project-divider {
+  border-color: var(--cyan-border);
+  opacity: 1;
+}
+
+.project-link {
+  color: var(--cyan-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.project-link:hover {
+  color: var(--cyan-primary);
+  opacity: 0.75;
+}
+
+.link-separator {
+  width: 1px;
+  height: 18px;
+  background-color: var(--cyan-border);
+}
+
+/* CATATAN: .scroll-progress-indicator/.scroll-progress-bar dihapus —
+ * tak pernah dirender di markup mana pun (CSS mati). */
+
+/* ================= POLICE LINE BACKGROUND & ANIMATIONS ================= */
+
+.police-lines-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.police-line {
+  position: absolute;
+  height: 45px;
+  width: 300%;
+  background-image: url("/element/policeline.avif");
+  /* Pengulangan tak hingga => semua nilai background-position selalu menyambung, jadi
+   * drift seamless; yang dijaga hanya posisinya tak pernah di-reset melompat. */
+  background-repeat: repeat-x;
+  background-size: auto 100%;
+  /* Glow biru #0583F2 di sekeliling line — ikut redup bersama animasi
+   * terang-redup karena diputar lewat opacity pada container police line. */
+  box-shadow:
+    0 0 10px rgba(5, 159, 242, 0.85),
+    0 0 28px rgba(5, 155, 242, 0.5),
+    0 10px 20px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+}
+
+.line-top {
+  top: 15px;
+  left: -100%;
+}
+
+.line-bottom-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-2deg);
+}
+
+.line-bottom {
+  bottom: 45px;
+  left: -100%;
+}
+
+.police-line-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.diag-1-wrapper {
+  transform: rotate(10deg) translateY(-40px);
+}
+
+.diag-2-wrapper {
+  transform: rotate(-17deg) translateY(40px);
+}
+
+.line-diagonal {
+  width: 300%;
+  left: -100%;
+}
+
+.slide-right.is-visible {
+  animation:
+    slideFromLeft 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards,
+    moveRight 12s linear infinite 1.2s,
+    pulseDim 2s ease-in-out infinite;
+}
+
+.slide-left.is-visible {
+  animation:
+    slideFromRight 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards,
+    moveLeft 12s linear infinite 1.2s,
+    pulseDim 2s ease-in-out infinite;
+}
+
+@keyframes slideFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideFromRight {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes moveRight {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes moveLeft {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -1000px 0;
+  }
+}
+
+/* CATATAN: pulseDim tidak lagi dipakai di kedua mode animasi — diputar GSAP pada
+   .police-lines-container (PL_PULSE_*); keyframe di bawah = fallback untuk
+   reduced-motion / tanpa JS. drop-shadow dihapus: filter dihitung tiap frame, mahal. */
+@keyframes pulseDim {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* ================= MODE ANIMASI (DESKTOP) =================
+ * Kondisi PERSIS sama dengan gsap.matchMedia di ProjectsSection.tsx. */
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  /* Section (elemen yang di-pin) tetap 1 viewport: tinggi layout wrapper cuma
+   * z x 100svh, jadi box overflow:hidden harus penuh agar konten hasil scale
+   * tidak ikut terklip. */
+  .project-section {
+    height: 100vh;
+    height: 100svh;
+  }
+
+  /* GSAP memegang seluruh siklus hidup police line di mode deck; CSS animation beating
+   * memprioritaskan keyframe di atas inline style GSAP, jadi harus dimatikan di sini. */
+  .police-line {
+    animation: none !important;
+    /* Hanya transform/opacity yang bisa dipromosikan ke compositor.
+     * background-position TIDAK bisa, jadi setiap perubahan memaksa raster ulang
+     * elemen selebar 300% viewport -> sumber utama "bergetar" saat scroll.
+     * Karena itu drift-nya ditulis sesedikit mungkin (lihat applyPlDrift). */
+    will-change: transform, opacity;
+    /* Glow 3 lapis (blur 28px) di atas area sebesar itu = raster raksasa tiap frame.
+     * Satu lapis tipis sudah cukup kesan menyala, dan jauh lebih murah. */
+    box-shadow: 0 0 10px rgba(5, 159, 242, 0.75);
+  }
+
+  .ps-card {
+    will-change: transform, opacity;
+    /* backdrop-filter membaca ulang piksel di belakang kartu SETIAP frame saat
+     * kartu bergerak (tidak bisa di-cache compositor) -> drop frame / getaran.
+     * Mode statis tetap pakai blur 5px karena di sana kartu tidak digerakkan. */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* ================= MODE ANIMASI — STATIS (MOBILE / TABLET) =================
+* Kondisi PERSIS sama dengan STATIC_MEDIA di ProjectsSection.tsx. Kartu vertikal tanpa
+ * pinning; keyframe CSS dimatikan karena beating-nya meng prioritaskan keyframe di atas GSAP. */
+@media (max-width: 1023px) and (prefers-reduced-motion: no-preference) {
+  .police-line {
+    animation: none !important;
+    will-change: background-position, transform, opacity;
+  }
+}
+
+/* Viewport pendek: rapatkan agar kartu tidak terpotong di dalam stage */
+@media (min-width: 1024px) and (max-height: 760px) {
+  .ps-stage {
+    padding-top: calc(var(--ps-nav-offset) + 4px);
+    padding-bottom: 18px;
+  }
+
+  .ps-head h2 {
+    font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  }
+
+  .ps-card {
+    width: min(370px, 70vw);
+    padding: 13px;
+  }
+
+  .project-img-wrapper img {
+    height: 150px;
+  }
+
+  .project-description {
+    min-height: 0;
+    margin-bottom: 0.75rem !important;
+  }
+}
+
+/* ================= MODE STATIS (MOBILE / TABLET / REDUCED MOTION) =================
+ * Tanpa pinning & tanpa horizontal scroll — semua project tetap mudah
+ * diakses dalam satu layar vertikal.                                     */
+@media (max-width: 1023px), (prefers-reduced-motion: reduce) {
+  /* Mode statis: kartu ikut menyusut saat zoom browser seperti section lain,
+   * jadi kompensasi zoom pada wrapper dimatikan. */
+  .ps-scalable-content {
+    transform: none;
+    width: 100%;
+    height: auto;
+  }
+
+  .ps-stage {
+    height: auto;
+    min-height: 0;
+    padding: 3rem 0 3.5rem;
+    overflow: visible;
+  }
+
+  .ps-head {
+    margin-bottom: 1.75rem;
+    pointer-events: auto;
+  }
+
+  .ps-head h2 {
+    font-size: clamp(1.5rem, 5.5vw, 2rem);
+  }
+
+  /* 2 kartu per baris, di tengah. Slot memakai flex 0 1 400px: tidak pernah
+   * lebih dari 400px tapi tetap boleh mengecil supaya 2 kartu muat. */
+  .ps-deck {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    padding: 0 1rem;
+  }
+
+  .ps-slot {
+    position: static;
+    inset: auto;
+    display: flex;
+    justify-content: center;
+    flex: 0 1 400px;
+    min-width: 0;
+  }
+
+  /* Jarak antar kartu = gap deck + margin ini. Deck desktop tidak
+   * memakai margin ini. */
+  .ps-card {
+    width: 100%;
+    max-width: 400px;
+    max-height: none;
+    margin-top: 2rem;
+    transform: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  /* Hover lift aman di mode statis (GSAP tidak memakai transform) */
+  .project-card:hover {
+    transform: translateY(-4px);
+  }
+
+  /* Mode statis: tak ada progres konveyor yang bisa dilaporkan. */
+  .ps-progress-row {
+    display: none;
+  }
+}
+
+/* ================= HP KECIL =================
+ * Di bawah ~520px dua kartu 400px tidak muat lega, jadi kembali
+ * 1 kartu per baris (kartu tetap di tengah). */
+@media (max-width: 520px) {
+  .ps-slot {
+    flex: 1 1 100%;
+  }
+}
+
+/* ================= MOBILE KECIL ================= */
+
+@media (max-width: 480px) {
+  .ps-stage {
+    padding: 2.25rem 0 2.75rem;
+  }
+
+  .ps-deck {
+    gap: 18px;
+    padding: 0 0.85rem;
+  }
+
+  .project-card {
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .project-title {
+    font-size: 1.15rem;
+  }
+
+  .project-description {
+    font-size: 0.85rem;
+    min-height: 0;
+  }
+
+  .project-img-wrapper img {
+    height: 160px;
+    border-radius: 10px;
+  }
+
+  .arrow-btn {
+    width: 34px;
+    height: 34px;
+    top: 10px;
+    right: 10px;
+  }
+}
+
+/* ================= REDUCED MOTION: MATIKAN ANIMASI LATAR ================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .police-line {
+    animation: none !important;
+    opacity: 0.25;
+  }
+
+  .slide-right.is-visible,
+  .slide-left.is-visible {
+    animation: none !important;
+    opacity: 0.25;
+    transform: translateX(0) !important;
+  }
+}

@@ -1,0 +1,1215 @@
+/* ================= TAILWIND v4 =================
+ * Hanya `theme` + `utilities` yang diimpor, `preflight` sengaja DILEWATI.
+ * Portal ini masih memakai Bootstrap (d-flex, row/col, py-5, ...) untuk
+ * section lain; preflight Tailwind akan me-reset heading/list/button dsb
+ * dan merusak tampilan section tersebut.
+ * Cascade: utilities > components > base -> class utility selalu menang. */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+/* ================= DESIGN TOKEN =================
+   Satu sumber warna/radius untuk seluruh situs. Sebelumnya setiap section
+   memakai palet sendiri (brand #00d9ff, Projects #0284c7, FloatingSettings
+   #4facfe/#f5576c) sehingga terasa seperti 3 template berbeda. */
+:root {
+  --accent: #00d9ff; /* brand cyan: glow, aksen di atas bg gelap/terang */
+  --accent-ink: #0e7490; /* varian gelap: teks/link di bg terang (AA) */
+  --accent-deep: #0b428f; /* ujung gelap gradien judul */
+  --surface-light: #f8fafc;
+  --surface-dark: #000e21;
+  --radius-card: 24px;
+  --radius-input: 15px;
+}
+
+/* ================= GLOBAL ================= */
+
+/* --- Animasi Transisi Tema (View Transitions) --- */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+  animation: circleExpand 0.5s ease-in-out forwards;
+}
+
+@keyframes circleExpand {
+  from {
+    clip-path: circle(0px at 0 0);
+  }
+  to {
+    clip-path: circle(150vmax at 0 0);
+  }
+}
+
+/* --- Menghilangkan scrollbar --- */
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* ================= GLOBAL ================= */
+
+html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: #f8fafc;
+  color: white;
+  -ms-overflow-style: none;
+}
+
+.dark-theme body {
+  background: #000e21;
+}
+
+/* --- FIX ZOOM LOCK LAYOUT --- */
+.main {
+  background: #f8fafc;
+}
+
+#main {
+  position: relative;
+  width: 100%;
+  max-width: 100vw;
+  /* clip, bukan hidden: memotong overflow tanpa membuat #main jadi scroll
+     container (yang bisa mengganggu position: fixed milik ScrollTrigger pin). */
+  overflow-x: clip;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+  /*Navbar sudah position: fixed (keluar dari flow), jadi ruang yang biasanya
+     dipakainya disediakan di sini. --nav-h diset runtime oleh Navbar.tsx.
+     Dibagi --zoom karena navbar di-scale 1/z oleh UseZoomLock, jadi hasilnya
+     = tinggi navbar yang terlukis dan #main selalu pas berapa pun zoom. */
+  padding-top: calc(var(--nav-h, 90px) / var(--zoom, 1));
+}
+
+/* --- KOMPENSASI ZOOM MANUAL UNTUK SEMUA SECTION ---
+   Zoom menu browser (mis. 25%) memperbesar viewport CSS 4x, jadi semua ukuran
+   berbasis px mengecil secara fisik. Navbar/bg/floating settings sudah di-scale
+   per-elemen 1/z oleh UseZoomLock. Isi halaman di sini dikompensasi per section
+   dengan pola yang sama seperti .ps-scalable-content: `zoom` 1/z (men-skala
+   rendering DAN layout slot, jadi section bertumpuk normal) + lebar dikali z
+   (agar box dan nilai % selebar section saat --zoom = 1 dan tidak meluber saat
+   zoom aktif). `zoom` tidak mengubah offsetWidth/computed style, jadi juga aman
+   bagi elemen yang diukur via getBoundingClientRect.
+   .project-section DIKECUALIKAN: ia memakai transform scale sendiri (pola
+   ps-scalable, tidak bisa menganimasikan zoom) + pin ScrollTrigger (child
+   position:fixed), dua-duanya rusak jika kena `zoom` CSS. */
+#main > section:not(.project-section),
+#main > footer {
+  zoom: calc(1 / var(--zoom, 1));
+  width: calc(100% * var(--zoom, 1));
+}
+
+.dark-theme .main {
+  background: #000e21;
+}
+
+.bg-primary-color {
+  background-color: #0b428f;
+}
+
+.particle-section {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ================= NAVBAR DESKTOP ================= */
+.navbar {
+  background: transparent;
+}
+
+/* Navbar fixed: tinggi dinormalisasi ke tinggi viewport, section di bawahnya
+   tetap tergeser oleh padding-top #main.
+   Selector sengaja ditulis `.navbar.navbar-fixed` (specificity 0,2,0):
+   layout.tsx meng-import globals.css SEBELUM bootstrap.min.css, sehingga
+   aturan `.navbar { position: relative }` milik Bootstrap datang belakangan.
+   Kalau specificity-nya sama, Bootstrap yang menang dan navbar ikut ter-scroll. */
+.navbar.navbar-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1020;
+}
+
+.nav-capsule {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-capsule .nav-link {
+  color: #000000;
+  padding: 12px 20px !important;
+  border-radius: 50px;
+  transition: 0.3s;
+  cursor: pointer;
+  background: transparent;
+}
+
+.dark-theme .nav-capsule .nav-link {
+  color: #f8fafc;
+}
+
+/* Outline keyboard-only: tetap terlihat untuk a11y, hilang saat di-tap.
+   `:focus` biasa dibuang agar sticky background saat tap tidak muncul. */
+.nav-capsule .nav-link:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent;
+}
+
+.nav-capsule .nav-link:focus-visible {
+  outline: 2px solid #00d9ff !important;
+  outline-offset: 2px;
+}
+
+/* Hover = tint transparan, ACTIVE = fill cyan penuh.
+   Dulu keduanya sama, jadi user tidak bisa membedakan hover vs section aktif. */
+@media (hover: hover) {
+  .nav-capsule .nav-link:hover {
+    background: rgba(0, 217, 255, 0.16);
+    color: #0077a3 !important;
+  }
+
+  .dark-theme .nav-capsule .nav-link:hover {
+    background: rgba(0, 217, 255, 0.2);
+    color: #00d9ff !important;
+  }
+}
+
+/* Style State Aktif Murni */
+.nav-capsule .nav-link.active {
+  background: #00d9ff !important;
+  color: #293133 !important;
+}
+
+/* ================= NAVBAR TABLET / MOBILE (MAX-WIDTH 768px) ================= */
+@media (max-width: 768px) {
+  .nav-capsule {
+    position: relative;
+    overflow: visible !important;
+    padding: 6px 12px !important;
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .nav-capsule ul {
+    justify-content: space-around;
+    gap: 0 !important;
+  }
+
+  .nav-capsule .nav-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 56px;
+    border-radius: 30px !important;
+    padding: 0 !important;
+    font-size: 15px;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .nav-capsule .nav-link i {
+    font-size: 1.25rem;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  .nav-capsule .nav-link.active {
+    background: #00d9ff !important;
+    box-shadow: 0 4px 15px rgba(0, 217, 255, 0.5);
+    z-index: 2;
+  }
+}
+
+/* ================= NAVBAR MOBILE (HP) ================= */
+@media (max-width: 550px) {
+  .nav-capsule {
+    position: relative;
+    overflow: visible !important;
+    padding: 6px 10px !important;
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .nav-capsule ul {
+    justify-content: space-around;
+    gap: 0 !important;
+  }
+
+  .nav-capsule .nav-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 65px;
+    height: 54px;
+    border-radius: 30px !important;
+    padding: 0 !important;
+    font-size: 12px;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .nav-capsule .nav-link i {
+    font-size: 1.2rem;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  .nav-capsule .nav-link.active {
+    background: #00d9ff !important;
+    box-shadow: 0 4px 15px rgba(0, 217, 255, 0.5);
+    z-index: 2;
+  }
+}
+
+/* ================= SECTION ================= */
+
+.section-title h2 {
+  /* clamp(): dulu 45px fixed, di layar kecil meluber dan di 4K kekecilan. */
+  font-size: clamp(1.9rem, 4vw + 0.6rem, 2.85rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(200deg, #00d9ff, #0b428f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.dark-theme .section-title h2 {
+  background: linear-gradient(200deg, #00d9ff, #4cc9ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Eyebrow mono di atas judul section — memakai Geist Mono yang sudah dimuat
+ * lewat next/font tapi sebelumnya tidak dipakai sama sekali. */
+.section-eyebrow {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  margin-bottom: 0.65rem;
+}
+
+.dark-theme .section-eyebrow {
+  color: var(--accent);
+}
+
+.section-eyebrow::before {
+  content: "//";
+  opacity: 0.55;
+  margin-right: 0.5em;
+}
+
+.dark-theme .section-title p {
+  color: #aaa;
+}
+
+.gradient-overlay-bottom {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+
+  background: linear-gradient(
+    to bottom,
+    #f8fafc 0%,
+    rgba(248, 250, 252, 0.6) 40%,
+    rgba(248, 250, 252, 0) 100%
+  );
+
+  pointer-events: none;
+  z-index: -1;
+}
+
+.dark-theme .gradient-overlay-bottom {
+  background: linear-gradient(
+    to bottom,
+    #000e21 0%,
+    #000e2163 40%,
+    rgba(248, 250, 252, 0) 100%
+  );
+}
+
+.gradient-overlay-top {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 40%;
+
+  background: linear-gradient(
+    to top,
+    #f8fafc 20%,
+    rgba(248, 250, 252, 0.212) 60%,
+    rgba(248, 250, 252, 0) 100%
+  );
+
+  pointer-events: none;
+  z-index: 10;
+}
+
+.dark-theme .gradient-overlay-top {
+  background: linear-gradient(
+    to top,
+    #000e21 20%,
+    #000e2163 60%,
+    rgba(248, 250, 252, 0) 100%
+  );
+}
+
+@media (min-height: 800px) {
+  .gradient-overlay-top {
+    background: linear-gradient(
+      to top,
+      #f8fafc 30%,
+      rgba(248, 250, 252, 0.212) 60%,
+      rgba(248, 250, 252, 0) 100%
+    );
+  }
+
+  .dark-theme .gradient-overlay-top {
+    background: linear-gradient(
+      to top,
+      #000e21 30%,
+      #000e2163 75%,
+      rgba(248, 250, 252, 0) 100%
+    );
+  }
+}
+
+@media (max-width: 500px) {
+  .gradient-overlay-top {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 20%;
+
+    background: linear-gradient(
+      to top,
+      #f8fafc 40%,
+      rgba(248, 250, 252, 0.237) 65%,
+      rgba(248, 250, 252, 0) 100%
+    );
+
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .dark-theme .gradient-overlay-top {
+    background: linear-gradient(
+      to top,
+      #000e21fc 40%,
+      #000e2163 65%,
+      rgba(248, 250, 252, 0) 100%
+    );
+  }
+}
+
+/* ================= FORM ================= */
+
+.glass-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 24px;
+  box-shadow:
+    0 8px 32px rgba(11, 66, 143, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  transition:
+    box-shadow 0.35s ease,
+    transform 0.35s ease;
+}
+
+.glass-card:hover {
+  box-shadow:
+    0 16px 48px rgba(11, 66, 143, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.dark-theme .glass-card {
+  background: rgba(15, 23, 42, 0.55);
+  border-color: rgba(0, 217, 255, 0.16);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.dark-theme .glass-card:hover {
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.45),
+    0 0 24px rgba(0, 217, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Dipakai ganda (.custom-input.custom-input) agar mengalahkan
+   `.form-control` Bootstrap (spesifisitas lebih tinggi, urutan datang
+   belakangan) tanpa perlu !important. */
+.custom-input.custom-input {
+  background: rgba(15, 23, 42, 0.06);
+  border: 1px solid transparent;
+  padding: 14px !important;
+  color: #1e293b;
+  border-radius: 15px !important;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.custom-input.custom-input::placeholder {
+  color: #64748b;
+}
+
+.custom-input.custom-input:focus {
+  background: #fff;
+  border-color: rgba(0, 217, 255, 0.55);
+  box-shadow: 0 0 0 3px rgba(1, 217, 255, 0.25) !important;
+}
+
+.dark-theme .custom-input.custom-input {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: transparent;
+  color: #f8fafc;
+}
+
+.dark-theme .custom-input.custom-input::placeholder {
+  color: #bbb;
+}
+
+.dark-theme .custom-input.custom-input:focus {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(0, 217, 255, 0.55);
+}
+
+/* ================= CONTACT ================= */
+
+/* Honeypot: tidak boleh terlihat/tertab, tapi tetap di DOM. */
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.form-label {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  margin-bottom: 0.4rem;
+}
+
+.dark-theme .form-label {
+  color: var(--accent);
+}
+
+.form-status {
+  min-height: 1.5rem;
+  margin-top: 0.85rem;
+}
+
+.form-status-error,
+.form-status-success {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.form-status-error {
+  color: #dc2626;
+}
+
+.form-status-success {
+  color: #059669;
+}
+
+.dark-theme .form-status-error {
+  color: #f87171;
+}
+
+.dark-theme .form-status-success {
+  color: #34d399;
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep)) !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease,
+    opacity 0.3s ease;
+}
+
+.submit-btn:hover:not(:disabled) {
+  box-shadow: 0 0 24px rgba(0, 217, 255, 0.45);
+  transform: translateY(-2px);
+}
+
+.submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.availability-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  background: rgba(14, 116, 144, 0.08);
+  border: 1px solid rgba(14, 116, 144, 0.28);
+  border-radius: 99px;
+  padding: 7px 14px;
+  margin-bottom: 1.5rem;
+}
+
+.dark-theme .availability-chip {
+  color: var(--accent);
+  background: rgba(0, 217, 255, 0.08);
+  border-color: rgba(0, 217, 255, 0.3);
+}
+
+.availability-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  animation: pulseDot 1.8s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.55);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+  }
+}
+
+.contact-info-title {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-bottom: 0.4rem;
+}
+
+.dark-theme .contact-info-title {
+  color: #94a3b8;
+}
+
+.contact-email-link {
+  display: inline-block;
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  font-weight: 600;
+  color: var(--accent-ink);
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(14, 116, 144, 0.45);
+  padding-bottom: 2px;
+  transition:
+    color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.contact-email-link:hover {
+  color: var(--accent-deep);
+  border-bottom-color: var(--accent-ink);
+}
+
+.dark-theme .contact-email-link {
+  color: var(--accent);
+  border-bottom-color: rgba(0, 217, 255, 0.45);
+}
+
+.dark-theme .contact-email-link:hover {
+  color: #8be9ff;
+}
+
+.copy-email-btn {
+  display: block;
+  margin-top: 0.9rem;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #64748b;
+  background: transparent;
+  border: 1px solid rgba(100, 116, 139, 0.35);
+  border-radius: 99px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition:
+    color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.copy-email-btn:hover {
+  color: var(--accent-ink);
+  border-color: var(--accent-ink);
+}
+
+.dark-theme .copy-email-btn {
+  color: #94a3b8;
+  border-color: rgba(148, 163, 184, 0.35);
+}
+
+.dark-theme .copy-email-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.contact-social-title {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #64748b;
+  margin: 2rem 0 0.75rem;
+}
+
+.dark-theme .contact-social-title {
+  color: #94a3b8;
+}
+
+.contact-social {
+  display: flex;
+  gap: 10px;
+}
+
+.contact-social a {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid rgba(14, 116, 144, 0.3);
+  color: var(--accent-ink);
+  font-size: 1.1rem;
+  text-decoration: none;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+.contact-social a:hover {
+  background: var(--accent-ink);
+  color: #f8fafc;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(14, 116, 144, 0.3);
+}
+
+.dark-theme .contact-social a {
+  color: var(--accent);
+  border-color: rgba(0, 217, 255, 0.3);
+}
+
+.dark-theme .contact-social a:hover {
+  background: var(--accent);
+  color: #04212b;
+  box-shadow: 0 8px 18px rgba(0, 217, 255, 0.3);
+}
+
+/* Reveal scroll untuk Contact (mirip Skills, tanpa arah). */
+.contact-section .reveal-item {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.contact-section .reveal-item:nth-child(2) {
+  transition-delay: 0.12s;
+}
+
+.contact-section.contact-visible .reveal-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ================= CURSOR SPOTLIGHT =================
+   MainPortfolio menulis --mx/--my (posisi pointer dalam px) langsung ke DOM;
+   overlay ini hanya membacanya. Transparan sampai pointer masuk. */
+.skill-card-front,
+.ps-card,
+.glass-card {
+  position: relative;
+}
+
+.skill-card-front::before,
+.ps-card::before,
+.glass-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    340px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(0, 217, 255, 0.16),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.skill-card-front:hover::before,
+.ps-card:hover::before,
+.glass-card:hover::before {
+  opacity: 1;
+}
+
+/* ================= SHIMMER JUDUL =================
+   Gradien judul digeser pelan berulang — efek "hologram" halus. */
+.section-title h2 {
+  background-size: 220% 220%;
+  animation: titleShimmer 7s ease-in-out infinite;
+}
+
+@keyframes titleShimmer {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-title h2 {
+    animation: none;
+  }
+
+  /* Semua gerak dekoratif berhenti; transisi fungsional (hover/focus)
+   * dibiarkan sangat singkat agar tetap terasa responsif. */
+  .blob,
+  .grid-floor::before,
+  .availability-dot {
+    animation: none !important;
+  }
+
+  .contact-section .reveal-item {
+    transition-duration: 0.01ms;
+    opacity: 1;
+    transform: none;
+  }
+
+  .skills-section.active .skill-card-front::after,
+  .skills-section.active .transition-grid .skill-card-front i {
+    animation: none !important;
+  }
+}
+
+/* ================= FOOTER ================= */
+
+footer {
+  border-top: 1px solid rgba(14, 116, 144, 0.22);
+  color: #475569; /* slate-600: kontras AA di atas #f8fafc (≈7:1) */
+  position: relative;
+}
+
+.dark-theme footer {
+  border-top-color: rgba(0, 217, 255, 0.18);
+  color: #94a3b8; /* slate-400: kontras AA di atas #000e21 (≈7:1) */
+}
+
+.site-footer {
+  position: relative;
+}
+
+.footer-code-img {
+  width: 110px;
+  opacity: 0.45;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  filter: grayscale(0.3);
+}
+
+.footer-copy {
+  font-size: 0.9rem;
+}
+
+.footer-note {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.back-to-top {
+  margin-top: 0.9rem;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  background: transparent;
+  border: 1px solid rgba(14, 116, 144, 0.35);
+  border-radius: 99px;
+  padding: 8px 18px;
+  cursor: pointer;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.back-to-top:hover {
+  background: var(--accent-ink);
+  color: #f8fafc;
+  box-shadow: 0 0 16px rgba(14, 116, 144, 0.35);
+}
+
+.back-to-top:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.dark-theme .back-to-top {
+  color: var(--accent);
+  border-color: rgba(0, 217, 255, 0.35);
+}
+
+.dark-theme .back-to-top:hover {
+  background: var(--accent);
+  color: #04212b;
+  box-shadow: 0 0 16px rgba(0, 217, 255, 0.4);
+}
+
+/* =====================================
+   ANIMATED BACKGROUND
+===================================== */
+
+.animated-bg {
+  position: fixed;
+  /* Rentangkan area melebihi viewport atas dan bawah */
+  top: -10vh;
+  bottom: -10vh;
+  left: 0;
+  right: 0;
+  height: 120vh; /* Buffer ekstra 20% */
+
+  z-index: -1;
+  overflow: hidden;
+
+  /* Mencegah interaksi touch yang memicu re-layout */
+  pointer-events: none;
+
+  /* Force hardware acceleration penuh */
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(0, 217, 255, 0.15),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(11, 66, 143, 0.2),
+      transparent 45%
+    ),
+    #f8fbff;
+
+  animation: bgReveal 2s ease;
+}
+
+.dark-theme .animated-bg {
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(0, 217, 255, 0.08),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(0, 110, 255, 0.12),
+      transparent 45%
+    ),
+    #000e21;
+
+  animation: bgReveal 2s ease;
+}
+/* =====================================
+   FLOATING BLOBS
+===================================== */
+
+/* Radial-gradient, BUKAN solid + filter:blur(120px): hasil visual hampir
+ * identik tapi tanpa re-raster GPU tiap frame saat blob beranimasi. */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: none;
+  will-change: transform;
+
+  animation: floatBlob 15s ease-in-out infinite;
+}
+
+.blob-1 {
+  width: 500px;
+  height: 500px;
+
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(0, 217, 255, 0.28),
+    rgba(0, 217, 255, 0.1) 45%,
+    transparent 72%
+  );
+
+  top: -100px;
+  left: -150px;
+}
+
+.blob-2 {
+  width: 600px;
+  height: 600px;
+
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(11, 66, 143, 0.2),
+    rgba(11, 66, 143, 0.07) 45%,
+    transparent 72%
+  );
+
+  bottom: -200px;
+  right: -150px;
+
+  animation-delay: 3s;
+}
+
+.blob-3 {
+  width: 350px;
+  height: 350px;
+
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(0, 217, 255, 0.17),
+    rgba(0, 217, 255, 0.06) 45%,
+    transparent 72%
+  );
+
+  top: 40%;
+  left: 50%;
+
+  animation-delay: 6s;
+}
+
+@keyframes floatBlob {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  25% {
+    transform: translate(50px, -30px);
+  }
+
+  50% {
+    transform: translate(-40px, 40px);
+  }
+
+  75% {
+    transform: translate(60px, 20px);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* =====================================
+   FUTURISTIC GRID
+   .grid-bg hidup di dalam .animated-bg yang di-scale 1/z, jadi device
+   = L × z × (1/z) = L. Cukup px biasa, jangan dikalikan --zoom.
+===================================== */
+
+.grid-bg {
+  position: absolute;
+  inset: 0;
+
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.132) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.119) 1px, transparent 1px);
+
+  background-size: 40px 40px;
+
+  mask-image: radial-gradient(circle, white, transparent 90%);
+}
+
+.dark-theme .grid-bg {
+  background-image:
+    linear-gradient(rgba(0, 189, 252, 0.138) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 189, 252, 0.252) 1px, transparent 1px);
+
+  background-size: 40px 40px;
+}
+
+/* Grid perspektif "lantai Tron" di sepertiga bawah viewport — menggantikan
+ * kesan grid datar. Dekoratif murni, aria-hidden, pointer-events: none. */
+.grid-floor {
+  position: absolute;
+  left: -25%;
+  right: -25%;
+  bottom: -10vh;
+  height: 55vh;
+  pointer-events: none;
+  perspective: 600px;
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, transparent, black 35%, black 75%, transparent);
+}
+
+.grid-floor::before {
+  content: "";
+  position: absolute;
+  inset: -60% 0 0;
+  transform: rotateX(62deg);
+  transform-origin: center top;
+  background-image:
+    linear-gradient(rgba(11, 66, 143, 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(11, 66, 143, 0.16) 1px, transparent 1px);
+  background-size: 56px 56px;
+  animation: floorScroll 9s linear infinite;
+}
+
+.dark-theme .grid-floor::before {
+  background-image:
+    linear-gradient(rgba(0, 217, 255, 0.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 217, 255, 0.18) 1px, transparent 1px);
+}
+
+@keyframes floorScroll {
+  from {
+    background-position-y: 0;
+  }
+  to {
+    background-position-y: 56px;
+  }
+}
+
+@keyframes bgReveal {
+  from {
+    transform: scale(1.2);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+.scroll-margin-top {
+  scroll-margin-top: 50px;
+}
+
+/* =====================================
+   ZOOM-OUT BORDER COMPENSATION
+   #main tidak lagi di-scale, jadi ukuran px-nya persis device = L x z.
+   Border ber-px ikut menyusut seperti section lain; jangan dikalikan --zoom.
+   ===================================== */
+
+#main .nav-capsule,
+#main .orbit-ring,
+#main .source-card,
+#main .skill-card-front,
+#main .skill-card-back,
+#main .arrow-btn,
+#main .project-category-badge,
+#main .tag-pill,
+#main .btn,
+#main .badge-title {
+  border-width: 1px;
+}
+
+#main .project-card {
+  border-width: 1.5px;
+}
+
+#main footer {
+  border-top-width: 1px;
+}

@@ -1,0 +1,815 @@
+================================================================================
+        LAPORAN ANALISIS MENYELURUH PROJECT: my-portfolio
+        Tanggal: 11 September 2026
+================================================================================
+
+================================================================================
+1. PROJECT OVERVIEW
+================================================================================
+
+Jenis Project: Personal Portfolio Website (Single-Page Application)
+
++---------------+----------+----------------------------------------+
+| Teknologi     | Versi    | Fungsi                                 |
++---------------+----------+----------------------------------------+
+| Next.js       | 16.2.6   | Framework (App Router)                 |
+| React         | 19.2.4   | UI Library                             |
+| TypeScript    | ^5       | Bahasa pemrograman                     |
+| Tailwind CSS  | v4       | Utility CSS framework                  |
+| Bootstrap     | 5.3.8    | UI Component Library                   |
+| GSAP + ST     | 3.15     | Animasi scroll-based                   |
+| Lenis         | 1.3.26   | Smooth scrolling                       |
+| Three.js+R3F  | 0.184+9.6| 3D (tidak aktif digunakan)            |
+| Bootstrap Ic  | 1.13.1   | Icon library                           |
+| Flag Icons    | 7.5.0    | Flag emoji                             |
+| DevIcons(CDN) | latest   | Skill/tech icons                       |
++---------------+----------+----------------------------------------+
+
+Arsitektur: Client-side SPA dengan splash screen interaktif (robot head,
+particle canvas, hacker text), transisi ke main portfolio. Bilingual (ID/EN),
+dark/light theme, animasi berat (multiple canvas animation loops, GSAP,
+CSS animations).
+
+================================================================================
+2. PROJECT STRUCTURE
+================================================================================
+
+src/app/
+  layout.tsx                   Root layout: fonts, CSS imports, providers
+  page.tsx                     Entry point: SplashScreen -> MainPortfolio
+  globals.css                  Global styles (532 lines)
+  favicon.ico
+
+  animation/                   CSS animation files (9 files, ~4,206 lines)
+    splash.css                   641 lines
+    HomeSection.css              783 lines
+    AboutSection.css             693 lines
+    SkilsSection.css             583 lines (TYPO: filename)
+    ProjectsSection.css          306 lines
+    FloatingSettings.css         424 lines
+    RobotHead.css                355 lines
+    AngryRobot.css               179 lines
+    DizzyRobot.css               242 lines
+
+  components/                  Shared components (5 files)
+    AnimatedBackground.tsx       Static animated bg blobs+grid
+    FloatingSettings.tsx         Settings FAB (theme/lang toggle)
+    GravityWell.tsx              Canvas warped grid effect (357 lines)
+    OrbitIcon.tsx                RAF-based orbit animation (177 lines)
+    RobotHead.tsx                Interactive robot head (111 lines)
+
+  contexts/                    React Contexts (2 files)
+    ThemeContext.tsx              Dark/light theme + View Transitions API
+    LanguageContext.tsx           ID/EN language toggle
+
+  data/
+    projectsData.ts              Project showcase data (5 entries, 244 lines)
+
+  functions/                   Custom hooks (8 files)
+    UseRobotHead.ts              Robot behavior: eye tracking, angry/dizzy (332 lines)
+    UseParticleSection.ts        Theme-aware particle canvas (157 lines)
+    UseParticle.ts               Splash particle canvas (152 lines)
+    UseNav.ts                    Lenis scroll + scroll-spy (79 lines)
+    UseHeaderText.ts             Typewriter effect (189 lines)
+    UseHackerText.ts             Splash hacker text (94 lines)
+    UseIntersectionObserver.ts   Visibility + direction hook (48 lines)
+    UseZoomControl.ts            Browser zoom prevention (52 lines)
+
+  page/                        Page components
+    SplashScreen.tsx             Splash screen (147 lines)
+    MainPortfolio.tsx            Main portfolio layout (98 lines)
+    sections/
+      Navbar.tsx                 Sticky pill navbar (65 lines)
+      HomeSection.tsx            Hero with orbit icons (199 lines)
+      AboutSection.tsx           About with falling stars (201 lines)
+      SkillsSection.tsx          Skills with 3D flip cards (247 lines)
+      ProjectsSection.tsx        Projects grid (182 lines)
+      ContactSection.tsx         Contact form (74 lines)
+
+  projects/
+    [slug]/page.tsx              Dynamic project detail (198 lines)
+
+  .trash/                       Deprecated files (5 files)
+    CursorTrail.tsx               STILL IMPORTED by SplashScreen!
+    methodSplash_old.ts
+    next_old.config.ts
+    page_old.tsx
+    UseRobotHead_old.ts
+
+public/
+  .trash/                       6 old PNG files
+  element/                      19 PNG/AVIF tech icons
+  projects/
+    flower_shop/                 6 PNG screenshots
+    kasir_sakpore/               21 PNG screenshots
+  exemple.png                   Favicon (TYPO: "exemple")
+  pro.avif / pro.png            Profile photo
+  file.svg, globe.svg, next.svg, vercel.svg, window.svg
+                                DEFAULT Next.js assets (UNUSED)
+
+================================================================================
+3. APPLICATION FLOW
+================================================================================
+
+layout.tsx
+  Fonts: Inter, Geist, Geist_Mono (next/font/google)
+  CSS: globals.css, RobotHead.css, AngryRobot.css, DizzyRobot.css
+  CSS: bootstrap, bootstrap-icons, flag-icons
+  CDN: devicons (in <head>)
+  <ThemeProvider> -> <LanguageProvider>
+    <Script>  // Inline: reads localStorage.theme for dark mode pre-hydration
+
+page.tsx ("use client")
+  <ZoomControl />              Prevents browser zoom-out
+  {!showMain && <SplashScreen />}
+    <RobotHead />              Interactive robot (eye tracking, angry, dizzy)
+    <GravityWell />            Canvas warped grid
+    <UseHackerText />          "MY PORTFOLIO" reveal animation
+    <UseParticle />            Canvas particle network (splash)
+    MutationObserver           Detects robot angry class changes
+    enterPortfolio()           zoom-out -> fade-out -> setShowMain(true)
+
+  {showMain && <MainPortfolio />}
+    Lenis smooth scroll + GSAP ScrollTrigger integration
+    <UseParticleSection />     Canvas particle network (main, theme-aware)
+    <AnimatedBackground />     Fixed blobs + grid
+    <Navbar />                 Lenis scrollTo + IntersectionObserver scroll-spy
+    <HomeSection />            Typewriter, OrbitIcons (5x RAF), profile, hexagons
+    <AboutSection />           Falling stars (40x CSS), glass cards
+    <SkillsSection />          12 skill cards with 3D flip
+    <ProjectsSection />        5 project cards with police-line bg
+    <ContactSection />         Non-functional contact form
+    <FloatingSettings />       FAB with theme/lang toggles
+
+================================================================================
+4. COMPONENT ARCHITECTURE
+================================================================================
+
+COMPONENT DEPENDENCY MAP:
+
+page.tsx
+  ZoomControl (hook)
+  SplashScreen
+    RobotHead
+      useRobotHead (hook)
+    useHackerText (hook)
+    GravityWell (canvas)
+    useParticle (hook)
+    [CursorTrail - IMPORTED but UNUSED]
+
+  MainPortfolio
+    useParticleSection (hook) + useTheme
+    useLenis + gsap + ScrollTrigger
+    AnimatedBackground
+    Navbar
+      useNav (hook) -> creates own Lenis instance
+    HomeSection
+      useHeaderText (hook)
+      useLanguage
+      useIntersectionObserver (hook)
+      OrbitIcon (5x) -> RAF loop each
+    AboutSection
+      useIntersectionObserver (hook)
+      useLanguage
+    SkillsSection
+      useIntersectionObserver (hook)
+      useLanguage
+    ProjectsSection
+      useIntersectionObserver (hook)
+      useLanguage
+      projectsData
+    ContactSection
+      useLanguage
+    FloatingSettings
+      useTheme
+      useLanguage
+
+================================================================================
+5. STATE & DATA FLOW
+================================================================================
+
+CONTEXTS:
++------------------+------------------+------------------+------------------+
+| Context          | State            | Source           | Persisted        |
++------------------+------------------+------------------+------------------+
+| ThemeContext      | dark: boolean    | localStorage     | Yes              |
+| LanguageContext   | lang: "ID"|"EN"  | localStorage     | Yes              |
++------------------+------------------+------------------+------------------+
+
+PER-COMPONENT STATE:
++-----------------------+----------------------------------+------------------+
+| Component/Hook        | State                            | Purpose          |
++-----------------------+----------------------------------+------------------+
+| page.tsx              | showMain: boolean                | splash->main     |
+| SplashScreen          | canEnter (5s), isAngry (MO)      | gate entry btn   |
+| HomeSection           | useHeaderText states             | typewriter       |
+| SkillsSection         | activeSkill: string|null         | expanded card    |
+| ProjectsDetail        | selectedImage                    | gallery thumb    |
+| FloatingSettings      | open: boolean                    | settings visible |
+| UseRobotHead          | blinkLeft/Right, angry, dizzy    | robot behavior   |
++-----------------------+----------------------------------+------------------+
+
+HOOKS SUMMARY:
++------------------------+---------------------+----------------------------+
+| Hook                   | Used By             | Key Behavior               |
++------------------------+---------------------+----------------------------+
+| useRobotHead           | RobotHead           | Mouse tracking, anger,     |
+|                        |                     | dizzy, auto-blink          |
+| useParticle            | SplashScreen        | Canvas particle (splash)   |
+| useParticleSection     | MainPortfolio       | Canvas particle (main)     |
+| useNav                 | Navbar              | Lenis + scroll-spy         |
+| useHeaderText          | HomeSection         | Infinite typewriter loop   |
+| useHackerText          | SplashScreen        | Letter-by-letter splash    |
+| useIntersectionObs.    | Home/About/Skills/  | [ref, isVisible, direction]|
+|                        | Projects            |                            |
+| useZoomControl         | page.tsx            | Prevents zoom-out          |
++------------------------+---------------------+----------------------------+
+
+================================================================================
+6. ANIMATION & RUNTIME ANALYSIS
+================================================================================
+
+CANVAS ANIMATION LOOPS (all RAF-based):
++----------------+---------------+-----+----------------+------------------+
+| Canvas         | Component     | FPS | Mobile Limit   | Cleanup          |
++----------------+---------------+-----+----------------+------------------+
+| UseParticle    | SplashScreen  | 30  | 200 max        | cancelAnimFrame  |
+| UseParticleSec | MainPortfolio | 30  | 60/130         | cancelAnimFrame  |
+| GravityWell    | SplashScreen  | 60  | None           | BUG: NOT cleaned |
+| OrbitIcon x5   | HomeSection   | 30  | None           | cancelAnimFrame  |
++----------------+---------------+-----+----------------+------------------+
+
+CRITICAL: GravityWell RAF loop is NEVER cancelled on unmount.
+
+RAF LOOPS PER LENIS INSTANCE:
++------------------+--------------------------------------------+
+| Location         | RAF Loop                                   |
++------------------+--------------------------------------------+
+| MainPortfolio.tsx| gsap.ticker.add -> lenis.raf()             |
+| UseNav.ts        | requestAnimationFrame(raf) -> lenis.raf()  |
++------------------+--------------------------------------------+
+
+CRITICAL: Two independent Lenis instances run simultaneously.
+
+MOUSE/TOUCH EVENT LISTENERS:
++----------------+----------------------------------+---------+----------+
+| Location       | Events                           | Active  | Cleanup  |
++----------------+----------------------------------+---------+----------+
+| UseRobotHead   | mousemove, touchmove, touchstart | Splash  | Yes      |
+| GravityWell    | mousemove, touchstart/move,      | Splash  | Yes      |
+|                | resize                           |         |          |
++----------------+----------------------------------+---------+----------+
+
+INTERSECTIONOBSERVER INSTANCES:
++--------------------+----------------------------+------------+
+| Location           | Purpose                    | Threshold  |
++--------------------+----------------------------+------------+
+| UseNav             | Navbar scroll-spy          | 0.5        |
+| UseIntersectionObs | Home animations            | 0.25       |
+| UseIntersectionObs | About animations           | 0.15       |
+| UseIntersectionObs | Skills animations          | 0.2        |
+| UseIntersectionObs | Projects animations        | 0.15       |
++--------------------+----------------------------+------------+
+
+setInterval/setTimeout:
++----------------+-------------------------------+----------+----------+
+| Location       | Timer                         | Duration | Cleanup  |
++----------------+-------------------------------+----------+----------+
+| SplashScreen   | canEnter timer                | 5000ms   | Yes      |
+| UseHeaderText  | Typewriter chains             | 50ms     | Yes      |
+| UseHackerText  | Hacker text interval          | var      | Yes      |
+| UseRobotHead   | Auto-blink interval           | 5000ms   | Yes      |
+| UseRobotHead   | Angry timeout                 | 3000ms   | PARTIAL  |
+| UseRobotHead   | Click decay timeout           | 1000ms   | PARTIAL  |
+| UseRobotHead   | Dizzy timeout                 | 5000ms   | PARTIAL  |
+| UseRobotHead   | Idle reset timeout            | 4000ms   | Yes      |
+| GravityWell    | Idle decay timeout            | 500ms    | Yes      |
++----------------+-------------------------------+----------+----------+
+
+CSS ANIMATIONS (running continuously):
++---------------------------+------------------+----------+-------------+
+| Animation                 | File             | Duration | Active When |
++---------------------------+------------------+----------+-------------+
+| floatBlob x3              | globals.css      | 15s inf  | Always      |
+| bgReveal                  | globals.css      | 2s fwd   | Once        |
+| robotReveal               | RobotHead.css    | Custom   | Once        |
+| Falling stars (40x)       | AboutSection.css | 1.8-4s   | Visible     |
+| Dizzy head shake          | DizzyRobot.css   | 0.5s inf | Dizzy       |
+| Dizzy ring spin           | DizzyRobot.css   | 1.2s inf | Dizzy       |
+| Police-line slide         | ProjectsSect.css | 1.5s fwd | Visible     |
+| Skill idle glow           | SkilsSection.css | 7s loop  | Visible     |
+| Orbit ring rotation       | HomeSection.css  | 12/20s   | Always      |
+| Floating hexagons         | HomeSection.css  | 6-8s inf | Always      |
+| Splash scanline           | splash.css       | 6s inf   | Splash vis  |
++---------------------------+------------------+----------+-------------+
+
+================================================================================
+7. STYLING ANALYSIS
+================================================================================
+
+CSS ARCHITECTURE:
++----------+------------------+-------+------------------------------------+
+| Layer    | Files            | Lines | Notes                              |
++----------+------------------+-------+------------------------------------+
+| Global   | globals.css      | 532   | View transitions, navbar, forms    |
+| Anim CSS | animation/*.css  | ~4206 | Per-section animation defs         |
+| Bootstrap| CDN import       | 5.3.8 | Grid, utilities, components        |
+| Tailwind | v4 via PostCSS   | Min   | Only ~5 utility classes            |
+| DevIcons | CDN link         | Ext   | Tech icon fonts                    |
++----------+------------------+-------+------------------------------------+
+
+FONT USAGE:
++-----------+------------------+-----------------------------------------+
+| Font      | Source           | Used In                                |
++-----------+------------------+-----------------------------------------+
+| Inter     | next/font/google | --font-inter variable                  |
+| Geist     | next/font/google | --font-geist-sans variable             |
+| Geist Mono| next/font/google | --font-geist-mono variable             |
+| Poppins   | NOT LOADED       | body { font-family: "Poppins" } BUG!  |
++-----------+------------------+-----------------------------------------+
+
+TAILWIND USAGE: Minimal - only min-h-full, flex, flex-col in layout body.
+
+BOOTSTRAP USAGE: Extensive: grid, utilities, buttons, form controls.
+
+RESPONSIVE BREAKPOINTS:
+  768px  - Tablet/mobile (navbar, particles, orbit, skill cards)
+  550px  - Small mobile (navbar)
+  500px  - Small mobile (gradient overlays)
+  991.5px- Tablet (about section rings)
+  728px  - Mobile (about section, home section)
+  690.5px- Mobile (home section)
+  1376px - Large desktop (home section)
+  800px h- Tall viewport (gradient overlay)
+
+POTENTIAL CSS ISSUES:
+  1. Font family mismatch: body uses "Poppins" but loads Inter/Geist
+  2. Filename typo: SkilsSection.css (should be SkillsSection.css)
+  3. Filename typo: exemple.png (should be example.png)
+  4. Bootstrap + Tailwind loaded simultaneously (potential conflicts)
+
+================================================================================
+8. ASSET ANALYSIS
+================================================================================
+
+IMAGES:
++-----------------------------+--------+-------------------+---------------+
+| Asset                       | Format | Used By           | Optimization  |
++-----------------------------+--------+-------------------+---------------+
+| pro.avif / pro.png          | AVIF   | HomeSection       | Dual format   |
+| element/*.avif              | AVIF   | HomeSection,Orbit | Good          |
+| element/*.png               | PNG    | Redundant copies  | DUPLICATE     |
+| projects/flower_shop/*.png  | PNG    | ProjectsSection   | No AVIF       |
+| projects/kasir_sakpore/*.png| PNG    | [slug] only       | No AVIF       |
+| exemple.png                 | PNG    | Favicon           | Typo          |
+| next/vercel/globe/file/win  | SVG    | UNUSED            | Dead assets   |
++-----------------------------+--------+-------------------+---------------+
+
+FONTS:
++------------+------------------+------------------------------------------+
+| Font       | Source           | Status                                   |
++------------+------------------+------------------------------------------+
+| Inter      | next/font/google | Loaded, CSS var set, but body uses Poppins|
+| Geist      | next/font/google | Loaded, CSS var set                      |
+| Geist Mono | next/font/google | Loaded, CSS var set                      |
+| Poppins    | NOT loaded       | Referenced in CSS but missing!           |
+| Bootstrap I| npm package      | Loaded                                   |
+| DevIcons   | CDN (jsdelivr)   | Loaded via <link>                        |
+| Flag Icons | npm package      | Loaded                                   |
++------------+------------------+------------------------------------------+
+
+================================================================================
+9. DEPENDENCY ANALYSIS
+================================================================================
+
+DEPENDENCIES ACTIVELY USED:
++---------------+-----------------------------------------+-------------------+
+| Package       | Used Where                             | Evidence          |
++---------------+-----------------------------------------+-------------------+
+| next          | Framework                               | Core              |
+| react/react-  | All components                          | Core              |
+| dom           |                                         |                   |
+| gsap          | MainPortfolio (ScrollTrigger, ticker)   | gsap.ticker       |
+| lenis         | MainPortfolio, UseNav                   | new Lenis()       |
+| bootstrap     | layout.tsx                              | CSS import        |
+| bootstrap-ic  | layout.tsx + all icon usage             | CSS import        |
+| flag-icons    | FloatingSettings                        | fi classes        |
++---------------+-----------------------------------------+-------------------+
+
+DEPENDENCIES NOT USED (CONFIRMED):
++------------------------+----------+------------------------------------+
+| Package                | Status   | Notes                              |
++------------------------+----------+------------------------------------+
+| @gsap/react            | UNUSED   | No import anywhere in source       |
+| three                  | UNUSED   | No import anywhere in source       |
+| @react-three/fiber     | UNUSED   | No import anywhere in source       |
+| @react-three/drei      | UNUSED   | No import anywhere in source       |
++------------------------+----------+------------------------------------+
+
+POTENTIALLY REDUNDANT:
++----------------------------------+------------------------------------------+
+| Dependency                       | Notes                                    |
++----------------------------------+------------------------------------------+
+| tailwindcss + @tailwindcss/post  | Only ~5 utility classes used. Could be   |
+| css                              | replaced with custom CSS.                |
++----------------------------------+------------------------------------------+
+
+================================================================================
+10. PERFORMANCE AUDIT
+================================================================================
+
+--- CRITICAL ---
+
+[#1] DUPLICATE LENIS INSTANCES
+  Location: MainPortfolio.tsx:39 + UseNav.ts:13
+  Impact: Double smooth-scroll processing, RAF thrashing, scroll conflicts,
+          wasted CPU
+  Description: Two separate Lenis instances with separate RAF loops run
+               simultaneously on the same page.
+
+[#2] GRAVITYWELL RAF NEVER CANCELLED
+  Location: GravityWell.tsx:297-320
+  Impact: RAF loop continues indefinitely after unmount (memory leak)
+  Description: animate() calls requestAnimationFrame(animate) but cleanup
+               never calls cancelAnimationFrame. The RAF ID is not stored.
+
+[#3] THREE.JS BUNDLE LOADED BUT UNUSED
+  Location: package.json
+  Impact: ~1MB+ unnecessary bundle shipped to client
+  Description: three (~600KB+), @react-three/fiber, @react-three/drei are
+               in dependencies but never imported.
+
+--- HIGH ---
+
+[#4] 3 CONCURRENT CANVAS ANIMATION LOOPS DURING SPLASH
+  Location: SplashScreen (UseParticle + GravityWell + RAF)
+  Impact: High CPU/GPU usage, especially on mobile
+
+[#5] ORBITICON RAF LOOP RUNS EVEN WHEN TAB HIDDEN
+  Location: OrbitIcon.tsx:71-73
+  Impact: Wasted CPU cycles when tab not visible
+  Description: isActiveRef skips rendering but RAF loop still fires.
+
+[#6] USEROBOHEAD TIMEOUTS NOT CLEANED ON UNMOUNT
+  Location: UseRobotHead.ts:54-57, 60-64, 134-137
+  Impact: State updates on unmounted component
+  Description: setTimeout for angry (3s), dizzy (5s), click decay (1s) are
+               not cleared in cleanup.
+
+[#7] USEHEADERTEXT RUNS INFINITE ANIMATION ON SPLASH
+  Location: UseHeaderText.ts
+  Impact: Continuous CPU usage during splash
+
+[#8] USEPARTICLE.TS USES MATH.SQRT IN HOT LOOP
+  Location: UseParticle.ts:116
+  Impact: Splash particle system less optimized than UseParticleSection
+
+--- MEDIUM ---
+
+[#9] CDN DEVICONS IN <head>
+  Location: layout.tsx:53-56
+  Impact: Blocks rendering, external dependency
+
+[#10] CONTACT FORM IS NON-FUNCTIONAL
+  Location: ContactSection.tsx
+  Impact: Dead UX element
+
+[#11] HERO SECTION STARTS INVISIBLE
+  Location: HomeSection.css
+  Impact: Flash of invisible content (needs JS active class)
+
+[#12] GRAVITYWELL CANVAS AT 60FPS (UNCAPPED)
+  Location: GravityWell.tsx:297
+  Impact: Higher CPU than other animations
+
+[#13] USEPARTICLESECTION REINIT ON THEME CHANGE
+  Location: MainPortfolio.tsx:35
+  Impact: Full particle recreation on every theme toggle
+
+[#14] 40 FALLING STARS GENERATED BUT NEVER CLEANED
+  Location: AboutSection.tsx:61-87
+  Impact: DOM nodes persist
+
+--- LOW ---
+
+[#15] AboutSection stars conditionally rendered - Good pattern
+[#16] OrbitIcon conditionally rendered - Good pattern
+[#17] policeline.png in public/.trash unused - Dead asset
+[#18] Default Next.js SVGs unused - Dead assets
+[#19] Dual PNG/AVIF for elements - Wasted disk
+[#20] @gsap/react unused - Small unused dependency
+
+================================================================================
+11. CODE QUALITY
+================================================================================
+
+DUPLICATED CODE:
++---------------------------+--------------------------------------+-------+
+| Pattern                   | Files                                | Lines |
++---------------------------+--------------------------------------+-------+
+| UseParticle vs            | UseParticle.ts +                     | ~80%  |
+| UseParticleSection        | UseParticleSection.ts                | similar|
+| Two Lenis instances       | MainPortfolio.tsx + UseNav.ts        | near- |
+|                           |                                      | identical|
+| visibilitychange listener | OrbitIcon, UseRobotHead, UseParticle,| Same  |
+|                           | UseParticleSection                   | pattern|
+| projectsData entries 2-5  | projectsData.ts                      | 4/5   |
+|                           |                                      | identical|
+| i18n content objects      | Every section component              | Same  |
+|                           |                                      | pattern|
++---------------------------+--------------------------------------+-------+
+
+OVERLY COMPLEX COMPONENTS:
++------------------+-------+--------------------------------------------------+
+| Component        | Lines | Complexity                                       |
++------------------+-------+--------------------------------------------------+
+| UseRobotHead.ts  | 332   | Complex state machine (angry/dizzy/blink/tracking)|
+| UseHeaderText.ts | 189   | Recursive setTimeout chains with mounted guard   |
+| GravityWell.tsx  | 357   | Canvas grid warping with complex coordinate math |
++------------------+-------+--------------------------------------------------+
+
+NAMING ISSUES:
+  - Hooks named with "Use" prefix (not "use") - React convention requires
+    lowercase "use" prefix
+  - Directory named "functions/" instead of "hooks/"
+  - CSS filename typo: SkilsSection.css (should be SkillsSection.css)
+  - Favicon filename typo: exemple.png (should be example.png)
+  - Comments in Indonesian mixed with English
+
+UNUSED CODE:
+  - CursorTrail import in SplashScreen.tsx:5 (imported but commented in JSX)
+  - @gsap/react dependency in package.json
+  - Three.js ecosystem (3 packages) in package.json
+  - next.svg, vercel.svg, globe.svg, file.svg, window.svg in public/
+  - Default README.md
+
+POTENTIAL BUGS:
++-----------------------------------------+----------------------+----------+
+| Bug                                     | Location             | Severity |
++-----------------------------------------+----------------------+----------+
+| Font mismatch: CSS says Poppins,        | globals.css:62 +     | HIGH     |
+| loads Inter/Geist                       | layout.tsx           |          |
+| 4/5 projects share slug                 | projectsData.ts      | HIGH     |
+|                                         |                      |          |
+| Project detail page uses hardcoded      | [slug]/page.tsx      | MEDIUM   |
+| bg-dark regardless of theme             |                      |          |
+|                                         |                      |          |
+| UseHeaderText dep array empty [] but    | UseHeaderText.ts:176 | LOW      |
+| uses lang via ref                       |                      |          |
+|                                         |                      |          |
+| GravityWell RAF cleanup missing         | GravityWell.tsx      | HIGH     |
+|                                         |                      |          |
+| UseRobotHead effect closures may be     | UseRobotHead.ts:93   | MEDIUM   |
+| stale (angry/dizzy in moveEyes)         |                      |          |
++-----------------------------------------+----------------------+----------+
+
+================================================================================
+12. ARCHITECTURE PROBLEMS
+================================================================================
+
+1. DUAL CSS FRAMEWORK OVERLOAD
+   Bootstrap 5 + Tailwind CSS v4 are both loaded. Tailwind is used for only
+   ~5 utility classes. Adds unnecessary complexity and potential style conflicts.
+
+2. DUAL SMOOTH-SCROLL SYSTEMS CONFLICT
+   Two independent Lenis instances created - one in MainPortfolio.tsx (wired to
+   GSAP ScrollTrigger) and one in UseNav.ts (for scrollTo navigation). Both
+   have separate RAF loops causing:
+   - Competing scroll position management
+   - Double RAF processing
+   - Potential scroll jank
+
+3. HOOKS DIRECTORY MISNAMED AS "functions/"
+   The functions/ directory contains React hooks but doesn't follow React naming
+   conventions (use prefix lowercase) or standard project structure (hooks/).
+
+4. ALL PAGES ARE CLIENT-RENDERED
+   Every page/component is "use client". No server components, no static
+   generation, no SSR benefits. The entire app hydrates client-side.
+
+5. CSS ANIMATION EXPLOSION
+   ~4,200 lines of animation CSS across 9 files, many running infinitely even
+   when sections are not visible (though CSS animation-play-state is used
+   in some cases).
+
+6. NO ERROR BOUNDARIES
+   No React error boundaries anywhere. A crash in any canvas or animation
+   would crash the entire app.
+
+7. UNUSED HEAVY DEPENDENCIES
+   Three.js ecosystem (~1MB+ bundle) is installed but never used.
+   @gsap/react is also unused.
+
+================================================================================
+13. RECOMMENDED IMPROVEMENTS
+================================================================================
+
+--- PRIORITY: CRITICAL ---
+
+[#1]  Remove Three.js ecosystem (three, @react-three/fiber, @react-three/drei)
+     Reason: ~1MB bundle savings, never used
+
+[#2]  Fix GravityWell RAF cleanup - add cancelAnimationFrame(rafId) in cleanup
+     Reason: Memory leak on unmount
+
+[#3]  Unify Lenis instances - Use ONE Lenis instance shared between
+     MainPortfolio and UseNav
+     Reason: Eliminate double RAF, scroll conflicts
+
+--- PRIORITY: HIGH ---
+
+[#4]  Remove @gsap/react from dependencies
+     Reason: Unused
+
+[#5]  Fix Poppins font - either load Poppins via next/font or change body
+     font-family to match loaded fonts (Inter)
+     Reason: Correct font rendering
+
+[#6]  Remove CursorTrail import from SplashScreen
+     Reason: Dead import from .trash
+
+[#7]  Clean up UseRobotHead timeouts on unmount
+     Reason: Prevent state updates on unmounted component
+
+[#8]  Consolidate UseParticle and UseParticleSection into one hook
+     Reason: ~80% code duplication
+
+[#9]  Add FPS throttling to GravityWell canvas (currently uncapped 60fps)
+     Reason: Reduce CPU usage
+
+--- PRIORITY: MEDIUM ---
+
+[#10] Remove Tailwind CSS - Replace 5 utility classes with custom CSS
+     Reason: Eliminate dual CSS framework
+
+[#11] Rename functions/ to hooks/ and rename files to use*.ts convention
+     Reason: Follow React conventions
+
+[#12] Fix projectsData slug duplication - Give each project a unique slug
+     Reason: 4 projects are unreachable
+
+[#13] Add i18n to project detail page - Currently hardcoded English
+     Reason: Consistency
+
+[#14] Remove default Next.js assets (next.svg, vercel.svg, etc.)
+     Reason: Dead files
+
+[#15] Move devicons CSS to local or add rel="preload"
+     Reason: Remove render-blocking external resource
+
+[#16] Implement server-side rendering or at minimum make layout.tsx server
+     Reason: Performance + SEO
+
+--- PRIORITY: LOW ---
+
+[#17] Implement the contact form
+     Reason: Currently non-functional
+
+[#18] Clean up .trash/ directories
+     Reason: Dead code bloat
+
+[#19] Remove duplicate PNG/AVIF for elements
+     Reason: Wasted assets
+
+[#20] Fix filename typos (SkilsSection.css, exemple.png)
+     Reason: Code quality
+
+================================================================================
+14. IMPORTANT FINDINGS
+================================================================================
+
+1. GRAVITYWELL HAS A MEMORY LEAK
+   RAF loop is never cancelled on unmount. The animate() function keeps calling
+   itself via requestAnimationFrame but the cleanup only removes event
+   listeners.
+
+2. THREE.JS ECOSYSTEM (~1MB+) IS COMPLETELY UNUSED
+   This is the single largest unnecessary bundle contributor.
+
+3. TWO LENIS INSTANCES CONFLICT
+   MainPortfolio.tsx creates one with GSAP integration; UseNav.ts creates a
+   separate one. Both run RAF loops simultaneously.
+
+4. POPPINS FONT IS DECLARED BUT NEVER LOADED
+   body { font-family: "Poppins" } falls back to system font.
+
+5. 4 OUT OF 5 PROJECTS ARE UNREACHABLE
+   All share slug "flower-shop-website", so only the first project can be
+   accessed via /projects/flower-shop-website.
+
+6. @GSAP/REACT IS UNUSED
+   Installed but never imported anywhere.
+
+7. ALL 5 ORBITICON COMPONENTS RUN CONCURRENT RAF LOOPS
+   When HomeSection is visible: 5 x 30fps = 150 RAF callbacks/second.
+
+8. SPLASH SCREEN RUNS 3 SIMULTANEOUS CANVAS ANIMATIONS
+   UseParticle + GravityWell + orbit effects all running at once.
+
+9. PROJECT DETAIL PAGE IGNORES THEME
+   Uses hardcoded bg-dark classes regardless of dark/light mode.
+
+10. NO SEO/ROUTING INFRASTRUCTURE
+    No sitemap, no robots.txt, no metadata beyond title, all client-rendered.
+
+================================================================================
+15. FILES THAT NEED ATTENTION
+================================================================================
+
++----------+----------------------------------------------+------------------+
+| Priority | File                                         | Reason           |
++----------+----------------------------------------------+------------------+
+| 1        | src/app/components/GravityWell.tsx            | Memory leak -    |
+|          |                                              | missing cancel   |
+|          |                                              | AnimFrame in     |
+|          |                                              | cleanup          |
+| 2        | src/app/page/MainPortfolio.tsx                | Duplicate Lenis  |
+|          |                                              | instance         |
+| 3        | src/app/functions/UseNav.ts                   | Duplicate Lenis  |
+|          |                                              | instance         |
+| 4        | src/app/layout.tsx                            | Font mismatch,   |
+|          |                                              | unnecessary pkgs |
+| 5        | package.json                                  | Remove unused    |
+|          |                                              | deps             |
+| 6        | src/app/globals.css                           | Font-family fix  |
+| 7        | src/app/data/projectsData.ts                  | Duplicate slugs  |
+| 8        | src/app/functions/UseRobotHead.ts             | Timeout cleanup  |
+| 9        | src/app/page/SplashScreen.tsx                 | Remove CursorT.  |
+|          |                                              | import           |
+| 10       | src/app/functions/UseParticle.ts              | Consolidate with |
+|          |                                              | UseParticleSec.  |
++----------+----------------------------------------------+------------------+
+
+================================================================================
+TOP 10 MOST IMPORTANT PROBLEMS
+================================================================================
+
++----+----------------------------------------------------------+----------+
+| #  | Problem                                                  | Severity |
++----+----------------------------------------------------------+----------+
+| 1  | GravityWell RAF memory leak (never cancelled)            | CRITICAL |
+| 2  | Three.js ecosystem (~1MB+) completely unused             | CRITICAL |
+| 3  | Dual Lenis instances with conflicting RAF loops          | CRITICAL |
+| 4  | @gsap/react unused dependency                            | HIGH     |
+| 5  | Poppins font declared but not loaded (wrong font)        | HIGH     |
+| 6  | 4/5 project slugs duplicated (4 projects unreachable)    | HIGH     |
+| 7  | UseRobotHead timeouts not cleaned on unmount             | HIGH     |
+| 8  | 5 concurrent OrbitIcon RAF loops at 30fps each           | MEDIUM   |
+| 9  | GravityWell canvas uncapped at 60fps (no throttle)       | MEDIUM   |
+| 10 | Project detail page ignores light/dark theme             | MEDIUM   |
++----+----------------------------------------------------------+----------+
+
+================================================================================
+TOP 10 MOST IMPORTANT RECOMMENDATIONS
+================================================================================
+
++----+----------------------------------------------------------+----------+
+| #  | Recommendation                                           | Priority |
++----+----------------------------------------------------------+----------+
+| 1  | Remove Three.js + R3F + Drei from package.json           | CRITICAL |
+| 2  | Fix GravityWell RAF cleanup (store rAF ID, cancel it)    | CRITICAL |
+| 3  | Unify Lenis to single instance (MainPortfolio owns)      | CRITICAL |
+| 4  | Remove @gsap/react from dependencies                     | HIGH     |
+| 5  | Fix font: load Poppins or change body to Inter           | HIGH     |
+| 6  | Fix project slugs - make each unique                      | HIGH     |
+| 7  | Consolidate UseParticle + UseParticleSection              | MEDIUM   |
+| 8  | Rename functions/ -> hooks/, files to use*.ts             | MEDIUM   |
+| 9  | Remove all .trash/ directories                           | LOW      |
+| 10 | Add error boundaries and loading states                   | LOW      |
++----+----------------------------------------------------------+----------+
+
+================================================================================
+SAFEST REFACTORING ORDER
+================================================================================
+
++------+-----------------------------------------------------------+------+
+| Step | Action                                                    | Risk |
++------+-----------------------------------------------------------+------+
+| 1    | Remove unused deps (three, @react-three/*, @gsap/react)   | NONE |
+|      | from package.json                                         |      |
++------+-----------------------------------------------------------+------+
+| 2    | Delete .trash/ directories (src/app/.trash + public/.trash| NONE |
+|      | CursorTrail import must be removed first)                 |      |
++------+-----------------------------------------------------------+------+
+| 3    | Remove CursorTrail import from SplashScreen.tsx:5         | NONE |
++------+-----------------------------------------------------------+------+
+| 4    | Remove default Next.js SVGs from public/                  | NONE |
++------+-----------------------------------------------------------+------+
+| 5    | Fix GravityWell RAF cleanup                               | LOW  |
++------+-----------------------------------------------------------+------+
+| 6    | Fix Poppins font in globals.css -> change to Inter        | LOW  |
++------+-----------------------------------------------------------+------+
+| 7    | Rename SkilsSection.css -> SkillsSection.css + update imp | LOW  |
++------+-----------------------------------------------------------+------+
+| 8    | Fix projectsData.ts unique slugs                          | LOW  |
++------+-----------------------------------------------------------+------+
+| 9    | Unify Lenis instances (biggest structural change)         | MED  |
+|      | touches MainPortfolio + UseNav                            |      |
++------+-----------------------------------------------------------+------+
+| 10   | Consolidate UseParticle + UseParticleSection              | MED  |
+|      | touches SplashScreen + MainPortfolio                      |      |
++------+-----------------------------------------------------------+------+
+
+================================================================================
+                           END OF ANALYSIS REPORT
+================================================================================

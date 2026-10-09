@@ -1,0 +1,792 @@
+/* Matikan animasi secara default jika section tidak memiliki class .active */
+.hero-section:not(.active) .hex,
+.hero-section:not(.active) .polcadot-img,
+.hero-section:not(.active) .polcadot-img2,
+.hero-section:not(.active) .orbit-ring,
+.hero-section:not(.active) .hero-img,
+.hero-section:not(.active) .source-card {
+  animation-play-state: paused !important;
+}
+
+/* Atau jika animasi dijalankan dengan class tambahan saat active */
+.hero-section.active .hex,
+.hero-section.active .orbit-ring {
+  animation-play-state: running;
+}
+
+/* ================= HERO SECTION ================= */
+/* vh dikali --zoom: section ini di-`zoom` 1/var(--zoom) oleh aturan kompensasi
+   di globals.css, dan CSS `zoom` ikut men-skala nilai vh. Agar vh yang terlukis
+   tetap = 60vh (bukan 60vh * 1/var(--zoom)), nilai sumber dikalikan --zoom. */
+.hero-section {
+  min-height: calc(60vh * var(--zoom, 1));
+  position: relative;
+  overflow: hidden;
+}
+
+/* Bootstrap .min-vh-100 (min-height: 100vh) di dalam hero ikut ter-skala oleh
+   `zoom` section, jadi sumber nilainya juga dikalikan --zoom (alasan sama
+   seperti di atas). Specificity #home menang atas .min-vh-100 milik Bootstrap. */
+#home .min-vh-100 {
+  min-height: calc(100vh * var(--zoom, 1));
+}
+
+.container-home {
+  width: 90%;
+  margin: auto;
+}
+
+.scroll-margin-top-hero {
+  scroll-margin-top: 50px;
+}
+
+.dark-theme .hero-title {
+  color: #f8fafc;
+}
+
+.hero-title {
+  font-size: 50px;
+  font-weight: 800 !important;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 12px;
+  opacity: 0;
+}
+
+.hero-title span.name-text {
+  background: linear-gradient(200deg, #00d9ff, #0b428f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.dark-theme .hero-title span.name-text {
+  background: linear-gradient(200deg, #0b428f, #00d9ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Cursor style diterapkan ke element individual (prefix-text atau name-text) */
+.cursor::after {
+  content: "";
+  display: inline-block;
+  width: 3px;
+  height: 1em;
+  margin-left: 6px;
+  background: #00d9ff;
+  vertical-align: middle;
+  animation: cursorBlink 0.8s steps(1) infinite;
+  box-shadow: 0 0 6px #00d9ff;
+}
+
+.badge-title,
+.hero-subtitle,
+.hero-text,
+.button-home,
+.social-icons {
+  opacity: 0;
+}
+
+.hero-subtitle {
+  color: #7f7f7f;
+  font-weight: 500;
+}
+
+.dark-theme .hero-subtitle {
+  color: #b6b6b6;
+}
+
+.hero-text {
+  color: #6b6b6b;
+  line-height: 1.8;
+}
+
+.dark-theme .hero-text {
+  color: #c9c9c9;
+}
+
+/* Gaya default (Light Theme) */
+.btn-theme-outline {
+  color: #212529;
+  border-color: #212529;
+  background-color: transparent;
+}
+
+.btn-theme-outline:hover {
+  color: #fff;
+  background-color: #212529;
+  border-color: #212529;
+}
+
+/* Gaya otomatis saat Dark Theme aktif */
+.dark-theme .btn-theme-outline {
+  color: #f8f9fa;
+  border-color: #f8f9fa;
+  background-color: transparent;
+}
+
+.dark-theme .btn-theme-outline:hover {
+  color: #000;
+  background-color: #f8f9fa;
+  border-color: #f8f9fa;
+}
+
+.dark-theme .social-icons {
+  color: white;
+}
+
+.social-icons i {
+  font-size: 28px;
+  margin-right: 18px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.social-icons i:hover {
+  color: #00d9ff;
+  transform: translateY(-5px);
+}
+
+/* ================= HERO RIGHT ================= */
+
+.hero-right {
+  position: relative;
+  width: 100%;
+  height: 700px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ================= GLOW EFFECT ================= */
+
+/* ================= PROFILE IMAGE ================= */
+
+.hero-img {
+  width: 450px;
+  position: relative;
+  z-index: 10;
+  opacity: 0;
+  filter: drop-shadow(0 0 25px rgba(0, 217, 255, 0.5));
+}
+
+/* ================= ORBIT RING ================= */
+
+.orbit-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.orbit-ring {
+  position: absolute;
+  width: 650px;
+  height: 650px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 170, 255, 0.15);
+  box-shadow:
+    0 0 30px rgba(0, 217, 255, 0.05),
+    inset 0 0 30px rgba(0, 217, 255, 0.05);
+  opacity: 0;
+}
+
+.orbit-ring-2 {
+  width: 500px;
+  height: 500px;
+}
+
+/* ================= TECH ICONS & EXTRA IMAGES ================= */
+
+.tech-icon {
+  position: absolute;
+  width: 90px;
+  z-index: 15;
+  transition: all 0.4s ease;
+  will-change: transform, filter;
+}
+
+.tech-icon:hover {
+  transform: scale(1.08);
+}
+
+.code-img {
+  position: absolute;
+  top: 40px;
+  left: 50px;
+  width: 120px;
+  opacity: 0;
+  animation: codeImgRight 1.5s ease forwards 0.6s;
+}
+
+.polcadot-img {
+  position: absolute;
+  width: 100px;
+  bottom: 60px;
+  left: 7%;
+  opacity: 0;
+}
+
+.polcadot-img2 {
+  position: absolute;
+  width: 90px;
+  right: 30px;
+  top: 60px;
+  opacity: 0;
+}
+
+/* ================= SOURCE CARD ================= */
+
+.source-card {
+  position: absolute;
+  width: 280px;
+  height: 190px;
+  top: 150px;
+  right: -50px;
+  z-index: 5;
+  opacity: 0;
+  border-radius: 20px;
+  background: rgba(50, 50, 50, 0.514);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 0 30px rgba(0, 217, 255, 0.08),
+    inset 0 0 10px rgba(255, 255, 255, 0.03);
+}
+
+/* ================= HEXAGON ================= */
+
+.hex {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  transform-origin: center;
+  opacity: 0;
+  filter: drop-shadow(0 0 5px rgba(0, 159, 245, 0.577))
+    drop-shadow(0 0 5px rgba(0, 191, 255, 0.792));
+}
+
+.hex1 {
+  width: 100px;
+  height: 100px;
+  top: 50px;
+  left: 8%;
+}
+
+.hex2 {
+  width: 170px;
+  height: 170px;
+  bottom: 110px;
+  left: 30%;
+}
+
+.hex3 {
+  width: 150px;
+  height: 150px;
+  bottom: 200px;
+  right: 5%;
+}
+
+.hex4 {
+  width: 120px;
+  height: 120px;
+  top: 40px;
+  right: 15%;
+}
+
+.hex img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0.5;
+  filter: drop-shadow(0 0 10px rgba(0, 217, 255, 0.299));
+}
+
+/* ================= STATE INACTIVE (RESET WHEN SCROLLED OUT) ================= */
+
+.hero-section:not(.active) * {
+  animation: none !important;
+}
+
+/* ================= STATE ACTIVE (TRIGGERS ALL ANIMATIONS) ================= */
+
+/* Left Section Content */
+.hero-section.active .badge-title {
+  animation: fadeRight 1s ease forwards 0.4s;
+}
+
+.hero-section.active .hero-title {
+  animation: fadeRight 1s ease forwards 0.6s;
+}
+
+.hero-section.active .hero-subtitle {
+  animation: fadeRight 1s ease forwards 0.8s;
+}
+
+.hero-section.active .hero-text {
+  animation: fadeRight 1s ease forwards 1s;
+}
+
+.hero-section.active .button-home {
+  animation: fadeRight 1s ease forwards 1.2s;
+}
+
+.hero-section.active .social-icons {
+  animation: socialReveal 1s ease forwards 1.5s;
+}
+
+/* Profile Image */
+.hero-section.active .hero-img {
+  animation:
+    profileIntro 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.3s,
+    floatProfile 4s ease-in-out infinite 1.5s,
+    profileGlow 4s ease-in-out infinite 1.5s;
+}
+
+/* Orbit Rings */
+.hero-section.active .orbit-ring {
+  animation:
+    orbitIntro 1.2s ease forwards 0.2s,
+    orbitRotate 30s linear infinite 1.4s;
+}
+
+.hero-section.active .orbit-ring-2 {
+  animation:
+    orbitIntro 1.4s ease forwards 0.4s,
+    orbitRotate 20s linear infinite 1.8s;
+}
+
+/* Hexagons */
+.hero-section.active .hex1 {
+  animation:
+    hexIntro 1s cubic-bezier(0.18, 0.9, 0.25, 1) forwards 0.2s,
+    hexSpin 20s linear infinite 1.2s;
+}
+
+.hero-section.active .hex2 {
+  animation:
+    hexIntro 1s cubic-bezier(0.18, 0.9, 0.25, 1) forwards 0.4s,
+    hexSpin 50s linear infinite reverse 1.4s;
+}
+
+.hero-section.active .hex3 {
+  animation:
+    hexIntro 1s cubic-bezier(0.18, 0.9, 0.25, 1) forwards 0.6s,
+    hexSpin 20s linear infinite 1.6s;
+}
+
+.hero-section.active .hex4 {
+  animation:
+    hexIntro 1s cubic-bezier(0.18, 0.9, 0.25, 1) forwards 0.8s,
+    hexSpin 40s linear infinite reverse 1.8s;
+}
+
+/* Decorative Images & Card */
+.hero-section.active .polcadot-img,
+.hero-section.active .polcadot-img2 {
+  animation:
+    polcadotShow 1s ease forwards 1.5s,
+    polcadotAnimate 5s infinite 2s;
+}
+
+.hero-section.active .source-card {
+  animation:
+    cardIntro 1s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.8s,
+    cardFloat 5s ease-in-out infinite 1.8s;
+}
+
+/* ================= KEYFRAMES ================= */
+
+@keyframes profileGlow {
+  50% {
+    filter: drop-shadow(0 0 20px rgba(0, 217, 255, 0.645))
+      drop-shadow(0 0 30px rgba(0, 217, 255, 0.3));
+  }
+}
+
+@keyframes profileIntro {
+  from {
+    opacity: 0;
+    transform: translateY(80px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes floatProfile {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+@keyframes orbitIntro {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes orbitRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes hexIntro {
+  0% {
+    transform: scale(0) rotate(-360deg);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes hexSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeRight {
+  from {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes cursorBlink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes cardIntro {
+  0% {
+    opacity: 0;
+    transform: translateX(80px) scale(0.75) rotate(8deg);
+    filter: blur(8px);
+  }
+  60% {
+    opacity: 0.8;
+    transform: translateX(-10px) scale(1.05) rotate(-2deg);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0.7;
+    transform: translateX(0) scale(1) rotate(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes cardFloat {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-10px) rotate(-1.5deg);
+    filter: blur(2px);
+  }
+  50% {
+    transform: translateY(-16px) rotate(0.5deg);
+    filter: blur(0);
+  }
+  75% {
+    transform: translateY(-8px) rotate(1.5deg);
+    filter: blur(1px);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+    filter: blur(0);
+  }
+}
+
+@keyframes codeImgRight {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  100% {
+    opacity: 0.1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes polcadotShow {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(40px) rotate(-10deg);
+    filter: blur(6px);
+  }
+  100% {
+    opacity: 0.4;
+    transform: scale(1) translateY(0) rotate(0deg);
+    filter: blur(0);
+  }
+}
+
+@keyframes polcadotAnimate {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.1;
+  }
+}
+
+@keyframes socialReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* RESPONSIVE LAYOUT */
+@media (max-width: 1376px) {
+  .hero-title {
+    flex-direction: column; /* Menumpuk prefixText dan nameText secara vertikal */
+    align-items: flex-start;
+  }
+
+  .hero-title span.prefix-text,
+  .hero-title span.name-text {
+    display: inline-block;
+    min-height: 1.2em; /* Mempertahankan tinggi 1 baris teks */
+  }
+}
+
+@media (max-width: 991.5px) {
+  .hero-title {
+    flex-direction: row;
+    align-items: center;
+  }
+  .code-img {
+    position: absolute;
+    width: 10%;
+    top: 3%;
+    left: 3%;
+  }
+
+  .scroll-margin-top-hero {
+    scroll-margin-top: 90px;
+  }
+
+  .hero-left .badge-title {
+    margin-top: 25px;
+  }
+
+  .hex1 {
+    width: 100px;
+    height: 100px;
+    top: 40% !important;
+    left: 8%;
+  }
+
+  .hex2 {
+    width: 170px;
+    height: 170px;
+    bottom: 110px;
+    left: 20%;
+  }
+
+  .hex4 {
+    width: 120px;
+    height: 120px;
+    top: 30%;
+    right: 10%;
+  }
+
+  .source-card {
+    top: 150px;
+    right: 30px;
+  }
+}
+
+@media (max-width: 728px) {
+  .code-img {
+    display: none;
+  }
+
+  .source-card {
+    width: 250px;
+    right: -20px;
+  }
+}
+
+/* Mode Mobile (max-width: 690px) */
+@media (max-width: 690.5px) {
+  .hero-title {
+    font-size: 40px;
+    flex-direction: column; /* Menumpuk prefixText dan nameText secara vertikal */
+    align-items: flex-start;
+  }
+
+  /* Menjaga agar span tetap memiliki tinggi walaupun teks di dalamnya kosong */
+  .hero-title span.prefix-text,
+  .hero-title span.name-text {
+    display: inline-block;
+    min-height: 1.2em; /* Mempertahankan tinggi 1 baris teks */
+  }
+
+  .hero-subtitle {
+    font-size: 24px;
+  }
+
+  .hero-text {
+    font-size: 15px;
+  }
+
+  .button-home {
+    display: flex;
+    flex-wrap: nowrap !important;
+    gap: 10px !important;
+  }
+
+  .button-home button {
+    font-size: 15px;
+    white-space: nowrap;
+  }
+
+  .social-icons i {
+    font-size: 24px;
+  }
+
+  .source-card {
+    width: 230px;
+  }
+
+  .orbit-wrapper {
+    transform: scale(0.85);
+  }
+}
+
+@media (max-width: 500px) {
+  .hero-title {
+    -webkit-text-stroke: 1.5px currentColor;
+  }
+
+  .source-card {
+    width: 180px;
+    height: 140px;
+    top: 130px;
+    right: -30px;
+  }
+
+  .hero-img {
+    width: 470px;
+  }
+
+  .orbit-wrapper {
+    transform: scale(0.65);
+  }
+
+  .hero-right {
+    height: 600px;
+  }
+
+  .hex1 {
+    width: 100px;
+    height: 100px;
+    top: 48% !important;
+    left: 8%;
+  }
+
+  .hex2 {
+    width: 130px;
+    height: 130px;
+    bottom: 110px;
+    left: 10%;
+  }
+
+  .hex4 {
+    width: 120px;
+    height: 120px;
+    top: 40%;
+    right: 10%;
+  }
+
+  .orbit-ring {
+    width: 500px;
+    height: 500px;
+  }
+
+  .orbit-ring-2 {
+    width: 350px;
+    height: 350px;
+  }
+
+  .hero-section.active .orbit-ring {
+    animation: orbitIntro 1.2s ease forwards 0.2s;
+  }
+
+  .hero-section.active .orbit-ring-2 {
+    animation: orbitIntro 1.4s ease forwards 0.4s;
+  }
+
+  /* Hexagons */
+  /* .hero-section.active .hex1 {
+    animation: hexIntro 1s cubic-bezier(0.18, 0.9, 0.25, 1) forwards 0.2s;
+  }
+
+  .hero-section.active .hex2 {
+    animation: hexIntro 1s cubic-bezier(0.18, 0.9, 0.25, 1) forwards 0.4s;
+  }
+
+  .hero-section.active .hex3 {
+    animation: hexIntro 1s cubic-bezier(0.18, 0.9, 0.25, 1) forwards 0.6s;
+  }
+
+  .hero-section.active .hex4 {
+    animation: hexIntro 1s cubic-bezier(0.18, 0.9, 0.25, 1) forwards 0.8s;
+  } */
+}

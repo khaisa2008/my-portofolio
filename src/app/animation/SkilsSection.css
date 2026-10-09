@@ -1,0 +1,677 @@
+.skills-section:not(.active) * {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* ================= SKILLS SECTION ================= */
+.skills-section {
+  background: transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.content-skills {
+  z-index: 10;
+  position: relative;
+  /* Memberikan kedalaman 3D untuk efek rotateX */
+  perspective: 1000px;
+}
+
+/* ================= TRANSISI GRID (DIBUAT BERTAHAP) ================= */
+.grid-col-transition {
+  /* 
+     Saat MENGECIL (Flip Balik): Delay 0.15s (menunggu teks pudar)
+     Saat MEMBESAR (Flip Buka): Delay 0.25s (menunggu flip dimulai)
+  */
+  transition:
+    flex 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.15s,
+    max-width 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.15s,
+    width 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.15s;
+}
+
+/* ================= 3D CARD FLIP CONTAINER =================
+ * Element-nya <button> (a11y: bisa di-tab & Enter/Space), jadi reset
+ * gaya default button dulu. */
+.skill-card-wrapper {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  text-align: inherit;
+  perspective: 1000px;
+  height: 140px; /* Dikunci tepat 140px */
+  cursor: pointer;
+}
+
+.skill-card-wrapper:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 16px;
+}
+
+/* Chip kategori kecil di bawah nama — memberi struktur pada grid seragam. */
+.skill-category-chip {
+  margin-top: 6px;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  background: rgba(14, 116, 144, 0.1);
+  border: 1px solid rgba(14, 116, 144, 0.25);
+  border-radius: 99px;
+  padding: 2px 9px;
+}
+
+.dark-theme .skill-category-chip {
+  color: var(--accent);
+  background: rgba(0, 217, 255, 0.1);
+  border-color: rgba(0, 217, 255, 0.3);
+}
+
+/* Hint "+" di pojok kanan atas: isyarat visual bahwa kartu bisa dibuka. */
+.skill-flip-hint {
+  position: absolute;
+  top: 8px;
+  right: 11px;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--accent-ink);
+  opacity: 0.55;
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+}
+
+.skill-card-wrapper:hover .skill-flip-hint {
+  transform: rotate(90deg);
+  opacity: 1;
+}
+
+.dark-theme .skill-flip-hint {
+  color: var(--accent);
+}
+
+.skill-card-wrapper[aria-expanded="true"] .skill-flip-hint {
+  transform: rotate(45deg);
+  opacity: 0;
+}
+
+.skill-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /* 
+     Saat MENGECIL (Flip Balik): Delay 0.45s (menunggu teks pudar 0.15s + ukuran grid mengecil 0.30s)
+  */
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.45s;
+  transform-style: preserve-3d;
+}
+
+.skill-card-inner.is-flipped {
+  transform: rotateY(180deg);
+  transition-delay: 0s; /* Putar langsung di tahap awal */
+}
+
+/* Sembunyikan teks ketika tidak flipped agar pudar di awal */
+.skill-card-inner:not(.is-flipped) .skill-desc-text {
+  opacity: 0;
+  transition: opacity 0.1s ease 0s;
+}
+
+/* Tampilkan teks hanya setelah kartu selesai berputar saat membuka */
+.skill-card-inner.is-flipped .skill-desc-text {
+  opacity: 1;
+  transition: opacity 0.2s ease 0.35s; /* Tampil setelah flip depan rampung */
+}
+
+.skill-card-wrapper:hover .skill-card-inner.is-flipped {
+  transform: rotateY(180deg) translateY(-4px);
+}
+/* ================= BASE SISI DEPAN & BELAKANG ================= */
+.skill-card-front,
+.skill-card-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 16px;
+  box-sizing: border-box;
+}
+
+/* ================= SISI DEPAN CARD (LIGHT THEME) ================= */
+.skill-card-front {
+  background-color: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  color: #0f172a;
+  /* Glow cyan, bukan bayangan hitam pekat — satu bahasa visual dgn situs. */
+  box-shadow:
+    0 10px 25px -8px rgba(14, 116, 144, 0.28),
+    0 0 0 1px rgba(14, 116, 144, 0.05);
+
+  opacity: 0;
+  transform: translateY(40px) scale(0.92) rotateX(10deg);
+  transform-origin: center bottom;
+
+  /* Transisi perubahan tema Light Mode (Gelap -> Terang) */
+  transition:
+    opacity 0.5s ease,
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 0.4s ease calc((11 - var(--delay)) * 0.04s),
+    border-color 0.4s ease calc((11 - var(--delay)) * 0.04s),
+    color 0.4s ease calc((11 - var(--delay)) * 0.04s),
+    box-shadow 0.4s ease calc((11 - var(--delay)) * 0.04s);
+}
+
+.skill-card-front i {
+  display: inline-block;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.05));
+}
+
+/* ================= IKON SKILL LOKAL =================
+ * SVG lokal di /public/skills — menggantikan devicon CDN (127KB CSS
+ * render-blocking + font 1.5MB). Ukuran mengikuti font-size (1em). */
+.skill-icon {
+  width: 1em;
+  height: 1em;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.icon-html5 { background-image: url("/skills/html5.svg"); }
+.icon-css3 { background-image: url("/skills/css3.svg"); }
+.icon-javascript { background-image: url("/skills/javascript.svg"); }
+.icon-typescript { background-image: url("/skills/typescript.svg"); }
+.icon-php { background-image: url("/skills/php.svg"); }
+.icon-java { background-image: url("/skills/java.svg"); }
+.icon-react { background-image: url("/skills/react.svg"); }
+.icon-nextjs { background-image: url("/skills/nextjs.svg"); }
+.icon-laravel { background-image: url("/skills/laravel.svg"); }
+.icon-tailwindcss { background-image: url("/skills/tailwindcss.svg"); }
+.icon-mysql { background-image: url("/skills/mysql.svg"); }
+.icon-postgresql { background-image: url("/skills/postgresql.svg"); }
+
+.skill-card-front h5 {
+  font-size: 0.95rem;
+  letter-spacing: 0.3px;
+}
+
+/* ================= SISI BELAKANG CARD (DESAIN REFERENSI FOTO) ================= */
+.skill-card-back {
+  transform: rotateY(180deg);
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(6, 182, 212, 0.6);
+  color: #0f172a;
+  box-shadow: 0 10px 30px -10px rgba(6, 182, 212, 0.5);
+  overflow: hidden;
+
+  /* Transisi perubahan tema Light Mode (Gelap -> Terang) */
+  transition:
+    opacity 0.5s ease,
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 0.4s ease calc((11 - var(--delay)) * 0.04s),
+    border-color 0.4s ease calc((11 - var(--delay)) * 0.04s),
+    color 0.4s ease calc((11 - var(--delay)) * 0.04s),
+    box-shadow 0.4s ease calc((11 - var(--delay)) * 0.04s);
+}
+
+.skill-icon-back {
+  font-size: 4rem; /* Ukuran Ikon Kiri */
+  line-height: 1;
+  padding-left: 10px;
+}
+
+.skill-info-content h5 {
+  font-size: 18px;
+  letter-spacing: 0.5px;
+  color: #0f172a;
+}
+
+.skill-desc-text {
+  font-size: 15px;
+  line-height: 1.3;
+  color: #475569;
+  font-weight: 400;
+  /* Tambahkan baris transisi ini: */
+  opacity: 1;
+  transition: opacity 0.15s ease 0s; /* Pudar dengan cepat tanpa delay saat flip balik */
+}
+
+/* ================= DARK THEME OVERRIDES ================= */
+.dark-theme .skill-card-front {
+  background-color: rgba(15, 23, 42, 0.6);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+
+  /* Transisi perubahan tema Dark Mode (Terang -> Gelap) */
+  transition:
+    opacity 0.5s ease,
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 0.4s ease calc(var(--delay) * 0.04s),
+    border-color 0.4s ease calc(var(--delay) * 0.04s),
+    color 0.4s ease calc(var(--delay) * 0.04s),
+    box-shadow 0.4s ease calc(var(--delay) * 0.04s);
+}
+
+.dark-theme .skill-card-back {
+  background-color: rgba(15, 23, 42, 0.823);
+  border-color: rgba(56, 189, 248, 0.4);
+  color: #f8fafc;
+  box-shadow: 0 10px 30px -10px rgba(6, 182, 212, 0.5);
+
+  /* Transisi perubahan tema Dark Mode (Terang -> Gelap) */
+  transition:
+    opacity 0.5s ease,
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 0.4s ease calc(var(--delay) * 0.04s),
+    border-color 0.4s ease calc(var(--delay) * 0.04s),
+    color 0.4s ease calc(var(--delay) * 0.04s),
+    box-shadow 0.4s ease calc(var(--delay) * 0.04s);
+}
+
+.dark-theme .skill-info-content h5 {
+  color: #f8fafc;
+}
+
+.dark-theme .skill-desc-text {
+  color: #94a3b8;
+}
+
+/* Logo Next.js SVG hitam — balikkan agar terlihat di tema gelap */
+.dark-theme .icon-nextjs {
+  filter: invert(1);
+}
+
+/* ================= HOVER EFFECT ================= */
+.skill-card-wrapper:hover .skill-card-front {
+  transform: translateY(-4px) scale(1.02);
+  background-color: rgba(255, 255, 255, 0.85);
+  border-color: rgba(6, 182, 212, 0.5);
+  box-shadow:
+    0 20px 35px -10px rgba(6, 182, 212, 0.25),
+    0 0 15px rgba(6, 182, 212, 0.15);
+
+  /* Matikan delay saat hover aktif */
+  transition-delay: 0s !important;
+}
+
+.skill-card-wrapper:hover .skill-card-front i {
+  transform: scale(1.2) translateY(-4px) rotate(4deg);
+  transition-delay: 0s !important;
+}
+
+.dark-theme .skill-card-wrapper:hover .skill-card-front {
+  background-color: rgba(15, 23, 42, 0.823);
+  border-color: rgba(56, 189, 248, 0.6);
+  box-shadow:
+    0 20px 40px -10px rgba(56, 189, 248, 0.3),
+    0 0 20px rgba(56, 189, 248, 0.2);
+
+  /* Matikan delay saat hover aktif di dark mode */
+  transition-delay: 0s !important;
+}
+
+/* ================= SCROLL ANIMATIONS ================= */
+.skills-section.active-down .skill-card-front {
+  animation: fadeInUp 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-delay: calc(var(--delay) * 0.06s);
+}
+
+.skills-section.active-up .skill-card-front {
+  animation: fadeInDown 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-delay: calc((11 - var(--delay)) * 0.06s);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.92) rotateX(10deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotateX(0deg);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.92) rotateX(-10deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotateX(0deg);
+  }
+}
+
+/* RESPONSIVE LAYOUT */
+@media (max-width: 991.5px) {
+  .grid-col-transition {
+    flex: 0 0 33.333%;
+    max-width: 33.333%;
+    width: 33.333%;
+  }
+
+  /* 1. Jika ada item yang flipped di baris manapun, set SEMUA item di baris tersebut jadi 20% */
+  .content-skills:has(
+      .grid-col-transition:nth-child(-n + 3) .skill-card-inner.is-flipped
+    )
+    .grid-col-transition:nth-child(-n + 3),
+  .content-skills:has(
+      .grid-col-transition:nth-child(n + 4):nth-child(-n + 6)
+        .skill-card-inner.is-flipped
+    )
+    .grid-col-transition:nth-child(n + 4):nth-child(-n + 6),
+  .content-skills:has(
+      .grid-col-transition:nth-child(n + 7):nth-child(-n + 9)
+        .skill-card-inner.is-flipped
+    )
+    .grid-col-transition:nth-child(n + 7):nth-child(-n + 9),
+  .content-skills:has(
+      .grid-col-transition:nth-child(n + 10):nth-child(-n + 12)
+        .skill-card-inner.is-flipped
+    )
+    .grid-col-transition:nth-child(n + 10):nth-child(-n + 12) {
+    flex: 0 0 20%;
+    max-width: 20%;
+    width: 20%;
+  }
+
+  /* 2. Khusus item yang SEDANG flipped, paksa lebarnya jadi 60% */
+  .grid-col-transition:has(.skill-card-inner.is-flipped) {
+    flex: 0 0 60% !important;
+    max-width: 60% !important;
+    width: 60% !important;
+  }
+
+  .skill-desc-text {
+    font-size: 14px;
+  }
+
+  .skill-info-content h5 {
+    font-size: 0.9rem;
+  }
+
+  .skill-icon-back {
+    font-size: 3.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Default: 2 Kolom Rata (50% - 50%) */
+  .grid-col-transition {
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+    width: 50% !important;
+  }
+
+  /* 1. Jika Kartu GANJIL (Kiri) Flipped -> Ubah Kartu GENAP (Kanan) di sebelahnya jadi 35% */
+  .grid-col-transition:nth-child(odd):has(.skill-card-inner.is-flipped)
+    + .grid-col-transition:nth-child(even) {
+    flex: 0 0 35% !important;
+    max-width: 35% !important;
+    width: 35% !important;
+  }
+
+  /* 2. Jika Kartu GENAP (Kanan) Flipped -> Ubah Kartu GANJIL (Kiri) di sebelahnya jadi 35% */
+  .grid-col-transition:nth-child(odd):has(
+      + .grid-col-transition:nth-child(even) .skill-card-inner.is-flipped
+    ) {
+    flex: 0 0 35% !important;
+    max-width: 35% !important;
+    width: 35% !important;
+  }
+
+  /* 3. Kartu yang SEDANG Flipped (Di mana saja) otomatis meke 65% */
+  .grid-col-transition:has(.skill-card-inner.is-flipped) {
+    flex: 0 0 65% !important;
+    max-width: 65% !important;
+    width: 65% !important;
+  }
+
+  .skill-icon-back {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 500px) {
+  /* 1. Jika Kartu GANJIL (Kiri) Flipped -> Ubah Kartu GENAP (Kanan) di sebelahnya jadi 35% */
+  .grid-col-transition:nth-child(odd):has(.skill-card-inner.is-flipped)
+    + .grid-col-transition:nth-child(even) {
+    flex: 0 0 30% !important;
+    max-width: 30% !important;
+    width: 30% !important;
+  }
+
+  /* 2. Jika Kartu GENAP (Kanan) Flipped -> Ubah Kartu GANJIL (Kiri) di sebelahnya jadi 30% */
+  .grid-col-transition:nth-child(odd):has(
+      + .grid-col-transition:nth-child(even) .skill-card-inner.is-flipped
+    ) {
+    flex: 0 0 30% !important;
+    max-width: 30% !important;
+    width: 30% !important;
+  }
+
+  /* 3. Kartu yang SEDANG Flipped (Di mana saja) otomatis meke 70% */
+  .grid-col-transition:has(.skill-card-inner.is-flipped) {
+    flex: 0 0 70% !important;
+    max-width: 70% !important;
+    width: 70% !important;
+  }
+
+  .skill-desc-text {
+    font-size: 12px;
+  }
+
+  .skill-info-content h5 {
+    font-size: 0.8rem;
+  }
+
+  .skill-icon-back {
+    font-size: 2.5rem;
+  }
+}
+
+
+/* ================= KEYFRAMES DENGAN JEDA 2 DETIK DI AKHIR ================= */
+
+/* Total Durasi Loop: 8s (Animasi berjalan 6s + Jeda Diam 2s di akhir sebelum repeat) */
+@keyframes idleGlowSequential {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(1);
+  }
+  /* Puncak efek hover (durasi ~0.6s) */
+  7.5% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1.02);
+  }
+  /* Kembali ke normal lalu DIAM dari 15% sampai 100% */
+  15%, 100% {
+    opacity: 0;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes idleIconSequential {
+  0% {
+    transform: scale(1) translateY(0) rotate(0deg);
+  }
+  7.5% {
+    transform: scale(1.2) translateY(-4px) rotate(4deg);
+  }
+  15%, 100% {
+    transform: scale(1) translateY(0) rotate(0deg);
+  }
+}
+
+/* ================= OVERLAY EFEK HOVER (PSEUDO-ELEMENT) ================= */
+
+.skill-card-front::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(6, 182, 212, 0.6);
+  box-shadow:
+    0 20px 35px -10px rgba(6, 182, 212, 0.3),
+    0 0 15px rgba(6, 182, 212, 0.2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.dark-theme .skill-card-front::after {
+  background-color: rgba(15, 23, 42, 0.4);
+  border-color: rgba(56, 189, 248, 0.6);
+  box-shadow:
+    0 20px 40px -10px rgba(56, 189, 248, 0.4),
+    0 0 20px rgba(56, 189, 248, 0.25);
+}
+
+/* ================= BASE ATURAN ANIMASI ================= */
+
+.skills-section.active .transition-grid .skill-card-front::after {
+  animation: idleGlowSequential 7s infinite;
+}
+
+.skills-section.active .transition-grid .skill-card-front i {
+  animation: idleIconSequential 7s infinite;
+}
+
+/* Pause seketika saat di-hover atau flipped */
+.skills-section.active .transition-grid:hover .skill-card-front::after,
+.skills-section.active .transition-grid:hover .skill-card-front i,
+.skills-section.active .transition-grid:has(.is-flipped) .skill-card-front::after,
+.skills-section.active .transition-grid:has(.is-flipped) .skill-card-front i {
+  animation: none !important;
+}
+
+/* ================= 1. DESKTOP MODE (4 KOLOM x 3 BARIS) ================= */
+@media (min-width: 992px) {
+  /* Baris 1: Kiri -> Kanan (1, 2, 3, 4) */
+  .skills-section.active .grid-col-transition:nth-child(1) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(1) .skill-card-front i { animation-delay: 0s; }
+  .skills-section.active .grid-col-transition:nth-child(2) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(2) .skill-card-front i { animation-delay: 0.5s; }
+  .skills-section.active .grid-col-transition:nth-child(3) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(3) .skill-card-front i { animation-delay: 1.0s; }
+  .skills-section.active .grid-col-transition:nth-child(4) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(4) .skill-card-front i { animation-delay: 1.5s; }
+
+  /* Baris 2: Kanan -> Kiri (8, 7, 6, 5) */
+  .skills-section.active .grid-col-transition:nth-child(8) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(8) .skill-card-front i { animation-delay: 2.0s; }
+  .skills-section.active .grid-col-transition:nth-child(7) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(7) .skill-card-front i { animation-delay: 2.5s; }
+  .skills-section.active .grid-col-transition:nth-child(6) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(6) .skill-card-front i { animation-delay: 3.0s; }
+  .skills-section.active .grid-col-transition:nth-child(5) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(5) .skill-card-front i { animation-delay: 3.5s; }
+
+  /* Baris 3: Kiri -> Kanan (9, 10, 11, 12) */
+  .skills-section.active .grid-col-transition:nth-child(9) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(9) .skill-card-front i { animation-delay: 4.0s; }
+  .skills-section.active .grid-col-transition:nth-child(10) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(10) .skill-card-front i { animation-delay: 4.5s; }
+  .skills-section.active .grid-col-transition:nth-child(11) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(11) .skill-card-front i { animation-delay: 5.0s; }
+  .skills-section.active .grid-col-transition:nth-child(12) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(12) .skill-card-front i { animation-delay: 5.5s; }
+
+  /* Jeda 2 Detik saat Kursor Keluar (:not(:hover)) */
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(1) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(1) .skill-card-front i { animation-delay: 2.0s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(2) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(2) .skill-card-front i { animation-delay: 2.5s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(3) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(3) .skill-card-front i { animation-delay: 3.0s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(4) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(4) .skill-card-front i { animation-delay: 3.5s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(8) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(8) .skill-card-front i { animation-delay: 4.0s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(7) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(7) .skill-card-front i { animation-delay: 4.5s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(6) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(6) .skill-card-front i { animation-delay: 5.0s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(5) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(5) .skill-card-front i { animation-delay: 5.5s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(9) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(9) .skill-card-front i { animation-delay: 6.0s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(10) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(10) .skill-card-front i { animation-delay: 6.5s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(11) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(11) .skill-card-front i { animation-delay: 7.0s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(12) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(12) .skill-card-front i { animation-delay: 7.5s !important; }
+}
+
+/* ================= 2. TABLET MODE (3 KOLOM x 4 BARIS) ================= */
+@media (min-width: 769px) and (max-width: 991.5px) {
+  /* Baris 1: Kiri -> Kanan (1, 2, 3) */
+  .skills-section.active .grid-col-transition:nth-child(1) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(1) .skill-card-front i { animation-delay: 0s; }
+  .skills-section.active .grid-col-transition:nth-child(2) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(2) .skill-card-front i { animation-delay: 0.5s; }
+  .skills-section.active .grid-col-transition:nth-child(3) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(3) .skill-card-front i { animation-delay: 1.0s; }
+
+  /* Baris 2: Kanan -> Kiri (6, 5, 4) */
+  .skills-section.active .grid-col-transition:nth-child(6) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(6) .skill-card-front i { animation-delay: 1.5s; }
+  .skills-section.active .grid-col-transition:nth-child(5) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(5) .skill-card-front i { animation-delay: 2.0s; }
+  .skills-section.active .grid-col-transition:nth-child(4) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(4) .skill-card-front i { animation-delay: 2.5s; }
+
+  /* Baris 3: Kiri -> Kanan (7, 8, 9) */
+  .skills-section.active .grid-col-transition:nth-child(7) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(7) .skill-card-front i { animation-delay: 3.0s; }
+  .skills-section.active .grid-col-transition:nth-child(8) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(8) .skill-card-front i { animation-delay: 3.5s; }
+  .skills-section.active .grid-col-transition:nth-child(9) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(9) .skill-card-front i { animation-delay: 4.0s; }
+
+  /* Baris 4: Kanan -> Kiri (12, 11, 10) */
+  .skills-section.active .grid-col-transition:nth-child(12) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(12) .skill-card-front i { animation-delay: 4.5s; }
+  .skills-section.active .grid-col-transition:nth-child(11) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(11) .skill-card-front i { animation-delay: 5.0s; }
+  .skills-section.active .grid-col-transition:nth-child(10) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(10) .skill-card-front i { animation-delay: 5.5s; }
+
+  /* Jeda 2 Detik saat Kursor Keluar (:not(:hover)) */
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(1) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(1) .skill-card-front i { animation-delay: 2.0s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(2) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(2) .skill-card-front i { animation-delay: 2.5s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(3) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(3) .skill-card-front i { animation-delay: 3.0s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(6) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(6) .skill-card-front i { animation-delay: 3.5s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(5) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(5) .skill-card-front i { animation-delay: 4.0s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(4) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(4) .skill-card-front i { animation-delay: 4.5s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(7) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(7) .skill-card-front i { animation-delay: 5.0s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(8) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(8) .skill-card-front i { animation-delay: 5.5s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(9) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(9) .skill-card-front i { animation-delay: 6.0s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(12) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(12) .skill-card-front i { animation-delay: 6.5s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(11) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(11) .skill-card-front i { animation-delay: 7.0s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(10) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(10) .skill-card-front i { animation-delay: 7.5s !important; }
+}
+
+/* ================= 3. MOBILE MODE (2 KOLOM x 6 BARIS) ================= */
+@media (max-width: 768px) {
+  /* Baris 1: Kiri -> Kanan (1, 2) */
+  .skills-section.active .grid-col-transition:nth-child(1) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(1) .skill-card-front i { animation-delay: 0s; }
+  .skills-section.active .grid-col-transition:nth-child(2) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(2) .skill-card-front i { animation-delay: 0.5s; }
+
+  /* Baris 2: Kanan -> Kiri (4, 3) */
+  .skills-section.active .grid-col-transition:nth-child(4) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(4) .skill-card-front i { animation-delay: 1.0s; }
+  .skills-section.active .grid-col-transition:nth-child(3) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(3) .skill-card-front i { animation-delay: 1.5s; }
+
+  /* Baris 3: Kiri -> Kanan (5, 6) */
+  .skills-section.active .grid-col-transition:nth-child(5) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(5) .skill-card-front i { animation-delay: 2.0s; }
+  .skills-section.active .grid-col-transition:nth-child(6) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(6) .skill-card-front i { animation-delay: 2.5s; }
+
+  /* Baris 4: Kanan -> Kiri (8, 7) */
+  .skills-section.active .grid-col-transition:nth-child(8) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(8) .skill-card-front i { animation-delay: 3.0s; }
+  .skills-section.active .grid-col-transition:nth-child(7) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(7) .skill-card-front i { animation-delay: 3.5s; }
+
+  /* Baris 5: Kiri -> Kanan (9, 10) */
+  .skills-section.active .grid-col-transition:nth-child(9) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(9) .skill-card-front i { animation-delay: 4.0s; }
+  .skills-section.active .grid-col-transition:nth-child(10) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(10) .skill-card-front i { animation-delay: 4.5s; }
+
+  /* Baris 6: Kanan -> Kiri (12, 11) */
+  .skills-section.active .grid-col-transition:nth-child(12) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(12) .skill-card-front i { animation-delay: 5.0s; }
+  .skills-section.active .grid-col-transition:nth-child(11) .skill-card-front::after, .skills-section.active .grid-col-transition:nth-child(11) .skill-card-front i { animation-delay: 5.5s; }
+
+  /* Jeda 2 Detik saat Kursor Keluar (:not(:hover)) */
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(1) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(1) .skill-card-front i { animation-delay: 2.0s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(2) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(2) .skill-card-front i { animation-delay: 2.5s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(4) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(4) .skill-card-front i { animation-delay: 3.0s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(3) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(3) .skill-card-front i { animation-delay: 3.5s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(5) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(5) .skill-card-front i { animation-delay: 4.0s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(6) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(6) .skill-card-front i { animation-delay: 4.5s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(8) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(8) .skill-card-front i { animation-delay: 5.0s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(7) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(7) .skill-card-front i { animation-delay: 5.5s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(9) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(9) .skill-card-front i { animation-delay: 6.0s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(10) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(10) .skill-card-front i { animation-delay: 6.5s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(12) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(12) .skill-card-front i { animation-delay: 7.0s !important; }
+  .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(11) .skill-card-front::after, .skills-section.active .transition-grid:not(:hover):not(:has(.is-flipped)) .grid-col-transition:nth-child(11) .skill-card-front i { animation-delay: 7.5s !important; }
+}
