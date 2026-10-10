@@ -1,11 +1,19 @@
-import MainPortfolio from "@/app/page/MainPortfolio";
-import ZoomControl from "@/app/components/ZoomControl";
+"use client";
+
+import { useState } from "react";
+
+import SplashScreen from "./page/SplashScreen";
+import MainPortfolio from "./page/MainPortfolio";
 
 export default function Home() {
+  const [showMain, setShowMain] = useState(false);
+
   return (
     <>
-      <ZoomControl />
-      <MainPortfolio />
+      {/* <MainPortfolio />; */}
+      {!showMain && <SplashScreen setShowMain={setShowMain} />}
+      
+      {showMain && <MainPortfolio />}
     </>
   );
 }
